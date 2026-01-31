@@ -26,6 +26,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.Angle;
@@ -96,7 +97,12 @@ public class TunerConstants {
     // This needs to be tuned to your individual robot
     public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.76072);
     //public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(0.01);
-    
+    //Max allowed speed at 12V while tracking a limelight with the chassis
+    public static final LinearVelocity limelightToRobotMaxSpeed = MetersPerSecond.of(2);
+    //Limelight PID constants
+    public static final PIDController LIMELIGHT_PID_CONTROLLER_TRANS_X = new PIDController(0, 0, 0);
+    public static final PIDController LIMELIGHT_PID_CONTROLLER_ROTATION = new PIDController(0, 0, 0);
+    public static final PIDController LIMELIGHT_PID_CONTROLLER_TRANS_Y = LIMELIGHT_PID_CONTROLLER_TRANS_X;
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
     private static final double kCoupleRatio = 0;
