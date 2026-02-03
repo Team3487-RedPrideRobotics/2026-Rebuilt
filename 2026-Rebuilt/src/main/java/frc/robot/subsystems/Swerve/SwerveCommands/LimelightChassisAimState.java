@@ -56,41 +56,43 @@ public class LimelightChassisAimState extends Command {
 
     @Override
     public void initialize(){
-    //limeLight = new Limelight("Limelight");
-    //targetData = new LimelightTargetData(limeLight);
+    limeLight = new Limelight("limelight-chassis");
+    targetData = new LimelightTargetData(limeLight);
+    apriltag = targetData.getAprilTagID();
+    System.out.println("hello, this is the april tag = " + apriltag);
     done = false;
     }
 
 
     @Override
     public void execute(){
-        //RobotPose = targetData.getTargetToRobot().toPose2d();
-        //apriltag = targetData.getAprilTagID();
-        apriltag = LimelightHelpers.getFiducialID("limelight@2");
-        System.out.println("hello, this is the april tag = " + apriltag);
-        //if(apriltag != 0){
+        RobotPose = targetData.getRobotToTarget().toPose2d();
+        
+        
+        
+        if(apriltag != -1){
          
-         //xVelocity = MathUtil.clamp(-pidControllerX.calculate(goalPose2d.getX(),RobotPose.getX()),-maxLimelightSpeed,maxLimelightSpeed);
-         //yVelocity = MathUtil.clamp(-pidControllerY.calculate(goalPose2d.getY(),RobotPose.getY()),-maxLimelightSpeed,maxLimelightSpeed);
-         //turnRate = MathUtil.clamp(pidControllerY.calculate(0,RobotPose.getRotation().getDegrees()),-1,1);
+         xVelocity = MathUtil.clamp(-pidControllerX.calculate(goalPose2d.getX(),RobotPose.getX()),-maxLimelightSpeed,maxLimelightSpeed);
+         yVelocity = MathUtil.clamp(-pidControllerY.calculate(goalPose2d.getY(),RobotPose.getY()),-maxLimelightSpeed,maxLimelightSpeed);
+         turnRate = MathUtil.clamp(pidControllerY.calculate(0,RobotPose.getRotation().getDegrees()),-1,1);
          
-         //if(Math.abs(goalPose2d.getX()-RobotPose.getX())<=limelightTolerance && Math.abs(goalPose2d.getY()-RobotPose.getY())<=limelightTolerance && Math.abs(goalPose2d.getRotation().getDegrees()-RobotPose.getRotation().getDegrees())<=5){
-         //CommandScheduler.getInstance().schedule(m_Drivetrain.applyRequest(() -> robotCentric.withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(turnRate)));
-         //}
-         //else{
-         //done = true;
-         //}
-        //}
-        //else{
-        // done = true;
-        //}
-        done = true;
+         if(Math.abs(goalPose2d.getX()-RobotPose.getX())<=limelightTolerance && Math.abs(goalPose2d.getY()-RobotPose.getY())<=limelightTolerance && Math.abs(goalPose2d.getRotation().getDegrees()-RobotPose.getRotation().getDegrees())<=5){
+         CommandScheduler.getInstance().schedule(m_Drivetrain.applyRequest(() -> robotCentric.withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(turnRate)));
+         }
+         else{
+         done = true;
+         }
+        }
+        else{
+         done = true;
+        }
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        CommandScheduler.getInstance().schedule(m_Drivetrain.applyRequest(() -> idle));
+        //CommandScheduler.getInstance().schedule(m_Drivetrain.applyRequest(() -> idle));
+        System.out.println("the robot pose at end: " + RobotPose);
     }
 
     @Override
