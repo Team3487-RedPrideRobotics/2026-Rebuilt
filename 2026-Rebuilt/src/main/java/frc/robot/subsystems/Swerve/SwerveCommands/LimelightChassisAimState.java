@@ -12,21 +12,18 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.RobotContainer;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.LimelightTargetData;
 import limelight.networktables.Orientation3d;
-import limelight.networktables.target.AprilTagFiducial;
+
 
 public class LimelightChassisAimState extends Command {
     
     private CommandSwerveDrivetrain m_Drivetrain;
     private SwerveRequest.RobotCentric robotCentric;
-    private RobotContainer robotContainer;
     
     private Pigeon2 gyro;
     private Limelight limeLight;
@@ -65,7 +62,7 @@ public class LimelightChassisAimState extends Command {
     public void initialize(){
     gyro = new Pigeon2(13);
     limeLight = new Limelight("limelight-chassis");
-    //TODO:provide all settings for the limelight-chassis
+    //TODO:Tune PID Values and Ensure that this system works      
     limeLight.getSettings().withCameraOffset(new Pose3d(0,0,0, new Rotation3d())).withRobotOrientation(new Orientation3d(gyro.getRotation3d(),
 												 new AngularVelocity3d(DegreesPerSecond.of(gyro.getAngularVelocityXDevice().getValueAsDouble()),
 																	   DegreesPerSecond.of(gyro.getAngularVelocityZDevice().getValueAsDouble()),
@@ -93,8 +90,8 @@ public class LimelightChassisAimState extends Command {
          yVelocity = MathUtil.clamp(-pidControllerY.calculate(goalPose2d.getY(),RobotPose.getZ()),-maxLimelightSpeed,maxLimelightSpeed);
          turnRate = MathUtil.clamp(pidControllerY.calculate(goalPose2d.getRotation().getRadians(),RobotPose.getRotation().getZ()),-1,1);
          
-         if(Math.abs(goalPose2d.getX()-RobotPose.getX())<=limelightTolerance && Math.abs(goalPose2d.getY()-RobotPose.getY())<=limelightTolerance && Math.abs(goalPose2d.getRotation().getRadians()-RobotPose.getRotation().getZ())<=0.09){
-         CommandScheduler.getInstance().schedule(m_Drivetrain.applyRequest(() -> robotCentric.withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(turnRate)));
+         if(Math.abs(goalPose2d.getX()-RobotPose.getX())<=limelightTolerance && Math.abs(goalPose2d.getY()-RobotPose.getY())<=limelightTolerance && Math.abs(goalPose2d.getRotation().getRadians()-RobotPose.getRotation().getX())<=0.2){
+         m_Drivetrain.setControl(robotCentric.withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(turnRate));
          }
          else{
          
@@ -105,7 +102,6 @@ public class LimelightChassisAimState extends Command {
     @Override
     public void end(boolean interrupted)
     {
-        //CommandScheduler.getInstance().schedule(m_Drivetrain.applyRequest(() -> idle));
         System.out.println("the robot pose at end: " + RobotPose);
         System.out.println("chassis speed out X: " + xVelocity + " Y: " + yVelocity + " Turn Rate: " + turnRate);
     }
