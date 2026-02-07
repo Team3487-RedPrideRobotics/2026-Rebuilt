@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom trench to bottom neutral zone"
+            "pathName": "bottom trench to depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom to top of neutral zone"
+            "pathName": "top to bottom of depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top neutral zone through trench"
+            "pathName": "bottom depot to tower"
           }
         }
       ]

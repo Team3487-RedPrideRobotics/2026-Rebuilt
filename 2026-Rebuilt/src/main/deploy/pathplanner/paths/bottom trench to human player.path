@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.067,
-        "y": 6.978
+        "x": 3.5484078711985685,
+        "y": 0.6520035778175304
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.057828947368421,
-        "y": 5.9390131578947365
+        "x": 1.9425219298245613,
+        "y": 1.342456140350877
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "bottom trench"
     },
     {
       "anchor": {
-        "x": 1.067,
-        "y": 5.179331140350877
+        "x": 0.6154824561448948,
+        "y": 0.7174013157894159
       },
       "prevControl": {
-        "x": 1.086232456141282,
-        "y": 6.785241228074949
+        "x": 0.9135855263203334,
+        "y": 1.111666666666608
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Bottom of Depot"
+      "linkedName": "Human player"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 0.5,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 90.07981039603848
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.55625222708065
+    "rotation": 89.99722263419918
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

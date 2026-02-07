@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom trench to depot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "top to bottom of depot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom depot aiming to hub"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "aiming to hub to bottom trench"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom trench to bottom neutral zone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom to top of neutral zone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "top neutral zone through trench"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "top trench to front of depot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "front of depot to tower"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

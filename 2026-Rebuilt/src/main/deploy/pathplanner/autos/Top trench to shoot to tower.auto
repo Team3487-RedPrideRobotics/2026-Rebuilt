@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom trench to bottom neutral zone"
+            "pathName": "top trench (start) to top side shooting"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom to top of neutral zone"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "top neutral zone through trench"
+            "pathName": "front of depot to tower"
           }
         }
       ]

@@ -1,0 +1,79 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "botttom trench to shooting on bottom half "
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shooting to human player"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "human player to bottom neutral zone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom to top of neutral zone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "top neutral zone through trench"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "through top trench to aiming bottom half"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom half to bottom trench"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom trench to bottom neutral zone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom to top of neutral zone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "top neutral zone through trench"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "through top trench to tower"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

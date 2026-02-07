@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Bump to Human Player"
+            "pathName": "bottom of hub to depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Human Player to Tower"
+            "pathName": "top to bottom of depot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom depot to tower"
           }
         }
       ]

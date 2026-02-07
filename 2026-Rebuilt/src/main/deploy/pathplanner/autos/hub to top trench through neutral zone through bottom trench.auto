@@ -7,19 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "topside AZ - depot"
+            "pathName": "middle of hub to top trench"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "topside Intake Depot"
+            "pathName": "top trench to top neutral zone"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "topside depot - tower"
+            "pathName": "top to bottom of neutral zone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom neutral zone to bottom trench"
           }
         }
       ]
