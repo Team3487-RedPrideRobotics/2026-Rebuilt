@@ -101,7 +101,7 @@ public class TunerConstants {
     public static final LinearVelocity limelightToRobotMaxSpeed = MetersPerSecond.of(2);
     //Limelight PID constants
     public static final PIDController LIMELIGHT_PID_CONTROLLER_TRANS_X = new PIDController(1, 0, 0);
-    public static final PIDController LIMELIGHT_PID_CONTROLLER_ROTATION = new PIDController(1, 0, 0);
+    public static final PIDController LIMELIGHT_PID_CONTROLLER_ROTATION = new PIDController(2, 0, 0);
     public static final PIDController LIMELIGHT_PID_CONTROLLER_TRANS_Y = LIMELIGHT_PID_CONTROLLER_TRANS_X;
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
