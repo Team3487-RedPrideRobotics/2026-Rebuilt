@@ -73,7 +73,7 @@ public class RobotContainer {
         driverController.y().toggleOnTrue(drivetrain.applyRequest(() -> 
             RobotCentricDrive.withVelocityX(-driverController.getLeftY() * MaxSpeed)
             .withVelocityY(-driverController.getLeftX() * MaxSpeed)
-            .withRotationalRate(driverController.getRightX() * MaxAngularRate)));
+            .withRotationalRate(-driverController.getRightX() * MaxAngularRate)));
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();
