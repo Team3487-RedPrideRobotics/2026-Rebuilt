@@ -4,8 +4,10 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 
 import java.util.Optional;
 
+import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.LimelightConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
@@ -24,13 +26,19 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     CommandSwerveDrivetrain m_CommandSwerveDrivetrain;
     PoseEstimate poseEstimate;
 
+    Field2d m_field;
+
     boolean   tooFast;
+    pose2d
 
     public PoseEstimatorSubsystem(CommandSwerveDrivetrain MySillyLittleDrivetrain){
         limelightFront = new Limelight(LimelightConstants.LimelightFrontID);
         limelightLeft = new Limelight(LimelightConstants.LimelightLeftID);
         m_gyro = new Pigeon2(13);
         m_CommandSwerveDrivetrain = MySillyLittleDrivetrain;
+        m_field = new Field2d();
+        m_field.initSendable(null);
+
 
         limelightFront.getSettings().withCameraOffset(LimelightConstants.limelightFrontPose).save();
         limelightLeft.getSettings().withCameraOffset(LimelightConstants.limelightLeftPose).save();        
@@ -62,6 +70,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     visionEstimateLeft.ifPresent((PoseEstimate poseEstimateLeft) -> {
     m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateLeft.pose.toPose2d(), poseEstimateLeft.timestampSeconds);
     });
+
+    m_CommandSwerveDrivetrain.samplePoseAt(Utils.getCurrentTimeSeconds()).ifPresentOrElse(() -> {
+
+    }, () -> {
+
+    });
+
+    m_field.setRobotPose();
 }
     
 
