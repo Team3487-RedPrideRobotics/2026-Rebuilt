@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
 
     public Robot() {
         m_robotContainer = new RobotContainer();
-        m_Drivetrain = m_robotContainer.drivetrain;
+        m_Drivetrain = m_robotContainer.m_drivetrain;
     }
 
     @Override

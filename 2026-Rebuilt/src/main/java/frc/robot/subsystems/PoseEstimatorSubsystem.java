@@ -20,51 +20,46 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     Limelight limelightFront;
     Limelight limelightLeft;
 
-    Pigeon2   gyro;
-
-    boolean tooFast;
-
+    Pigeon2   m_gyro;
     CommandSwerveDrivetrain m_CommandSwerveDrivetrain;
-
     PoseEstimate poseEstimate;
+
+    boolean   tooFast;
 
     public PoseEstimatorSubsystem(CommandSwerveDrivetrain MySillyLittleDrivetrain){
         limelightFront = new Limelight(LimelightConstants.LimelightFrontID);
         limelightLeft = new Limelight(LimelightConstants.LimelightLeftID);
-        gyro = new Pigeon2(13);
+        m_gyro = new Pigeon2(13);
         m_CommandSwerveDrivetrain = MySillyLittleDrivetrain;
 
         limelightFront.getSettings().withCameraOffset(LimelightConstants.limelightFrontPose).save();
-        limelightLeft.getSettings().withCameraOffset(LimelightConstants.limelightLeftPose).save();
-
-        
+        limelightLeft.getSettings().withCameraOffset(LimelightConstants.limelightLeftPose).save();        
     }
 
     @Override
     public void periodic() {
 
-        
-
-        limelightFront.getSettings().withRobotOrientation(new Orientation3d(gyro.getRotation3d(),
-												 new AngularVelocity3d(DegreesPerSecond.of(gyro.getAngularVelocityXDevice().getValueAsDouble()),
-																	   DegreesPerSecond.of(gyro.getAngularVelocityZDevice().getValueAsDouble()),
-																	   DegreesPerSecond.of(gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
-        limelightLeft.getSettings().withRobotOrientation(new Orientation3d(gyro.getRotation3d(),
-												 new AngularVelocity3d(DegreesPerSecond.of(gyro.getAngularVelocityXDevice().getValueAsDouble()),
-																	   DegreesPerSecond.of(gyro.getAngularVelocityZDevice().getValueAsDouble()),
-																	   DegreesPerSecond.of(gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
+    
+    
+    //Update each of the limelights with the current robot orientation
+    limelightFront.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d(),
+												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXDevice().getValueAsDouble()),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble()),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
+    limelightLeft.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d(),
+												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXDevice().getValueAsDouble()),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble()),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
+    //get the pose estimates from the limelights
     Optional<PoseEstimate> visionEstimateFront = limelightFront.createPoseEstimator(EstimationMode.MEGATAG2).getPoseEstimate();
+    Optional<PoseEstimate> visionEstimateLeft = limelightLeft.createPoseEstimator(EstimationMode.MEGATAG2).getPoseEstimate();
+
     // If the pose is present
     visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
     // Add it to the pose estimator.
     m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds);
     });
-
-
-    Optional<PoseEstimate> visionEstimateLeft = limelightLeft.createPoseEstimator(EstimationMode.MEGATAG2).getPoseEstimate();
-    // If the pose is present
     visionEstimateLeft.ifPresent((PoseEstimate poseEstimateLeft) -> {
-    // Add it to the pose estimator.
     m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateLeft.pose.toPose2d(), poseEstimateLeft.timestampSeconds);
     });
 }
