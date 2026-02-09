@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.LimelightConstants;
@@ -29,7 +30,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     Field2d m_field;
 
     boolean   tooFast;
-    pose2d
+    Pose2d    robotPose;
 
     public PoseEstimatorSubsystem(CommandSwerveDrivetrain MySillyLittleDrivetrain){
         limelightFront = new Limelight(LimelightConstants.LimelightFrontID);
