@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.generated.SubsystemConstants;
 
 public class SpindexterSubsytem extends SubsystemBase {
 
@@ -13,7 +14,7 @@ public class SpindexterSubsytem extends SubsystemBase {
 
     public SpindexterSubsytem(){
     
-    m_Motor = new TalonFX(0);
+    m_Motor = new TalonFX(SubsystemConstants.SpindexterKrakenCANID);
 
     m_motorRequest = new DutyCycleOut(0.0);
     

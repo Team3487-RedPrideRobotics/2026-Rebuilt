@@ -5,6 +5,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.robot.generated.SubsystemConstants;
+
 public class kickerSubsystem extends SubsystemBase {
     
      private TalonFX m_Motor;
@@ -13,7 +15,7 @@ public class kickerSubsystem extends SubsystemBase {
 
     public kickerSubsystem(){
     
-    m_Motor = new TalonFX(0);
+    m_Motor = new TalonFX(SubsystemConstants.KickerKrakenCANID);
 
     m_motorRequest = new DutyCycleOut(0.0);
     

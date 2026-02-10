@@ -10,7 +10,6 @@ public class spindexterLowstates extends Command{
     public spindexterLowstates( SpindexterSubsytem Subsystem){
         
         subsystem = Subsystem;
-        addRequirements(Subsystem);
 
     }
 
@@ -21,7 +20,7 @@ public class spindexterLowstates extends Command{
 
     @Override
     public void execute() {
-        subsystem.RunMotor(1);
+        subsystem.RunMotor(0.5);
     }
 
     @Override

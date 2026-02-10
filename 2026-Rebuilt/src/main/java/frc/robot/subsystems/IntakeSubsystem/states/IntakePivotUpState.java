@@ -3,16 +3,18 @@ package frc.robot.subsystems.IntakeSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 
-public class IntakepivotstatesDown extends Command {
-    
+public class IntakePivotUpState extends Command {
+        
 IntakeSubsystem subsystem;
 
     double Position = 5;
 
     boolean done;
 
-    public IntakepivotstatesDown(IntakeSubsystem Subsystem){
+    public IntakePivotUpState(IntakeSubsystem Subsystem){
         
+        super();
+
         subsystem = Subsystem;
         addRequirements(Subsystem);
 

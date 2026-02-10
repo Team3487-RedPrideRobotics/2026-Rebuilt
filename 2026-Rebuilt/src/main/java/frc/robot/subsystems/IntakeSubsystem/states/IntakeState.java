@@ -3,17 +3,14 @@ package frc.robot.subsystems.IntakeSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 
-public class Intakestates extends Command{
+public class IntakeState extends Command{
     
     IntakeSubsystem subsystem;
 
-    double Speed;
-
-    public Intakestates(double speed, IntakeSubsystem Subsystem){
+    public IntakeState( IntakeSubsystem Subsystem){
         
+        super();
         subsystem = Subsystem;
-        addRequirements(Subsystem);
-        Speed = speed;
 
     }
 
@@ -24,13 +21,13 @@ public class Intakestates extends Command{
 
     @Override
     public void execute() {
-        subsystem.RunIntake(Speed);
+        subsystem.RunIntake(1);
     }
 
     @Override
     public void end(boolean interrupted) {
 
-        subsystem.StopMotorPivot();
+        subsystem.StopIntake();
 
     }
 

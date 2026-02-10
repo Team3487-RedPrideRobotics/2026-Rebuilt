@@ -1,22 +1,22 @@
-package frc.robot.subsystems.TestSubsystem.States;
+package frc.robot.subsystems.IntakeSubsystem.states;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 
-import frc.robot.subsystems.TestSubsystem.*;
+public class IntakePivotDownState extends Command {
+    
+IntakeSubsystem subsystem;
 
-public class DriveMotorPIDState extends Command {
-
-    TestSubsystem subsystem;
-
-    double Position;
+    double Position = 5;
 
     boolean done;
 
-    public DriveMotorPIDState(double Turns, TestSubsystem Subsystem){
+    public IntakePivotDownState(IntakeSubsystem Subsystem){
         
+        super();
+
         subsystem = Subsystem;
         addRequirements(Subsystem);
-        Position = Turns;
 
     }
 
@@ -27,7 +27,7 @@ public class DriveMotorPIDState extends Command {
 
     @Override
     public void execute() {
-        if (subsystem.SubsystemPID(Position,1.0,0.1,0.5)) {
+        if (subsystem.IntakePiviotPID(Position,1.0,0.1,0.5)) {
             done = true;
         }
         else{

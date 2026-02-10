@@ -1,20 +1,22 @@
-package frc.robot.subsystems.IntakeSubsystem.states;
+package frc.robot.subsystems.ShooterSubsystem.States;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.*;
 
-public class IntakePiviotUpstates extends Command {
-        
-IntakeSubsystem subsystem;
+public class HoodPidState extends Command {
 
-    double Position = 5;
+    ShooterSubsystem subsystem;
+
+    double Position;
 
     boolean done;
 
-    public IntakePiviotUpstates(IntakeSubsystem Subsystem){
+    public HoodPidState( ShooterSubsystem Subsystem){
         
+        super();
         subsystem = Subsystem;
         addRequirements(Subsystem);
+        
 
     }
 
@@ -25,7 +27,7 @@ IntakeSubsystem subsystem;
 
     @Override
     public void execute() {
-        if (subsystem.IntakePiviotPID(Position,1.0,0.1,0.5)) {
+        if (subsystem.SubsystemPID(Position,1.0,0.1,0.5)) {
             done = true;
         }
         else{
