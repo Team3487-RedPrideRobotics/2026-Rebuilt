@@ -3,14 +3,13 @@ package frc.robot.subsystems.SpindexterSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
 
-public class spindexterSlowstates extends Command{
+public class spindexterLowstates extends Command{
     
     SpindexterSubsytem subsystem;
 
-    public spindexterSlowstates( SpindexterSubsytem Subsystem){
+    public spindexterLowstates( SpindexterSubsytem Subsystem){
         
         subsystem = Subsystem;
-        addRequirements(Subsystem);
 
     }
 
@@ -21,7 +20,7 @@ public class spindexterSlowstates extends Command{
 
     @Override
     public void execute() {
-        subsystem.RunMotor(1);
+        subsystem.RunMotor(0.5);
     }
 
     @Override

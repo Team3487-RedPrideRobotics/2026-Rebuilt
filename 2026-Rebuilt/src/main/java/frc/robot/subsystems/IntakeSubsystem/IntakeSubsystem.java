@@ -3,6 +3,8 @@ package frc.robot.subsystems.IntakeSubsystem;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import frc.robot.generated.SubsystemConstants;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -16,8 +18,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public IntakeSubsystem(){
     
-    m_pivotMotor = new TalonFX(0);
-    m_intakeMotor = new TalonFX(1);
+    m_pivotMotor = new TalonFX(SubsystemConstants.IntakePivotKrakenCANID);
+    m_intakeMotor = new TalonFX(SubsystemConstants.IntakeKrakenCANID);
 
     m_pivotMotorRequest = new DutyCycleOut(0.0);
     m_intakeMotorRequest = new DutyCycleOut(0.0);
