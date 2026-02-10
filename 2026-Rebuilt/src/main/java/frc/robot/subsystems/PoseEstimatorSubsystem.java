@@ -8,10 +8,14 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.generated.LimelightConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
+
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.LimelightPoseEstimator.EstimationMode;
@@ -25,12 +29,16 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     Pigeon2   m_gyro;
     CommandSwerveDrivetrain m_CommandSwerveDrivetrain;
-    PoseEstimate poseEstimate;
 
     Field2d m_field;
+    Optional<Pose2d> tempPose;
+    Pose2d  m_robotPose2d = new Pose2d(0.0,0.0, new Rotation2d(0.0));
 
     boolean   tooFast;
-    Pose2d    robotPose;
+
+    Pose2d getRobotPose2d(){
+        return(m_robotPose2d);
+    }
 
     public PoseEstimatorSubsystem(CommandSwerveDrivetrain MySillyLittleDrivetrain){
         limelightFront = new Limelight(LimelightConstants.LimelightFrontID);
@@ -38,8 +46,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
         m_gyro = new Pigeon2(13);
         m_CommandSwerveDrivetrain = MySillyLittleDrivetrain;
         m_field = new Field2d();
-        m_field.initSendable(null);
-
+        SmartDashboard.putData("Field",m_field);
 
         limelightFront.getSettings().withCameraOffset(LimelightConstants.limelightFrontPose).save();
         limelightLeft.getSettings().withCameraOffset(LimelightConstants.limelightLeftPose).save();        
@@ -72,13 +79,13 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateLeft.pose.toPose2d(), poseEstimateLeft.timestampSeconds);
     });
 
-    m_CommandSwerveDrivetrain.samplePoseAt(Utils.getCurrentTimeSeconds()).ifPresentOrElse(() -> {
+    Optional<Pose2d> tempPose = m_CommandSwerveDrivetrain.samplePoseAt(Utils.getCurrentTimeSeconds());
 
-    }, () -> {
+    if (tempPose.isPresent()) {
+        m_robotPose2d = tempPose.get();
+    }
 
-    });
-
-    m_field.setRobotPose();
+    m_field.setRobotPose(getRobotPose2d());
 }
     
 
