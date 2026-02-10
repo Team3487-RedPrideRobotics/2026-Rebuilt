@@ -107,6 +107,7 @@ public class RobotContainer {
         // Reset the field-centric heading on left bumper press.
         driverController.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
+        //TEST: drive 1 meter infront of the viewed apriltag while Right Bumper is held
         driverController.rightBumper().onTrue(new LimelightChassisAimState(drivetrain, RobotCentricDrive,new Pose2d(0.0,1.0,Rotation2d.kZero)));
 
         //OPERATOR CONTROLS

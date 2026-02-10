@@ -23,12 +23,12 @@ public class FlywheelHighState extends Command {
 
     @Override
     public void execute() {
-        subsystem.RunMotor(0.5);
+        subsystem.RunFlywheelMotor(0.5);
     }
 
     @Override
     public void end(boolean interrupted) {
-        
+        subsystem.StopFlywheelMotors();
     }
 
 }

@@ -27,7 +27,7 @@ public class HoodPidState extends Command {
 
     @Override
     public void execute() {
-        if (subsystem.SubsystemPID(Position,1.0,0.1,0.5)) {
+        if (subsystem.HoodPID(Position,1.0,0.1,0.5)) {
             done = true;
         }
         else{
