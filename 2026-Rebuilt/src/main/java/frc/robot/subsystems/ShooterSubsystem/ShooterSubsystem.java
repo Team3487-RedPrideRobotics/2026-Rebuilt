@@ -35,6 +35,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     }
 
+    public double TurretTurnsToDeg(double turns){
+        return(((turns*SubsystemConstants.ShooterTurretGearRatio)-Math.floor(turns*SubsystemConstants.ShooterTurretGearRatio))/360);
+    }
+
     //Flywheel Control
     public void RunFlywheelMotor(double speed) {
         m_FlywheelMotorRequest.Output = speed;
@@ -88,7 +92,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean TurretPID(double goalValue, double limit, double kP, double threshold) {
-        if(goalValue >= SubsystemConstants.SooterTurretHardLimitTop || goalValue <= SubsystemConstants.SooterTurretHardLimitBottom){
+        if(goalValue >= SubsystemConstants.ShooterTurretHardLimitTop || goalValue <= SubsystemConstants.ShooterTurretHardLimitBottom){
         TurretRingOverrun.set(false);
         double delta = Math.abs(goalValue) - Math.abs(m_TurretMotor.getPosition().getValueAsDouble());
         if (Math.abs(delta) >= threshold) {
@@ -104,6 +108,7 @@ public class ShooterSubsystem extends SubsystemBase {
     else{
         System.err.println("Turret Ring Overrun!");
         TurretRingOverrun.set(true);
+
         return(false);
     }
     }
