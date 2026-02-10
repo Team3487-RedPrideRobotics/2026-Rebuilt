@@ -22,7 +22,7 @@ public class FlywheelLowState extends Command {
 
     @Override
     public void execute() {
-        subsystem.RunMotor(0.5);
+        subsystem.RunFlywheelMotor(0.5);
     }
 
     @Override
