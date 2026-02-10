@@ -1,17 +1,18 @@
-package frc.robot.subsystems.IntakeSubsystem.states;
+package frc.robot.subsystems.ClimberSubsystem.states;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
+import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 
-public class IntakePivotDownState extends Command {
+public class ClimberHoldstates extends Command {
     
-IntakeSubsystem subsystem;
+    
+ClimberSubsystem subsystem;
 
     double Position = 5;
 
     boolean done;
 
-    public IntakePivotDownState(IntakeSubsystem Subsystem){
+    public ClimberHoldstates(ClimberSubsystem Subsystem){
         
         super();
 
@@ -27,7 +28,7 @@ IntakeSubsystem subsystem;
 
     @Override
     public void execute() {
-        if (subsystem.IntakePiviotPID(Position,1.0,0.1,0.5)) { //pos would be 24 climber
+        if (subsystem.HoldMotorPID(24,1.0,0.1,0.5)) { // 1.213680 in radius for the gear relating to this motor
             done = true;
         }
         else{

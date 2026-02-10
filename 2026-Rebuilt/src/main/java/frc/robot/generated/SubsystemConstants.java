@@ -14,6 +14,9 @@ public class SubsystemConstants {
     //in turns
     public final static double ShooterHoodHardLimitTop = 5;
     public final static double ShooterHoodHardLimitBottom = 0;
+    public final static double ClimberClimbHardLimitTop = 5; // placeholder value
+    public final static double ClimberClimbHardLimitBottom = 0; // placeholder value
+
 
     public final static double SooterTurretHardLimitTop = 5;
 
