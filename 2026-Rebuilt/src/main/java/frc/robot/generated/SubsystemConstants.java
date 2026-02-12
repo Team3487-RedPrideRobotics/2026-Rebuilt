@@ -24,4 +24,5 @@ public class SubsystemConstants {
     //Gear ratios
     public final static double ShooterTurretGearRatio = 1/10;
 
+    //goku
 }
