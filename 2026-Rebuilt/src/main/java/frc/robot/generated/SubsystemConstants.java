@@ -23,8 +23,8 @@ public class SubsystemConstants {
     public final static double ShooterTurretHardLimitTop = 5;
     public final static double ShooterTurretHardLimitBottom = 0;
 
-    public final static double IntakePiviotHardLimitTop = 5; //placeholder
-    public final static double IntakePiviotHardLimitBototm = 0; //placeholder
+    public final static double IntakePiviotHardLimitTop = 25.6; 
+    public final static double IntakePiviotHardLimitBototm = 0; 
 
     //Gear ratios
     public final static double ShooterTurretGearRatio = 1/10;
