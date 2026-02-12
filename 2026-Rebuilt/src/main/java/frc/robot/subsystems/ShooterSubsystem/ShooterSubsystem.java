@@ -4,7 +4,9 @@
 package frc.robot.subsystems.ShooterSubsystem;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -19,7 +21,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private DutyCycleOut m_FlywheelMotorRequest;
     private DutyCycleOut m_TurretMotorRequest;
-    private DutyCycleOut m_HoodMotorRequest;
+    private VelocityDutyCycle m_HoodMotorRequest;
 
     Alert TurretRingOverrun = new Alert("Turret ring overrun!", AlertType.kWarning);
 
@@ -31,12 +33,27 @@ public class ShooterSubsystem extends SubsystemBase {
 
         m_FlywheelMotorRequest = new DutyCycleOut(0.0);
         m_TurretMotorRequest = new DutyCycleOut(0.0);
-        m_HoodMotorRequest = new DutyCycleOut(0.0);
+        m_HoodMotorRequest = new VelocityDutyCycle(0.0);
+
+        m_FlywheelMotor.setNeutralMode(NeutralModeValue.Coast);
+        m_TurretMotor.setNeutralMode(NeutralModeValue.Brake);
+        m_HoodMotor.setNeutralMode(NeutralModeValue.Brake);
 
     }
 
+    //takes a value above 360 degrees and wraps it around to 0
+    public double DegreesAngleClamp(double angle){
+        return((angle/360-Math.floor(angle/360))*360);
+    }
+
+    //returns an angle of degrees from the input o
     public double TurretTurnsToDeg(double turns){
         return(((turns*SubsystemConstants.ShooterTurretGearRatio)-Math.floor(turns*SubsystemConstants.ShooterTurretGearRatio))/360);
+    }
+
+    // returns a number of relative turns of the turret motor
+    public double DegToTurretTurns(double degrees, double gearRatio){
+        return((degrees*1/gearRatio)/360);
     }
 
     //Flywheel Control
@@ -47,20 +64,25 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void StopFlywheelMotors() {
         m_FlywheelMotorRequest.Output = 0;
-        m_FlywheelMotor.setControl(m_FlywheelMotorRequest);
+        m_FlywheelMotor.stopMotor();
+    }
+
+    //returns Flywheel RPM
+    public double getFlywheelSpeed(){
+        return(m_FlywheelMotor.getVelocity().getValueAsDouble()*60);
     }
 
     //Hood Control
     public void RunHoodMotor(double speed) {
 
-        m_HoodMotorRequest.Output = m_HoodMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? -speed : speed;
-        m_HoodMotorRequest.Output = m_HoodMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom ? -speed : speed; 
+        m_HoodMotorRequest.Velocity = m_HoodMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? -speed : speed;
+        m_HoodMotorRequest.Velocity = m_HoodMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom ? -speed : speed; 
         m_HoodMotor.setControl(m_HoodMotorRequest);
     }
 
     public void StopHoodMotor() {
-        m_HoodMotorRequest.Output = 0;
-        m_HoodMotor.setControl(m_HoodMotorRequest);
+        m_HoodMotorRequest.Velocity = 0;
+        m_HoodMotor.stopMotor();
     }
 
     //Goal in turns, Limit in max speed, kP as P value, threshold as in tolerance
@@ -78,6 +100,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     }
 
+    public double getHoodTurns(){
+        return(m_HoodMotor.getPosition().getValueAsDouble());
+    }
+
     //Turret Control
     public void RunTurretMotor(double speed) {
 
@@ -88,7 +114,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void StopTurretMotor() {
         m_TurretMotorRequest.Output = 0;
-        m_TurretMotor.setControl(m_TurretMotorRequest);
+        m_TurretMotor.stopMotor();
     }
 
     public boolean TurretPID(double goalValue, double limit, double kP, double threshold) {
@@ -110,6 +136,13 @@ public class ShooterSubsystem extends SubsystemBase {
         TurretRingOverrun.set(true);
 
         return(false);
+    }}
+
+    public double getTurretAngle(){
+        return(TurretTurnsToDeg(m_TurretMotor.getPosition().getValueAsDouble()));
     }
+
+    public boolean TurretPIDAngle(double angle){
+    return(TurretPID(DegToTurretTurns(DegreesAngleClamp(angle),SubsystemConstants.ShooterTurretGearRatio), 1, 0.1, 0.02));
     }
 }

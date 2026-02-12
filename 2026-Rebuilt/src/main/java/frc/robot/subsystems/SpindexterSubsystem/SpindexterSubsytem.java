@@ -2,6 +2,7 @@ package frc.robot.subsystems.SpindexterSubsystem;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.SubsystemConstants;
@@ -17,6 +18,8 @@ public class SpindexterSubsytem extends SubsystemBase {
     m_Motor = new TalonFX(SubsystemConstants.SpindexterKrakenCANID);
 
     m_motorRequest = new DutyCycleOut(0.0);
+
+    m_Motor.setNeutralMode(NeutralModeValue.Coast);
     
     }
 
@@ -27,7 +30,7 @@ public class SpindexterSubsytem extends SubsystemBase {
 
     public void StopMotors(){
         m_motorRequest.Output = 0;
-        m_Motor.setControl(m_motorRequest);
+        m_Motor.stopMotor();
     }
     
 }

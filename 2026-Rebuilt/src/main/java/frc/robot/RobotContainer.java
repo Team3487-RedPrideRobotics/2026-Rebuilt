@@ -114,12 +114,10 @@ public class RobotContainer {
 
         
 
-
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
-        // Simple drive forward auto
         return autoChooser.getSelected();
     }
 }

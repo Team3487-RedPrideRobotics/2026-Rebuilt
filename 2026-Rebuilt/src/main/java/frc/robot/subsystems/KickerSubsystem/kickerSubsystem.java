@@ -2,6 +2,7 @@ package frc.robot.subsystems.KickerSubsystem;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -18,6 +19,8 @@ public class kickerSubsystem extends SubsystemBase {
     m_Motor = new TalonFX(SubsystemConstants.KickerKrakenCANID);
 
     m_motorRequest = new DutyCycleOut(0.0);
+
+    m_Motor.setNeutralMode(NeutralModeValue.Brake);
     
     }
 

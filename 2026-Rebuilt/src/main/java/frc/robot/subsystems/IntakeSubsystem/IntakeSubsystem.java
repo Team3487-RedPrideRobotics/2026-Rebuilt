@@ -2,6 +2,7 @@ package frc.robot.subsystems.IntakeSubsystem;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.generated.SubsystemConstants;
 
@@ -24,6 +25,8 @@ public class IntakeSubsystem extends SubsystemBase {
     m_pivotMotorRequest = new DutyCycleOut(0.0);
     m_intakeMotorRequest = new DutyCycleOut(0.0);
     
+    m_intakeMotor.setNeutralMode(NeutralModeValue.Coast);
+    m_pivotMotor.setNeutralMode(NeutralModeValue.Brake);
 
     }
 

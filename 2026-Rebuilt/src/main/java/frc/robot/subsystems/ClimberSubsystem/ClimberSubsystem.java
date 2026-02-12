@@ -1,10 +1,8 @@
 package frc.robot.subsystems.ClimberSubsystem;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.compound.Diff_DutyCycleOut_Open;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.SubsystemConstants;
 
@@ -20,7 +18,11 @@ public class ClimberSubsystem extends SubsystemBase {
     DutyCycleOut m_ClimbPivotMotorRequest;
 
     public ClimberSubsystem(){
-    
+        
+        m_holdMotorRequest = new DutyCycleOut(0);
+        m_ClimbMotorRequest = new DutyCycleOut(0);
+        m_ClimbPivotMotorRequest = new DutyCycleOut(0);
+
     }
 
     public void RunHoldMotor(double speed){
@@ -30,7 +32,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public void StopHoldMotor(){
         m_holdMotorRequest.Output = 0;
-        m_holdMotor.setControl(m_holdMotorRequest);
+        m_holdMotor.stopMotor();
     }
 
     public boolean HoldMotorPID(double goalValue,double limit, double kP, double threshold){
@@ -58,7 +60,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public void StopClimbMotor(){
         m_ClimbMotorRequest.Output = 0;
-        m_ClimbMotor.setControl(m_ClimbMotorRequest);
+        m_ClimbMotor.stopMotor();
     }
 
     public boolean ClimbMotorPID(double goalValue,double limit, double kP, double threshold){
@@ -81,8 +83,7 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void StopClimbPivotMotor(){
-        m_ClimbPivotMotorRequest.Output = 0;
-        m_ClimbPivotMotor.setControl(m_ClimbPivotMotorRequest);
+        m_ClimbPivotMotor.stopMotor();
     }
 
     public boolean ClimbPivotMotorPID(double goalValue,double limit, double kP, double threshold){
