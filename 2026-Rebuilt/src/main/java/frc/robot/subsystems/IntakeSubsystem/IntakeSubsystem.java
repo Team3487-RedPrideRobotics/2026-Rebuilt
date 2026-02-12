@@ -17,6 +17,7 @@ public class IntakeSubsystem extends SubsystemBase {
     DutyCycleOut m_pivotMotorRequest;
     DutyCycleOut m_intakeMotorRequest;
 
+
     public IntakeSubsystem(){
     
     m_pivotMotor = new TalonFX(SubsystemConstants.IntakePivotKrakenCANID);
@@ -24,6 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     m_pivotMotorRequest = new DutyCycleOut(0.0);
     m_intakeMotorRequest = new DutyCycleOut(0.0);
+    
     
     m_intakeMotor.setNeutralMode(NeutralModeValue.Coast);
     m_pivotMotor.setNeutralMode(NeutralModeValue.Brake);
@@ -52,7 +54,23 @@ public class IntakeSubsystem extends SubsystemBase {
             return true;
     }
 
+}
+
+// turn limits 
+
+public double TurretTurnsToDeg(double turns){
+        return(((turns*SubsystemConstants.IntakePivotGearRatio)-Math.floor(turns*SubsystemConstants.IntakePivotGearRatio))/360); 
     }
+
+
+            public void IntakePiviotPID(double speed) {
+
+        m_pivotMotorRequest.Output = m_pivotMotor.getPosition().getValueAsDouble() > SubsystemConstants.IntakePiviotHardLimitTop ? -speed : speed;
+        m_pivotMotorRequest.Output = m_pivotMotor.getPosition().getValueAsDouble() < SubsystemConstants.IntakePiviotHardLimitBototm ? -speed : speed; 
+        m_pivotMotor.setControl(m_pivotMotorRequest);
+    }
+
+
 
     public void RunIntake(double speed){
         m_intakeMotorRequest.Output = speed;

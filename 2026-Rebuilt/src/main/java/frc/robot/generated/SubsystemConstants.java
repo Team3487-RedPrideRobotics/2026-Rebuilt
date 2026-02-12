@@ -14,15 +14,23 @@ public class SubsystemConstants {
     //in turns
     public final static double ShooterHoodHardLimitTop = 5;
     public final static double ShooterHoodHardLimitBottom = 0;
-    public final static double ClimberClimbHardLimitTop = 5; // placeholder value
-    public final static double ClimberClimbHardLimitBottom = 0; // placeholder value
+
+
+    public final static double ClimberClimbHardLimitTop = 21.3; 
+    public final static double ClimberClimbHardLimitBottom = 0; 
 
 
     public final static double ShooterTurretHardLimitTop = 5;
     public final static double ShooterTurretHardLimitBottom = 0;
 
+    public final static double IntakePiviotHardLimitTop = 5; //placeholder
+    public final static double IntakePiviotHardLimitBototm = 0; //placeholder
+
     //Gear ratios
     public final static double ShooterTurretGearRatio = 1/10;
+    public final static double IntakePivotGearRatio = 1/80;
+    //-25.1549 resting agnle
+    //90 intaking angle
 
     //goku
 }
