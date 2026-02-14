@@ -7,23 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bHub to DP"
+            "pathName": "top bump to top neutral zone"
           }
         },
         {
           "type": "path",
           "data": {
-<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/bHub through DP to TO.auto
-            "pathName": "top to bottom of DP"
-=======
-            "pathName": "top to bottom of NZ"
->>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/top bump through neutral to bottom trench.auto
+            "pathName": "top to bottom of neutral zone"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bDP to TO"
+            "pathName": "bottom neutral zone to bottom trench"
           }
         }
       ]

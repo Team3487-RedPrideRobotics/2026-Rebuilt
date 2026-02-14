@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "tTR to tNZ"
+            "pathName": "top trench to top neutral zone"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top to bottom of NZ"
+            "pathName": "top to bottom of neutral zone"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bNZ to bTR"
+            "pathName": "bottom neutral zone to bottom trench"
           }
         }
       ]

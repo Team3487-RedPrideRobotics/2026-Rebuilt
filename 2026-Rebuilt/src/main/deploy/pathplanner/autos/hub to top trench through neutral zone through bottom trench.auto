@@ -7,6 +7,7 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "mHub to top trench"
           }
         },
@@ -15,20 +16,57 @@
           "data": {
 <<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/hub to top trench through neutral zone through bottom trench.auto
             "pathName": "top trench to top neutral zone"
+=======
+            "pathName": "middle of hub to top trench"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
 ========
 >>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/top bump through neutral to bottom trench.auto
             "pathName": "top to bottom of NZ"
+=======
+<<<<<<<< HEAD:2026-Rebuilt/src/main/deploy/pathplanner/autos/Hub to tTR through NZ through bTR.auto
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/Hub to tTR through NZ through bTR.auto
+            "pathName": "tTR to tNZ"
+=======
+            "pathName": "bottom to top of NZ"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/out of bottom trench through neutral zone in top trench.auto
+========
+            "pathName": "top trench to top neutral zone"
+>>>>>>>> parent of 838c6bf (Renamed autos):2026-Rebuilt/src/main/deploy/pathplanner/autos/hub to top trench through neutral zone through bottom trench.auto
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "bottom neutral zone to bottom trench"
+=======
+<<<<<<<< HEAD:2026-Rebuilt/src/main/deploy/pathplanner/autos/Hub to tTR through NZ through bTR.auto
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/Hub to tTR through NZ through bTR.auto
+            "pathName": "top to bottom of NZ"
+========
+            "pathName": "top to bottom of neutral zone"
+>>>>>>>> parent of 838c6bf (Renamed autos):2026-Rebuilt/src/main/deploy/pathplanner/autos/hub to top trench through neutral zone through bottom trench.auto
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+<<<<<<<< HEAD:2026-Rebuilt/src/main/deploy/pathplanner/autos/Hub to tTR through NZ through bTR.auto
+            "pathName": "bNZ to bTR"
+=======
+            "pathName": "top neutral zone through trench"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/out of bottom trench through neutral zone in top trench.auto
+========
+            "pathName": "bottom neutral zone to bottom trench"
+>>>>>>>> parent of 838c6bf (Renamed autos):2026-Rebuilt/src/main/deploy/pathplanner/autos/hub to top trench through neutral zone through bottom trench.auto
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         }
       ]

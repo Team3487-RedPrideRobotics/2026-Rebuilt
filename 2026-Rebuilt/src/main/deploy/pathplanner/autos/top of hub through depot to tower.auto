@@ -13,6 +13,7 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/top of hub through depot to tower.auto
             "pathName": "top to bottom of depot"
@@ -22,11 +23,15 @@
 =======
             "pathName": "top to bottom of depot"
 >>>>>>> Stashed changes
+=======
+            "pathName": "top to bottom of depot"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/top of hub through depot to tower.auto
             "pathName": "bDP to TO"
@@ -36,6 +41,17 @@
 =======
             "pathName": "bDP to TO"
 >>>>>>> Stashed changes
+=======
+<<<<<<<< HEAD:2026-Rebuilt/src/main/deploy/pathplanner/autos/bTR through NZ to tBP.auto
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/bTR through NZ to tBP.auto
+            "pathName": "tNZ to tBP"
+=======
+            "pathName": "top neutral zone through trench"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/out of bottom trench through neutral zone in top trench.auto
+========
+            "pathName": "bottom depot to tower"
+>>>>>>>> parent of 838c6bf (Renamed autos):2026-Rebuilt/src/main/deploy/pathplanner/autos/top of hub through depot to tower.auto
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         }
       ]

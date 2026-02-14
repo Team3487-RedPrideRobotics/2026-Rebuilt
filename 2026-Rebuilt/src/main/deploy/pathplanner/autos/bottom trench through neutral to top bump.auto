@@ -13,12 +13,17 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "bottom to top of NZ"
+=======
+            "pathName": "bottom to top of neutral zone"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -40,6 +45,9 @@
 =======
             "pathName": "top neutral zone to top bump"
 >>>>>>> Stashed changes
+=======
+            "pathName": "top neutral zone to top bump"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         }
       ]

@@ -7,6 +7,7 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/top trench through depot to tower.auto
             "pathName": "top trench to depot"
@@ -16,21 +17,37 @@
 =======
             "pathName": "top trench to depot"
 >>>>>>> Stashed changes
+=======
+            "pathName": "top trench to depot"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/top trench through depot to tower.auto
 =======
 >>>>>>> Stashed changes
             "pathName": "top to bottom of depot"
+=======
+<<<<<<<< HEAD:2026-Rebuilt/src/main/deploy/pathplanner/autos/bHub through DP to TO.auto
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/bHub through DP to TO.auto
+            "pathName": "top to bottom of DP"
+=======
+            "pathName": "top to bottom of NZ"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/top bump through neutral to bottom trench.auto
+========
+            "pathName": "top to bottom of depot"
+>>>>>>>> parent of 838c6bf (Renamed autos):2026-Rebuilt/src/main/deploy/pathplanner/autos/top trench through depot to tower.auto
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "bDP to TO"
 <<<<<<< Updated upstream
 ========
@@ -38,6 +55,9 @@
 >>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/bottom bump to human player to tower.auto
 =======
 >>>>>>> Stashed changes
+=======
+            "pathName": "bottom depot to tower"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         }
       ]

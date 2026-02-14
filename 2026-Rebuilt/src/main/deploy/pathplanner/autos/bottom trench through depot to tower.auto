@@ -13,6 +13,7 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -30,12 +31,19 @@
 =======
             "pathName": "top to bottom of depot"
 >>>>>>> Stashed changes
+=======
+            "pathName": "top to bottom of depot"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "bDP to TO"
+=======
+            "pathName": "bottom depot to tower"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         }
       ]

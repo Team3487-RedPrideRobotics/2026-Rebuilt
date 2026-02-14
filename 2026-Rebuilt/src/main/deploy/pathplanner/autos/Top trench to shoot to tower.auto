@@ -7,6 +7,7 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -24,11 +25,15 @@
 =======
             "pathName": "top trench (start) to top side shooting"
 >>>>>>> Stashed changes
+=======
+            "pathName": "top trench (start) to top side shooting"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -46,6 +51,21 @@
 =======
             "pathName": "front of DP to TO"
 >>>>>>> Stashed changes
+=======
+<<<<<<<< HEAD:2026-Rebuilt/src/main/deploy/pathplanner/autos/bBP to HP to tower.auto
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/bBP to HP to tower.auto
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/bBP to HP to tower.auto
+            "pathName": "HP to TO"
+=======
+            "pathName": "Human Player to Tower"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/bottom bump to human player to tower.auto
+=======
+            "pathName": "Human Player to Tower"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/bottom bump to human player to tower.auto
+========
+            "pathName": "front of depot to tower"
+>>>>>>>> parent of 838c6bf (Renamed autos):2026-Rebuilt/src/main/deploy/pathplanner/autos/Top trench to shoot to tower.auto
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         }
       ]

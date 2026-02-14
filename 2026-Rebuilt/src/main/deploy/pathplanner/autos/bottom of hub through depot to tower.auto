@@ -7,19 +7,39 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "bHub to DP"
+=======
+            "pathName": "bottom of hub to depot"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "top to bottom of depot"
+=======
+<<<<<<<< HEAD:2026-Rebuilt/src/main/deploy/pathplanner/autos/bTR through DP to TO.auto
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/bTR through DP to TO.auto
+            "pathName": "top to bottom of DP"
+=======
+            "pathName": "top to bottom of NZ"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/top bump through neutral to bottom trench.auto
+========
+            "pathName": "top to bottom of depot"
+>>>>>>>> parent of 838c6bf (Renamed autos):2026-Rebuilt/src/main/deploy/pathplanner/autos/bottom of hub through depot to tower.auto
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "bDP to TO"
+=======
+            "pathName": "bottom depot to tower"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         }
       ]

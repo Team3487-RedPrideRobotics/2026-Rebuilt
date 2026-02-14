@@ -19,7 +19,11 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "bDP aiming to Hub"
+=======
+            "pathName": "bottom depot aiming to hub"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
@@ -37,7 +41,11 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "bottom to top of NZ"
+=======
+            "pathName": "bottom to top of neutral zone"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         },
         {
@@ -55,7 +63,11 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "front of DP to TO"
+=======
+            "pathName": "front of depot to tower"
+>>>>>>> parent of 838c6bf (Renamed autos)
           }
         }
       ]
