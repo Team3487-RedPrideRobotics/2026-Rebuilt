@@ -22,6 +22,10 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.IntakeSubsystem.*;
+import frc.robot.subsystems.KickerSubsystem.*;
+import frc.robot.subsystems.ShooterSubsystem.*;
+import frc.robot.subsystems.SpindexterSubsystem.*;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.SwerveCommands.LimelightChassisAimState;
 
@@ -49,6 +53,12 @@ public class RobotContainer {
 
     public final PoseEstimatorSubsystem  m_PoseEstimator = new PoseEstimatorSubsystem(m_drivetrain);
 
+    //instance other robot subsystems
+    public final kickerSubsystem m_kicker        = new kickerSubsystem();
+    public final SpindexterSubsytem m_Spindexter = new SpindexterSubsytem();
+    public final IntakeSubsystem m_Intake        = new IntakeSubsystem();
+    public final ShooterSubsystem m_Shooter      = new ShooterSubsystem();
+
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
@@ -60,6 +70,9 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+
+        //CONFIGIURE DRIVER CONTROLS
+
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         m_drivetrain.setDefaultCommand(
@@ -106,7 +119,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        // Simple drive forward auto
         return autoChooser.getSelected();
     }
 }
