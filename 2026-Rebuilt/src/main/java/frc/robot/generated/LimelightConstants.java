@@ -33,6 +33,7 @@ public class LimelightConstants {
     public static final Pose2d BlueHubPose2d = new Pose2d(4.6228,4.034536,new Rotation2d(0));
     public static final Pose2d RedHubPose2d = new Pose2d(11.9126,4.034536,new Rotation2d(0));
 
+
     //Interpolator values 
     //WARNING: All current values do not actually represent the current robot's data!
 
@@ -40,7 +41,7 @@ public class LimelightConstants {
     public static final InterpolatingDoubleTreeMap TurretHoodInterpolatorDEG = InterpolatingDoubleTreeMap.ofEntries(
           Map.entry(2.13, 60.0)
          ,Map.entry(4.57,56.0)
-         ,Map.entry(.0,52.0)
+         ,Map.entry(4.87,52.0)
         );
 
 
