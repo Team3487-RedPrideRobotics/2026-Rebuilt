@@ -7,31 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "top of hub to depot"
+            "pathName": "tHub to DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top to bottom of depot"
+            "pathName": "top to bottom of DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bDP aiming to Hub"
+            "pathName": "bDP to aiming bHalf"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "aiming to hub to bottom trench"
+            "pathName": "aiming to hub to bTR"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom trench to bottom neutral zone"
+            "pathName": "bTR to bNZ"
           }
         },
         {
@@ -43,19 +43,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "top neutral zone through trench"
+            "pathName": "tNZ through tTR"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top trench to front of depot"
+            "pathName": "tTR to front of DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "front of DP to TO"
+            "pathName": "aiming tHalf to TO"
           }
         }
       ]

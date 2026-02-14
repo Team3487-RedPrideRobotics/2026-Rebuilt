@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.673355263157895,
-        "y": 7.371831140350877
+        "x": 2.3752521929824564,
+        "y": 4.765833333333332
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.673355263157895,
-        "y": 7.371831140350877
+        "x": 3.3752521929824564,
+        "y": 4.765833333333332
       },
       "isLocked": false,
-      "linkedName": "in through top trench"
+      "linkedName": "top half aiming to hub"
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 1.7117324561403509,
+        "y": 4.438881578947369
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 6.0
+        "x": 3.490734649122807,
+        "y": 4.313870614035087
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "tower"
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 92.29061004263853
+    "rotation": -19.025606037568604
   },
   "useDefaultConstraints": true
 }

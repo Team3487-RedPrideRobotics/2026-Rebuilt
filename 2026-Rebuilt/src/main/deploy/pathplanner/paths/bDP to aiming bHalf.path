@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 1.067,
-        "y": 5.179331140350877
+        "y": 4.823530701754386
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.230563596495511,
-        "y": 5.140866228067586
+        "x": 2.6925877192982455,
+        "y": 5.323574561403509
       },
       "isLocked": false,
-      "linkedName": "Bottom of Depot"
+      "linkedName": "bottom depot"
     },
     {
       "anchor": {
-        "x": 1.7117324561403509,
-        "y": 4.015767543859649
+        "x": 2.234150268336314,
+        "y": 2.1609660107334525
       },
       "prevControl": {
-        "x": 3.423815789473683,
-        "y": 3.9932456140350885
+        "x": 1.2341502683363141,
+        "y": 2.1609660107334525
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "bottom half aiming to hub"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 0.5,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -2.0095538130211485
+    "rotation": 38.608993163604374
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 89.09176939861916
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

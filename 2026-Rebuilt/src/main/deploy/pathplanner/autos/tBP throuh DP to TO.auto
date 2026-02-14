@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "tBP to tNZ"
+            "pathName": "tBP to tDP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top to bottom of NZ"
+            "pathName": "top to bottom of DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bNZ to bTR"
+            "pathName": "bDP to TO"
           }
         }
       ]

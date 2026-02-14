@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6154824561448948,
-        "y": 0.7174013157894159
+        "x": 2.673355263157895,
+        "y": 7.371831140350877
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0670372807062987,
-        "y": 0.7558662280701172
+        "x": 3.673355263157895,
+        "y": 7.371831140350877
       },
       "isLocked": false,
-      "linkedName": "Human player"
+      "linkedName": "in through top trench"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 4.438881578947369
       },
       "prevControl": {
-        "x": 3.654210526315789,
-        "y": 4.390800438596491
+        "x": 3.115701754385965,
+        "y": 4.544660087719298
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 0.5,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -4.666858371439018
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.07981039603848
+    "rotation": 92.29061004263853
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
