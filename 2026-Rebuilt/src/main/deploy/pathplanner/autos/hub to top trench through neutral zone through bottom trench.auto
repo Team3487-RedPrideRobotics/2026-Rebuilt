@@ -7,23 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bTR to bNZ"
+            "pathName": "mHub to top trench"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom to top of NZ"
+            "pathName": "top trench to top neutral zone"
           }
         },
         {
           "type": "path",
           "data": {
-<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/bTR through NZ to tBP.auto
-            "pathName": "tNZ to tBP"
-=======
-            "pathName": "top neutral zone through trench"
->>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/out of bottom trench through neutral zone in top trench.auto
+            "pathName": "top to bottom of NZ"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom neutral zone to bottom trench"
           }
         }
       ]

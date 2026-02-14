@@ -7,17 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bBP to HP"
+            "pathName": "bottom trench to bottom neutral zone"
           }
         },
         {
           "type": "path",
           "data": {
-<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/bBP to HP to tower.auto
-            "pathName": "HP to TO"
-=======
-            "pathName": "Human Player to Tower"
->>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/bottom bump to human player to tower.auto
+            "pathName": "bottom to top of NZ"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "top neutral zone to top bump"
           }
         }
       ]
