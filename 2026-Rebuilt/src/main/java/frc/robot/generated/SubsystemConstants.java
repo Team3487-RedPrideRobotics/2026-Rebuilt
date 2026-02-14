@@ -33,4 +33,5 @@ public class SubsystemConstants {
     //90 intaking angle
 
     //goku
+    //vegeta
 }

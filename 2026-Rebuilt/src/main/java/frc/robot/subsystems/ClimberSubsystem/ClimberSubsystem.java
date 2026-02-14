@@ -17,6 +17,8 @@ public class ClimberSubsystem extends SubsystemBase {
     DutyCycleOut m_ClimbMotorRequest;
     DutyCycleOut m_ClimbPivotMotorRequest;
 
+    private int direction;
+    
     public ClimberSubsystem(){
         
         m_holdMotorRequest = new DutyCycleOut(0);
@@ -99,5 +101,13 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     }
+
+    public void SetDirection(int Direction){
+        direction = Direction;
+    }
+
+    public int GeDirection(){
+            return direction;
+}
 
 }
