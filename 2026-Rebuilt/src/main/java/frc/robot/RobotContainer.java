@@ -98,7 +98,10 @@ public class RobotContainer {
         // Reset the field-centric heading on left bumper press.
         driverController.leftBumper().onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
         
-        driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
+
+        //Non Competition viable in current state
+        //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
+        
         m_drivetrain.registerTelemetry(m_logger::telemeterize);
     }
 
