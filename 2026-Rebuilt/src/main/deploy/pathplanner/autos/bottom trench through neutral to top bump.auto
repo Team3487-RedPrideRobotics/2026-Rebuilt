@@ -19,11 +19,15 @@
         {
           "type": "path",
           "data": {
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/bottom trench through neutral to top bump.auto
             "pathName": "top neutral zone to top bump"
 ========
             "pathName": "top neutral zone through trench"
 >>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/out of bottom trench through neutral zone in top trench.auto
+=======
+            "pathName": "top neutral zone to top bump"
+>>>>>>> Stashed changes
           }
         }
       ]
