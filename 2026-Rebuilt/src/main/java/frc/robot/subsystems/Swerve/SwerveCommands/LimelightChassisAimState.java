@@ -1,27 +1,34 @@
+//THIS CODE IS EXPERIMENTAL AND IS NOT CURRENTLY COMPETITION VIABLE
+//USE FOR TESTING ONLY
+
 package frc.robot.subsystems.Swerve.SwerveCommands;
 
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
-import limelight.*;
+import limelight.Limelight;
+import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.LimelightTargetData;
+import limelight.networktables.Orientation3d;
 
 public class LimelightChassisAimState extends Command {
     
     private CommandSwerveDrivetrain m_Drivetrain;
     private SwerveRequest.RobotCentric robotCentric;
-    private RobotContainer robotContainer;
     
+    private Pigeon2 gyro;
     private Limelight limeLight;
     private LimelightTargetData targetData;
 
@@ -40,8 +47,8 @@ public class LimelightChassisAimState extends Command {
     PIDController pidControllerY = TunerConstants.LIMELIGHT_PID_CONTROLLER_TRANS_Y;
     PIDController pidControllerTheta = TunerConstants.LIMELIGHT_PID_CONTROLLER_ROTATION;
     //in meters:
-    double limelightTolerance = 0.1;
-    Pose2d RobotPose;
+    double limelightTolerance = 0.05;
+    Pose3d RobotPose;
 
 
 
@@ -56,41 +63,46 @@ public class LimelightChassisAimState extends Command {
 
     @Override
     public void initialize(){
-    limeLight = new Limelight("Limelight");
+    gyro = new Pigeon2(13);
+    limeLight = new Limelight("limelight-chassis");
+    //TODO:Tune PID Values and Ensure that this system works      
+    limeLight.getSettings().withCameraOffset(new Pose3d(0,0,0, new Rotation3d())).withRobotOrientation(new Orientation3d(gyro.getRotation3d(),
+												 new AngularVelocity3d(DegreesPerSecond.of(gyro.getAngularVelocityXDevice().getValueAsDouble()),
+																	   DegreesPerSecond.of(gyro.getAngularVelocityZDevice().getValueAsDouble()),
+																	   DegreesPerSecond.of(gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
     targetData = new LimelightTargetData(limeLight);
+    apriltag = targetData.getAprilTagID();
+    
+    boolean validTarget =  targetData.getTargetStatus();
+    System.out.println("hello, this is a " + validTarget + " april tag = " + apriltag);
     done = false;
     }
 
 
     @Override
     public void execute(){
-        //RobotPose = targetData.getTargetToRobot().toPose2d();
-        //apriltag = targetData.getAprilTagID();
-        apriltag = LimelightHelpers.getFiducialID("limelight@2");
-        System.out.println("hello, this is the april tag = "+apriltag);
-        //if(apriltag != 0){
+        limeLight.getSettings().withRobotOrientation(new Orientation3d(gyro.getRotation3d(),
+												 new AngularVelocity3d(DegreesPerSecond.of(gyro.getAngularVelocityXDevice().getValueAsDouble()),
+																	   DegreesPerSecond.of(gyro.getAngularVelocityZDevice().getValueAsDouble()),
+																	   DegreesPerSecond.of(gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
+        RobotPose = targetData.getRobotToTarget();
+
+        if(apriltag != -1){
          
-         //xVelocity = MathUtil.clamp(-pidControllerX.calculate(goalPose2d.getX(),RobotPose.getX()),-maxLimelightSpeed,maxLimelightSpeed);
-         //yVelocity = MathUtil.clamp(-pidControllerY.calculate(goalPose2d.getY(),RobotPose.getY()),-maxLimelightSpeed,maxLimelightSpeed);
-         //turnRate = MathUtil.clamp(pidControllerY.calculate(0,RobotPose.getRotation().getDegrees()),-1,1);
+         xVelocity = MathUtil.clamp(-pidControllerX.calculate(goalPose2d.getX(),RobotPose.getX()),-maxLimelightSpeed,maxLimelightSpeed);
+         yVelocity = MathUtil.clamp(-pidControllerY.calculate(goalPose2d.getY(),RobotPose.getZ()),-maxLimelightSpeed,maxLimelightSpeed);
+         turnRate = MathUtil.clamp(pidControllerY.calculate(goalPose2d.getRotation().getRadians(),RobotPose.getRotation().getZ()),-10,10);
          
-         //if(Math.abs(goalPose2d.getX()-RobotPose.getX())<=limelightTolerance && Math.abs(goalPose2d.getY()-RobotPose.getY())<=limelightTolerance && Math.abs(goalPose2d.getRotation().getDegrees()-RobotPose.getRotation().getDegrees())<=5){
-         //CommandScheduler.getInstance().schedule(m_Drivetrain.applyRequest(() -> robotCentric.withVelocityX(xVelocity).withVelocityY(yVelocity).withRotationalRate(turnRate)));
-         //}
-         //else{
-         //done = true;
-         //}
-        //}
-        //else{
-        // done = true;
-        //}
-        done = true;
+         
+         m_Drivetrain.setControl(robotCentric.withVelocityX(yVelocity).withVelocityY(-xVelocity).withRotationalRate(turnRate));
+        }
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        CommandScheduler.getInstance().schedule(m_Drivetrain.applyRequest(() -> idle));
+        System.out.println("the robot pose at end: " + RobotPose);
+        System.out.println("chassis speed out X: " + xVelocity + " Y: " + yVelocity + " Turn Rate: " + turnRate);
     }
 
     @Override
