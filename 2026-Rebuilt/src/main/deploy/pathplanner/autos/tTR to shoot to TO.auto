@@ -7,13 +7,21 @@
         {
           "type": "path",
           "data": {
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/tTR to shoot to TO.auto
             "pathName": "through tTR to tShooting"
+=======
+            "pathName": "bBP to HP"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/bottom bump to human player to tower.auto
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/tTR to shoot to TO.auto
             "pathName": "front of DP to TO"
+=======
+            "pathName": "Human Player to Tower"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/bottom bump to human player to tower.auto
           }
         }
       ]
