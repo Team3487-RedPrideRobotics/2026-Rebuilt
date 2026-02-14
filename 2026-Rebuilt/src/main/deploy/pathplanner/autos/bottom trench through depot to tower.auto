@@ -15,11 +15,15 @@
           "data": {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/bottom trench through depot to tower.auto
             "pathName": "top to bottom of depot"
 ========
             "pathName": "top to bottom of NZ"
 >>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/top bump through neutral to bottom trench.auto
+=======
+            "pathName": "top to bottom of depot"
+>>>>>>> Stashed changes
 =======
             "pathName": "top to bottom of depot"
 >>>>>>> Stashed changes

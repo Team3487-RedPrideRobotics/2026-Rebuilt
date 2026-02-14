@@ -13,12 +13,17 @@
         {
           "type": "path",
           "data": {
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/Hub to tTR through NZ through bTR.auto
             "pathName": "tTR to tNZ"
+=======
+            "pathName": "bottom to top of NZ"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/out of bottom trench through neutral zone in top trench.auto
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< Updated upstream:2026-Rebuilt/src/main/deploy/pathplanner/autos/Hub to tTR through NZ through bTR.auto
             "pathName": "top to bottom of NZ"
           }
         },
@@ -26,6 +31,9 @@
           "type": "path",
           "data": {
             "pathName": "bNZ to bTR"
+=======
+            "pathName": "top neutral zone through trench"
+>>>>>>> Stashed changes:2026-Rebuilt/src/main/deploy/pathplanner/autos/out of bottom trench through neutral zone in top trench.auto
           }
         }
       ]
