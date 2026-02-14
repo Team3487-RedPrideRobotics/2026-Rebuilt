@@ -57,7 +57,7 @@ public class RobotContainer {
     public final kickerSubsystem m_kicker        = new kickerSubsystem();
     public final SpindexterSubsytem m_Spindexter = new SpindexterSubsytem();
     public final IntakeSubsystem m_Intake        = new IntakeSubsystem();
-    public final ShooterSubsystem m_Shooter      = new ShooterSubsystem();
+    public final ShooterSubsystem m_Shooter      = new ShooterSubsystem(m_PoseEstimator);
 
     private final SendableChooser<Command> autoChooser;
 

@@ -8,10 +8,14 @@ import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
+import frc.robot.subsystems.PoseEstimatorSubsystem;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -19,13 +23,17 @@ public class ShooterSubsystem extends SubsystemBase {
     private TalonFX m_TurretMotor;
     private TalonFX m_HoodMotor;
 
+    private PoseEstimatorSubsystem m_PoseEstimatorSubsystem;
+
     private DutyCycleOut m_FlywheelMotorRequest;
     private DutyCycleOut m_TurretMotorRequest;
     private VelocityDutyCycle m_HoodMotorRequest;
 
     Alert TurretRingOverrun = new Alert("Turret ring overrun!", AlertType.kWarning);
 
-    public ShooterSubsystem() {
+    public ShooterSubsystem(PoseEstimatorSubsystem Goku) {
+
+        m_PoseEstimatorSubsystem = Goku;
 
         m_FlywheelMotor = new TalonFX(SubsystemConstants.ShooterFlywheelKrakenCANID);
         m_TurretMotor = new TalonFX(SubsystemConstants.ShooterTurretKrakenCANID);
@@ -144,5 +152,27 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public boolean TurretPIDAngle(double angle){
     return(TurretPID(DegToTurretTurns(DegreesAngleClamp(angle),SubsystemConstants.ShooterTurretGearRatio), 1, 0.1, 0.02));
+    }
+
+    //AimPose: the pose to aim at, tolearance: how close it finds 'acceptable' in deg
+    public boolean FullTurretAutoAim(Pose2d AimPose,double tolerance){
+        Pose2d robotPose = m_PoseEstimatorSubsystem.getRobotPose2d();
+        double distanceToHub;
+        double desiredHoodAngle;
+        double desiredRPM;
+        Rotation2d desiredTurretAngle;
+            desiredTurretAngle = Rotation2d.fromDegrees(Math.atan2(AimPose.relativeTo(robotPose).getY(),AimPose.relativeTo(robotPose).getX()));
+            distanceToHub = LimelightConstants.RedHubPose2d.relativeTo(robotPose).getTranslation().getNorm();
+            desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
+            desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
+        if(Math.abs(desiredHoodAngle-getTurretAngle()) < tolerance && Math.abs(desiredHoodAngle-getHoodTurns()*360)<tolerance){
+            return true;
+        }
+        else{
+            TurretPIDAngle(desiredTurretAngle.getDegrees());
+            RunFlywheelMotor(desiredRPM);
+            HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
+            return false;
+        }
     }
 }

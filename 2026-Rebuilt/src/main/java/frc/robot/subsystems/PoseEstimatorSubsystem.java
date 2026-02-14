@@ -28,7 +28,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     Pigeon2   m_gyro;
     CommandSwerveDrivetrain m_CommandSwerveDrivetrain;
-
+    double shooterRotation2d;
 
     Field2d m_field;
     Optional<Pose2d> tempPose;
@@ -39,9 +39,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     Optional<PoseEstimate> visionEstimateFront;
     Optional<PoseEstimate> visionEstimateShooter;
 
-
-    Pose2d getRobotPose2d(){
+    public Pose2d getRobotPose2d(){
         return(m_robotPose2d);
+    }
+
+    public void putShooterRotation(double shooterTurretAngle){
+        shooterRotation2d = shooterTurretAngle;
     }
 
     public PoseEstimatorSubsystem(CommandSwerveDrivetrain MySillyLittleDrivetrain){
@@ -64,7 +67,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     limelightShooter.getSettings().withCameraOffset(LimelightConstants.limelightShooterOffset.rotateAround(
                                  LimelightConstants.limelightShooterCenter.getTranslation()
-                                ,new Rotation3d(0,0,0)));
+                                ,new Rotation3d(0,0,shooterRotation2d)));
     
     //Update each of the limelights with the current robot orientation
     limelightFront.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d(),

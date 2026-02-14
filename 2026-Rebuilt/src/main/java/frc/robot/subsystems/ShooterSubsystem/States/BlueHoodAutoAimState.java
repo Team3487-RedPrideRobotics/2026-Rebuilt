@@ -1,9 +1,10 @@
 package frc.robot.subsystems.ShooterSubsystem.States;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.generated.LimelightConstants;
 import frc.robot.subsystems.ShooterSubsystem.*;
 
-public class HoodPidState extends Command {
+public class BlueHoodAutoAimState extends Command {
 
     ShooterSubsystem subsystem;
 
@@ -11,7 +12,7 @@ public class HoodPidState extends Command {
 
     boolean done;
 
-    public HoodPidState( ShooterSubsystem Subsystem){
+    public BlueHoodAutoAimState( ShooterSubsystem Subsystem){
         
         super();
         subsystem = Subsystem;
@@ -27,7 +28,7 @@ public class HoodPidState extends Command {
 
     @Override
     public void execute() {
-        if (subsystem.HoodPID(Position,1.0,0.1,0.5)) {
+        if (subsystem.FullTurretAutoAim(LimelightConstants.BlueHubPose2d, 0.1)) {
             done = true;
         }
         else{
