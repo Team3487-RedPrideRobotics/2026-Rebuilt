@@ -7,6 +7,7 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "y": 2.5060197368421053
       },
       "prevControl": null,
@@ -17,6 +18,8 @@
       "isLocked": false,
       "linkedName": "bottom bump"
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -32,6 +35,9 @@
       "linkedName": null
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -47,8 +53,13 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "x": 1.9997236842150699,
         "y": 1.2366776315788892
+=======
+        "x": 2.192543859653666,
+        "y": 0.7558662280701172
+>>>>>>> Stashed changes
 =======
         "x": 2.192543859653666,
         "y": 0.7558662280701172
@@ -90,7 +101,11 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "rotation": 89.99722263419918
+=======
+    "rotation": 90.0
+>>>>>>> Stashed changes
 =======
     "rotation": 90.0
 >>>>>>> Stashed changes
