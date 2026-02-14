@@ -7,25 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "middle of hub to top trench"
+            "pathName": "tTR to DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top trench to top neutral zone"
+            "pathName": "top to bottom of DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top to bottom of neutral zone"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "bottom neutral zone to bottom trench"
+            "pathName": "bDP to TO"
           }
         }
       ]

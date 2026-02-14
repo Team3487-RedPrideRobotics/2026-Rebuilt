@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom bump to human player"
+            "pathName": "bTR to bNZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Human Player to Tower"
+            "pathName": "bottom to top of NZ"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "tNZ to tBP"
           }
         }
       ]

@@ -7,55 +7,55 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom trench to bottom neutral zone"
+            "pathName": "bHub to DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom to top of neutral zone"
+            "pathName": "top to bottom of DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top neutral zone through trench"
+            "pathName": "bDP aiming to Hub"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top trench (start) to top side shooting"
+            "pathName": "bHalf to bTR"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top side shooting to top depot"
+            "pathName": "bTR to bNZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top to bottom of depot"
+            "pathName": "bottom to top of NZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom depot aiming to hub"
+            "pathName": "tNZ through tTR"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "shooting to human player"
+            "pathName": "tTR to front of DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "human player to tower"
+            "pathName": "front of DP to TO"
           }
         }
       ]

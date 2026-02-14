@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom of hub to depot"
+            "pathName": "tBP to tNZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top to bottom of depot"
+            "pathName": "top to bottom of NZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom depot to tower"
+            "pathName": "bNZ to bTR"
           }
         }
       ]

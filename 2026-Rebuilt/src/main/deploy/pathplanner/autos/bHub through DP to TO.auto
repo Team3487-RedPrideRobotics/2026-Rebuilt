@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "top bump to top neutral zone"
+            "pathName": "bHub to DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top to bottom of neutral zone"
+            "pathName": "top to bottom of DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom neutral zone to bottom trench"
+            "pathName": "bDP to TO"
           }
         }
       ]

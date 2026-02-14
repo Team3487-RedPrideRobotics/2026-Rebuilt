@@ -7,55 +7,67 @@
         {
           "type": "path",
           "data": {
-            "pathName": "top trench to depot"
+            "pathName": "bTR to shooting on bHalf "
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top to bottom of depot"
+            "pathName": "bShooting to HP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom depot aiming to hub"
+            "pathName": "HP to bNZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "aiming to hub to bottom trench"
+            "pathName": "bottom to top of NZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom trench to bottom neutral zone"
+            "pathName": "tNZ through tTR"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom to top of neutral zone"
+            "pathName": "through tTR to aiming bHalf"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top neutral zone through trench"
+            "pathName": "bHalf to bTR"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top trench to front of depot"
+            "pathName": "bTR to bNZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "front of depot to tower"
+            "pathName": "bottom to top of NZ"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "tNZ through tTR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "through tTR to TO"
           }
         }
       ]

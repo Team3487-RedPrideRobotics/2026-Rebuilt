@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "top bump to depot"
+            "pathName": "top of hub to DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top to bottom of depot"
+            "pathName": "top to bottom of DP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom depot to tower"
+            "pathName": "bDP to TO"
           }
         }
       ]
