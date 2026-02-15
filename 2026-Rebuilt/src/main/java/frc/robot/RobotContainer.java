@@ -14,18 +14,27 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.IntakeSubsystem.*;
 import frc.robot.subsystems.KickerSubsystem.*;
 import frc.robot.subsystems.ShooterSubsystem.*;
+import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
+import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
+import frc.robot.subsystems.ShooterSubsystem.States.RedHoodAutoAimState;
 import frc.robot.subsystems.SpindexterSubsystem.*;
+import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterLowstates;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.SwerveCommands.LimelightChassisAimState;
 
@@ -61,8 +70,19 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser;
 
+    private Alliance m_alliance;
+    
+    public Alliance getAlliance(){
+        DriverStation.getAlliance().ifPresent((DriverStation.Alliance myAlliance) -> {
+            m_alliance = myAlliance;
+        });
+        return m_alliance;
+    } 
+
     public RobotContainer() {
         configureBindings();
+
+        getAlliance();
 
         autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -111,6 +131,24 @@ public class RobotContainer {
         // Reset the field-centric heading on left bumper press.
         driverController.leftBumper().onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
         
+        //OperatorControls
+
+        m_Shooter.setDefaultCommand(
+            new ParallelCommandGroup(
+                new FlywheelIdleState(m_Shooter),
+                new SpindexterLowstates(m_Spindexter)
+            ));
+
+        if(getAlliance() == Alliance.Red){
+            
+            driverController.setRumble(RumbleType.kBothRumble, (m_Shooter.getDistanceToHub((LimelightConstants.RedHubPose2d))-2.1336)/2.7432);
+            operatorController.a().toggleOnTrue(new RedHoodAutoAimState(m_Shooter));
+
+        }
+        if(getAlliance() == Alliance.Blue){
+            driverController.setRumble(RumbleType.kBothRumble, (m_Shooter.getDistanceToHub((LimelightConstants.BlueHubPose2d))-2.1336)/2.7432);
+            operatorController.a().toggleOnTrue(new BlueHoodAutoAimState(m_Shooter));
+        }
 
         //Non Competition viable in current state
         //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));

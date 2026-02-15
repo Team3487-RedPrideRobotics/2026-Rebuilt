@@ -47,6 +47,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
         shooterRotation2d = shooterTurretAngle;
     }
 
+    public CommandSwerveDrivetrain getDrivetrain(){
+        return m_CommandSwerveDrivetrain;
+    }
+
+
     public PoseEstimatorSubsystem(CommandSwerveDrivetrain MySillyLittleDrivetrain){
         limelightFront = new Limelight(LimelightConstants.LimelightFrontID);
         limelightShooter = new Limelight(LimelightConstants.LimelightShooterID);

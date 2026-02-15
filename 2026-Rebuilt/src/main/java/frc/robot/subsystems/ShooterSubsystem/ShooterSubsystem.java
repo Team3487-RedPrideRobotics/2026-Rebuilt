@@ -1,6 +1,4 @@
 
-//Test subsystemm that makes Motors spin
-
 package frc.robot.subsystems.ShooterSubsystem;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -10,6 +8,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -157,15 +156,19 @@ public class ShooterSubsystem extends SubsystemBase {
     //AimPose: the pose to aim at, tolearance: how close it finds 'acceptable' in deg
     public boolean FullTurretAutoAim(Pose2d AimPose,double tolerance){
         Pose2d robotPose = m_PoseEstimatorSubsystem.getRobotPose2d();
+        Translation2d chassisSpeed = new Translation2d(m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vxMetersPerSecond
+                                                      ,m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vyMetersPerSecond)
+                                                      .rotateBy(robotPose.getRotation());
         double distanceToHub;
         double desiredHoodAngle;
         double desiredRPM;
         Rotation2d desiredTurretAngle;
-            desiredTurretAngle = Rotation2d.fromDegrees(Math.atan2(AimPose.relativeTo(robotPose).getY(),AimPose.relativeTo(robotPose).getX()));
-            distanceToHub = LimelightConstants.RedHubPose2d.relativeTo(robotPose).getTranslation().getNorm();
+            desiredTurretAngle = Rotation2d.fromDegrees(Math.atan2(AimPose.relativeTo(robotPose).getY()+chassisSpeed.getY(),AimPose.relativeTo(robotPose).getX()+chassisSpeed.getX()));
+            distanceToHub = getDistanceToHub(robotPose);
             desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
             desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
         if(Math.abs(desiredHoodAngle-getTurretAngle()) < tolerance && Math.abs(desiredHoodAngle-getHoodTurns()*360)<tolerance){
+            RunFlywheelMotor(2500.0);
             return true;
         }
         else{
@@ -174,5 +177,16 @@ public class ShooterSubsystem extends SubsystemBase {
             HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
             return false;
         }
+
+    }
+
+    public double getDistanceToHub(Pose2d hubPose2d){
+        Pose2d robotPose = m_PoseEstimatorSubsystem.getRobotPose2d();
+        Translation2d chassisSpeed = new Translation2d(m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vxMetersPerSecond
+                                                      ,m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vyMetersPerSecond)
+                                                      .rotateBy(robotPose.getRotation());
+        double distanceToHub;
+        distanceToHub = (hubPose2d.relativeTo(robotPose).getTranslation().plus(chassisSpeed)).getNorm();
+        return distanceToHub;
     }
 }
