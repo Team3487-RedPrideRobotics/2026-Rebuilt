@@ -72,6 +72,8 @@ public class RobotContainer {
     public final IntakeSubsystem m_Intake        = new IntakeSubsystem();
     public final ShooterSubsystem m_Shooter      = new ShooterSubsystem(m_PoseEstimator);
 
+    public boolean IsRed; 
+
     private final SendableChooser<Command> autoChooser;
 
     private Alliance m_alliance;
@@ -79,6 +81,9 @@ public class RobotContainer {
     public Alliance getAlliance(){
         DriverStation.getAlliance().ifPresent((DriverStation.Alliance myAlliance) -> {
             m_alliance = myAlliance;
+            if(m_alliance == Alliance.Red){
+                IsRed = true;
+            }
         });
         return m_alliance;
     } 
@@ -91,6 +96,8 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        SmartDashboard.putBoolean("Is Red", IsRed);
     }
 
     private void configureBindings() {
@@ -113,6 +120,7 @@ public class RobotContainer {
             RobotCentricDrive.withVelocityX(-driverController.getLeftY() * MaxSpeed)
             .withVelocityY(-driverController.getLeftX() * MaxSpeed)
             .withRotationalRate(-driverController.getRightX() * MaxAngularRate)));
+        
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();

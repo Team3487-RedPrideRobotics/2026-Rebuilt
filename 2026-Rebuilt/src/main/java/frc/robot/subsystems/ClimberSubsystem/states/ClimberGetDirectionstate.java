@@ -1,15 +1,12 @@
 package frc.robot.subsystems.ClimberSubsystem.states;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
-import frc.robot.subsystems.KickerSubsystem.kickerSubsystem;
 
-import java.util.Optional;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj2.command.Command;
+
+import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 
 
 public class ClimberGetDirectionstate extends Command {
@@ -18,6 +15,8 @@ ClimberSubsystem subsystem;
 
 boolean done;
 double startTime;
+double current;
+
 public ClimberGetDirectionstate(ClimberSubsystem Subsystem){
         
         subsystem = Subsystem;
@@ -35,20 +34,30 @@ public ClimberGetDirectionstate(ClimberSubsystem Subsystem){
     public void execute() {
         subsystem.RunClimbMotor(1);
 
-        if(Utils.getCurrentTimeSeconds()-startTime > 1){
+        if((subsystem.detectClimbMotorCurrent()-current)<=10){
+            subsystem.SetDirection(-1);
             done = true;
-            subsystem.SetDirection(1);
         }
+        
+        
+
+        if(Utils.getCurrentTimeSeconds()-startTime > 1){
+            subsystem.SetDirection(1);
+            done = true;
+        }
+
+        current = subsystem.detectClimbMotorCurrent();
     }
 
     @Override
     public void end(boolean interrupted) {
-    subsystem.StopClimbMotor();
+        subsystem.StopClimbMotor();
     }
-@Override
-public boolean isFinished(){
-    return done;
-}
+
+    @Override
+    public boolean isFinished(){
+        return done;
+    }
   
 
 

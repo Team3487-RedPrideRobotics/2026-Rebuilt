@@ -27,6 +27,10 @@ public class ClimberSubsystem extends SubsystemBase {
 
     }
 
+    public double detectClimbMotorCurrent(){
+        return m_ClimbMotor.getStatorCurrent().getValueAsDouble();
+    }
+
     public void RunHoldMotor(double speed){
         m_holdMotorRequest.Output = speed;
         m_holdMotor.setControl(m_holdMotorRequest);
