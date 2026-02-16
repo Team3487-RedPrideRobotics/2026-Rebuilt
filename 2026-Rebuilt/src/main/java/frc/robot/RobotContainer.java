@@ -30,6 +30,10 @@ import frc.robot.generated.SubsystemConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.IntakeSubsystem.*;
+import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotDownState;
+import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotUpState;
+import frc.robot.subsystems.IntakeSubsystem.states.IntakeState;
+import frc.robot.subsystems.IntakeSubsystem.states.OutakeState;
 import frc.robot.subsystems.KickerSubsystem.*;
 import frc.robot.subsystems.ShooterSubsystem.*;
 import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
@@ -134,6 +138,11 @@ public class RobotContainer {
 
         // Reset the field-centric heading on left bumper press.
         driverController.leftBumper().onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
+
+        driverController.leftTrigger().whileTrue(new IntakeState(m_Intake)); // while the LT button is held it will intake fuel
+        driverController.leftBumper().whileTrue(new OutakeState(m_Intake));  // while the LB button is held it will outake fuel
+        driverController.rightTrigger().onTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake                          picolo from dragon ball Z
+        driverController.rightBumper().onTrue(new IntakePivotDownState(m_Intake));  // when RB button is pressed deploy the intake
         
         //OperatorControls
 
