@@ -24,9 +24,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private PoseEstimatorSubsystem m_PoseEstimatorSubsystem;
 
-    private DutyCycleOut m_FlywheelMotorRequest;
+    private VelocityDutyCycle m_FlywheelMotorRequest;
     private DutyCycleOut m_TurretMotorRequest;
-    private VelocityDutyCycle m_HoodMotorRequest;
+    private DutyCycleOut m_HoodMotorRequest;
 
     Alert TurretRingOverrun = new Alert("Turret ring overrun!", AlertType.kWarning);
 
@@ -38,9 +38,9 @@ public class ShooterSubsystem extends SubsystemBase {
         m_TurretMotor = new TalonFX(SubsystemConstants.ShooterTurretKrakenCANID);
         m_HoodMotor = new TalonFX(SubsystemConstants.ShooterHoodKrakenCANID);
 
-        m_FlywheelMotorRequest = new DutyCycleOut(0.0);
+        m_FlywheelMotorRequest = new VelocityDutyCycle(0.0);
         m_TurretMotorRequest = new DutyCycleOut(0.0);
-        m_HoodMotorRequest = new VelocityDutyCycle(0.0);
+        m_HoodMotorRequest = new DutyCycleOut(0);
 
         m_FlywheelMotor.setNeutralMode(NeutralModeValue.Coast);
         m_TurretMotor.setNeutralMode(NeutralModeValue.Brake);
@@ -65,12 +65,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //Flywheel Control
     public void RunFlywheelMotor(double speed) {
-        m_FlywheelMotorRequest.Output = speed;
+        m_FlywheelMotorRequest.Velocity = speed;
         m_FlywheelMotor.setControl(m_FlywheelMotorRequest);
     }
 
     public void StopFlywheelMotors() {
-        m_FlywheelMotorRequest.Output = 0;
+        m_FlywheelMotorRequest.Velocity = 0;
         m_FlywheelMotor.stopMotor();
     }
 
@@ -82,13 +82,13 @@ public class ShooterSubsystem extends SubsystemBase {
     //Hood Control
     public void RunHoodMotor(double speed) {
 
-        m_HoodMotorRequest.Velocity = m_HoodMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? -speed : speed;
-        m_HoodMotorRequest.Velocity = m_HoodMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom ? -speed : speed; 
+        m_HoodMotorRequest.Output = m_HoodMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? -speed : speed;
+        m_HoodMotorRequest.Output = m_HoodMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom ? -speed : speed; 
         m_HoodMotor.setControl(m_HoodMotorRequest);
     }
 
     public void StopHoodMotor() {
-        m_HoodMotorRequest.Velocity = 0;
+        m_HoodMotorRequest.Output = 0;
         m_HoodMotor.stopMotor();
     }
 
