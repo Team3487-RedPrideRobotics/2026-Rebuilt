@@ -33,7 +33,8 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void RunMotorPivot(double speed){
-        m_pivotMotorRequest.Output = speed;
+        m_pivotMotorRequest.Output = m_pivotMotor.getPosition().getValueAsDouble() > SubsystemConstants.IntakePiviotHardLimitTop ? -speed : speed;
+        m_pivotMotorRequest.Output = m_pivotMotor.getPosition().getValueAsDouble() < SubsystemConstants.IntakePiviotHardLimitBototm ? -speed : speed; 
         m_pivotMotor.setControl(m_pivotMotorRequest);
     }
 
@@ -53,24 +54,11 @@ public class IntakeSubsystem extends SubsystemBase {
             StopMotorPivot();
             return true;
     }
+    }
 
-}
-
-// turn limits 
-
-public double TurretTurnsToDeg(double turns){
+    public double TurretTurnsToDeg(double turns){
         return(((turns*SubsystemConstants.IntakePivotGearRatio)-Math.floor(turns*SubsystemConstants.IntakePivotGearRatio))/360); 
     }
-
-
-            public void IntakePiviotPID(double speed) {
-
-        m_pivotMotorRequest.Output = m_pivotMotor.getPosition().getValueAsDouble() > SubsystemConstants.IntakePiviotHardLimitTop ? -speed : speed;
-        m_pivotMotorRequest.Output = m_pivotMotor.getPosition().getValueAsDouble() < SubsystemConstants.IntakePiviotHardLimitBototm ? -speed : speed; 
-        m_pivotMotor.setControl(m_pivotMotorRequest);
-    }
-
-
 
     public void RunIntake(double speed){
         m_intakeMotorRequest.Output = speed;
@@ -81,8 +69,5 @@ public double TurretTurnsToDeg(double turns){
         m_intakeMotorRequest.Output = 0;
         m_intakeMotor.setControl(m_intakeMotorRequest);
     }
-
-
-
 
 }
