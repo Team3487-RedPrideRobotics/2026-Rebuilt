@@ -3,14 +3,15 @@ package frc.robot.subsystems.ShooterSubsystem.States;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem.*;
 
-public class FlywheelIdleState extends Command {
+public class HoodDownState extends Command {
 
     ShooterSubsystem subsystem;
 
 
-    public FlywheelIdleState( ShooterSubsystem Subsystem){
+    public HoodDownState( ShooterSubsystem Subsystem){
         
         subsystem = Subsystem;
+        addRequirements(subsystem);
 
     }
 
@@ -21,12 +22,12 @@ public class FlywheelIdleState extends Command {
 
     @Override
     public void execute() {
-        subsystem.RunFlywheelMotor(4000);
+        subsystem.HoodPID(0, 1, 0.1, 0.1);
     }
 
     @Override
     public void end(boolean interrupted) {
-        
+        subsystem.StopHoodMotor();
     }
 
 }

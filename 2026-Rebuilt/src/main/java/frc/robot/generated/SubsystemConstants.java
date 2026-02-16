@@ -19,7 +19,6 @@ public class SubsystemConstants {
     public final static double ClimberClimbHardLimitTop = 21.3; 
     public final static double ClimberClimbHardLimitBottom = 0; 
 
-
     public final static double ShooterTurretHardLimitTop = 5;
     public final static double ShooterTurretHardLimitBottom = 0;
 
@@ -31,6 +30,18 @@ public class SubsystemConstants {
     public final static double IntakePivotGearRatio = 1/80;
     //-25.1549 resting agnle
     //90 intaking angle
+
+    //Manual Speed values
+    public final static double TurretRotationSpeed = 0.1; // in Deg/(1/50 of a second)
+
+    public final static double HoodRotationSpeed = 0.1;
+
+    //Controller Deadbands
+    public static class OperatorConstants{
+        public final static double leftXdeadBand = 0.1;
+        public final static double leftYdeadBand = 0.1;
+    }
+
 
     //goku
     //vegeta

@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.LimelightConstants;
+import frc.robot.generated.SubsystemConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.IntakeSubsystem.*;
@@ -32,7 +34,9 @@ import frc.robot.subsystems.KickerSubsystem.*;
 import frc.robot.subsystems.ShooterSubsystem.*;
 import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
+import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.ShooterSubsystem.States.RedHoodAutoAimState;
+import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
 import frc.robot.subsystems.SpindexterSubsystem.*;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterLowstates;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
@@ -136,9 +140,13 @@ public class RobotContainer {
         m_Shooter.setDefaultCommand(
             new ParallelCommandGroup(
                 new FlywheelIdleState(m_Shooter),
-                new SpindexterLowstates(m_Spindexter)
-            ));
+                new SpindexterLowstates(m_Spindexter),
+                new TurretHoodManualState(m_Shooter, () -> MathUtil.applyDeadband(operatorController.getLeftX(),SubsystemConstants.OperatorConstants.leftXdeadBand)
+                                                   , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand)
+            )));
 
+
+        //sets the rumble for the controllers and auto aims the turret to the 
         if(getAlliance() == Alliance.Red){
             
             driverController.setRumble(RumbleType.kBothRumble, (m_Shooter.getDistanceToHub((LimelightConstants.RedHubPose2d))-2.1336)/2.7432);
@@ -149,6 +157,9 @@ public class RobotContainer {
             driverController.setRumble(RumbleType.kBothRumble, (m_Shooter.getDistanceToHub((LimelightConstants.BlueHubPose2d))-2.1336)/2.7432);
             operatorController.a().toggleOnTrue(new BlueHoodAutoAimState(m_Shooter));
         }
+
+        //sends the 
+        operatorController.b().whileTrue(new HoodDownState(m_Shooter));
 
         //Non Competition viable in current state
         //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
