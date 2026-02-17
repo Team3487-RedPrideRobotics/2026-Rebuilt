@@ -21,10 +21,18 @@ public class ClimberSubsystem extends SubsystemBase {
     
     public ClimberSubsystem(){
         
+        m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID);
+        m_ClimbMotor = new TalonFX(SubsystemConstants.ClimerHoldKrakenCANID);
+        m_ClimbPivotMotor = new TalonFX(SubsystemConstants.ClimberPivotKrakenCANID);
+
         m_holdMotorRequest = new DutyCycleOut(0);
         m_ClimbMotorRequest = new DutyCycleOut(0);
         m_ClimbPivotMotorRequest = new DutyCycleOut(0);
 
+    }
+
+    public double getHoldClimberDistance(double degTurned){
+        return 1.191*(Math.PI/180*degTurned);
     }
 
     public double detectClimbMotorCurrent(){

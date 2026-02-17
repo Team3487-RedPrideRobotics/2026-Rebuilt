@@ -10,6 +10,9 @@ public class SubsystemConstants {
     public final static int ShooterFlywheelKrakenCANID = 44;
     public final static int ShooterTurretKrakenCANID = 45;
     public final static int ShooterHoodKrakenCANID = 46;
+    public final static int ClimberKrakenCANID = 47;
+    public final static int ClimerHoldKrakenCANID = 48;
+    public final static int ClimberPivotKrakenCANID = 49;
 
     //in turns
     public final static double ShooterHoodHardLimitTop = 5;
