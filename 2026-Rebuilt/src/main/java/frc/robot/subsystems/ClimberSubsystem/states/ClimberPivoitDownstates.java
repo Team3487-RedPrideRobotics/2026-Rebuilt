@@ -3,8 +3,7 @@ package frc.robot.subsystems.ClimberSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 
-public class ClimberHoldstates extends Command {
-    
+public class ClimberPivoitDownstates extends Command{
     
 ClimberSubsystem subsystem;
 
@@ -12,7 +11,7 @@ ClimberSubsystem subsystem;
 
     boolean done;
 
-    public ClimberHoldstates(ClimberSubsystem Subsystem){
+    public ClimberPivoitDownstates(ClimberSubsystem Subsystem){
         
         super();
 
@@ -28,8 +27,7 @@ ClimberSubsystem subsystem;
 
     @Override
     public void execute() {
-        if (subsystem.HoldMotorPID(24,1.0,0.1,0.5)) { // 1.213680 in radius for the gear relating to this motor
-            done = true;
+        if (subsystem.ClimbMotorPID(24,1.0,0.1,0.5)) { 
         }
         else{
             done = false;

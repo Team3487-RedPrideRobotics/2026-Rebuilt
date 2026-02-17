@@ -3,7 +3,7 @@ package frc.robot.subsystems.ClimberSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 
-public class ClimberClimbstates extends Command {
+public class ClimberClimbDownstates extends Command{
     
 ClimberSubsystem subsystem;
 
@@ -11,7 +11,7 @@ ClimberSubsystem subsystem;
 
     boolean done;
 
-    public ClimberClimbstates(ClimberSubsystem Subsystem){
+    public ClimberClimbDownstates(ClimberSubsystem Subsystem){
         
         super();
 
@@ -27,7 +27,8 @@ ClimberSubsystem subsystem;
 
     @Override
     public void execute() {
-        if (subsystem.ClimbMotorPID(24,1.0,0.1,0.5)) { 
+        if (subsystem.ClimbMotorPID(0,1,1,0.1)) { 
+            done = true;
         }
         else{
             done = false;
@@ -45,3 +46,4 @@ ClimberSubsystem subsystem;
     }
 
 }
+

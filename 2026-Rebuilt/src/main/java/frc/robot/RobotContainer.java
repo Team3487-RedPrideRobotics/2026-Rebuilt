@@ -76,8 +76,6 @@ public class RobotContainer {
     public final IntakeSubsystem m_Intake        = new IntakeSubsystem();
     public final ShooterSubsystem m_Shooter      = new ShooterSubsystem(m_PoseEstimator);
 
-    public boolean IsRed; 
-
     private final SendableChooser<Command> autoChooser;
 
     private Alliance m_alliance;
@@ -85,9 +83,6 @@ public class RobotContainer {
     public Alliance getAlliance(){
         DriverStation.getAlliance().ifPresent((DriverStation.Alliance myAlliance) -> {
             m_alliance = myAlliance;
-            if(m_alliance == Alliance.Red){
-                IsRed = true;
-            }
         });
         return m_alliance;
     } 
@@ -100,8 +95,6 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
-
-        SmartDashboard.putBoolean("Is Red", IsRed);
     }
 
     private void configureBindings() {
@@ -124,7 +117,6 @@ public class RobotContainer {
             RobotCentricDrive.withVelocityX(-driverController.getLeftY() * MaxSpeed)
             .withVelocityY(-driverController.getLeftX() * MaxSpeed)
             .withRotationalRate(-driverController.getRightX() * MaxAngularRate)));
-        
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();
@@ -149,7 +141,7 @@ public class RobotContainer {
 
         driverController.leftTrigger().whileTrue(new IntakeState(m_Intake)); // while the LT button is held it will intake fuel
         driverController.leftBumper().whileTrue(new OutakeState(m_Intake));  // while the LB button is held it will outake fuel
-        driverController.rightTrigger().onTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake                          picolo from dragon ball Z
+        driverController.rightTrigger().onTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake                          picolo from dragon ball 
         driverController.rightBumper().onTrue(new IntakePivotDownState(m_Intake));  // when RB button is pressed deploy the intake
         
         //OperatorControls
@@ -182,9 +174,15 @@ public class RobotContainer {
         //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
         
         m_drivetrain.registerTelemetry(m_logger::telemeterize);
+
+    operatorController.povUp().whileTrue(new ());
+    operatorController.povLeft().whileTrue();
+    operatorController.povRight().whileTrue();
+    operatorController.povDown().whileTrue();
     }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
+
 }
