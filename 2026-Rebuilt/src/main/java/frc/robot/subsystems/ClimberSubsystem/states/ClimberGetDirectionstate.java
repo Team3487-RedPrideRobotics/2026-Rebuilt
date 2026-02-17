@@ -1,7 +1,5 @@
 package frc.robot.subsystems.ClimberSubsystem.states;
 
-
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
