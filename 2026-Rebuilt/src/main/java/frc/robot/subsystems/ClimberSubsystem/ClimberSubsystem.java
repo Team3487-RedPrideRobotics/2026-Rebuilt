@@ -20,23 +20,15 @@ public class ClimberSubsystem extends SubsystemBase {
     private int direction;
     
     public ClimberSubsystem(){
-        
-        m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID);
-        m_ClimbMotor = new TalonFX(SubsystemConstants.ClimerHoldKrakenCANID);
-        m_ClimbPivotMotor = new TalonFX(SubsystemConstants.ClimberPivotKrakenCANID);
 
+    m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID);
+    m_holdMotor = new TalonFX(SubsystemConstants.ClimerHoldKrakenCANID);
+    m_ClimbPivotMotor = new TalonFX(SubsystemConstants.ClimberPivotKrakenCANID);
+        
         m_holdMotorRequest = new DutyCycleOut(0);
         m_ClimbMotorRequest = new DutyCycleOut(0);
         m_ClimbPivotMotorRequest = new DutyCycleOut(0);
 
-    }
-
-    public double getHoldClimberDistance(double degTurned){
-        return 1.191*(Math.PI/180*degTurned);
-    }
-
-    public double detectClimbMotorCurrent(){
-        return m_ClimbMotor.getStatorCurrent().getValueAsDouble();
     }
 
     public void RunHoldMotor(double speed){
@@ -121,5 +113,10 @@ public class ClimberSubsystem extends SubsystemBase {
     public int GeDirection(){
             return direction;
 }
+
+    public double detectClimbMotorCurrent() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'detectClimbMotorCurrent'");
+    }
 
 }
