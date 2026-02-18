@@ -31,7 +31,7 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbUpstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberHoldDownstate;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivoitInstate;
+import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotInstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotOutstate;
 import frc.robot.subsystems.IntakeSubsystem.*;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotDownState;
@@ -79,6 +79,7 @@ public class RobotContainer {
         public final SpindexterSubsytem m_Spindexter = new SpindexterSubsytem();
         public final IntakeSubsystem m_Intake        = new IntakeSubsystem();
         public final ShooterSubsystem m_Shooter      = new ShooterSubsystem(m_PoseEstimator,this);
+        public final ClimberSubsystem m_Climber      = new ClimberSubsystem();
     
         public boolean IsRed; 
     
@@ -193,7 +194,7 @@ public class RobotContainer {
 
     operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
     operatorController.povLeft().whileTrue(new ClimberPivotOutstate(m_Climber));
-    operatorController.povRight().whileTrue(new ClimberPivoitInstate(m_Climber));
+    operatorController.povRight().whileTrue(new ClimberPivotInstate(m_Climber));
     operatorController.povDown().whileTrue(new ClimberHoldDownstate(m_Climber));
     }  
 
