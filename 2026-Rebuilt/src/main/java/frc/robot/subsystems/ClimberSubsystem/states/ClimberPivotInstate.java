@@ -27,7 +27,7 @@ ClimberSubsystem subsystem;
 
     @Override
     public void execute() {
-        if (subsystem.ClimbMotorPID(24,1.0,0.1,0.5)) { 
+        if (subsystem.ClimbMotorPID(0,1.0,0.1,0.5)) { 
         }
         else{
             done = false;

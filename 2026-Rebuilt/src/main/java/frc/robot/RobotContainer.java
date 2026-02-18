@@ -175,11 +175,11 @@ public class RobotContainer {
         
         m_drivetrain.registerTelemetry(m_logger::telemeterize);
 
-    operatorController.povUp().whileTrue(new ());
-    operatorController.povLeft().whileTrue();
-    operatorController.povRight().whileTrue();
-    operatorController.povDown().whileTrue();
-    }
+    operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_ClimbMotor));
+    operatorController.povLeft().whileTrue(new ClimberPivotOutstate(m_ClimbPivotMotor));
+    operatorController.povRight().whileTrue(new ClimberPivotInstate(m_ClimbPivotMotor));
+    operatorController.povDown().whileTrue(new ClimberClimbDownstates(m_ClimbMotor));
+    }  
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
