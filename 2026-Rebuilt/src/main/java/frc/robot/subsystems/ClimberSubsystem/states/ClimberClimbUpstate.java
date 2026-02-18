@@ -3,7 +3,7 @@ package frc.robot.subsystems.ClimberSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 
-public class ClimberClimbUpstates extends Command {
+public class ClimberClimbUpstate extends Command {
     
 ClimberSubsystem subsystem;
 
@@ -11,7 +11,7 @@ ClimberSubsystem subsystem;
 
     boolean done;
 
-    public ClimberClimbUpstates(ClimberSubsystem Subsystem){
+    public ClimberClimbUpstate(ClimberSubsystem Subsystem){
         
         super();
 

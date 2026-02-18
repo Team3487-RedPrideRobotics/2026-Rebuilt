@@ -29,6 +29,11 @@ import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
+import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbUpstate;
+import frc.robot.subsystems.ClimberSubsystem.states.ClimberHoldDownstate;
+import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivoitInstate;
+import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotOutstate;
 import frc.robot.subsystems.IntakeSubsystem.*;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotDownState;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotUpState;
@@ -42,7 +47,7 @@ import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.ShooterSubsystem.States.RedHoodAutoAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
 import frc.robot.subsystems.SpindexterSubsystem.*;
-import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterLowstates;
+import frc.robot.subsystems.SpindexterSubsystem.states.spindexterLowstates;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.SwerveCommands.LimelightChassisAimState;
 
@@ -75,6 +80,8 @@ public class RobotContainer {
     public final SpindexterSubsytem m_Spindexter = new SpindexterSubsytem();
     public final IntakeSubsystem m_Intake        = new IntakeSubsystem();
     public final ShooterSubsystem m_Shooter      = new ShooterSubsystem(m_PoseEstimator);
+
+    public final ClimberSubsystem m_Climber = new ClimberSubsystem();
 
     private final SendableChooser<Command> autoChooser;
 
@@ -149,7 +156,7 @@ public class RobotContainer {
         m_Shooter.setDefaultCommand(
             new ParallelCommandGroup(
                 new FlywheelIdleState(m_Shooter),
-                new SpindexterLowstates(m_Spindexter),
+                new spindexterLowstates(m_Spindexter),
                 new TurretHoodManualState(m_Shooter, () -> MathUtil.applyDeadband(operatorController.getLeftX(),SubsystemConstants.OperatorConstants.leftXdeadBand)
                                                    , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand)
             )));
@@ -175,10 +182,10 @@ public class RobotContainer {
         
         m_drivetrain.registerTelemetry(m_logger::telemeterize);
 
-    operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_ClimbMotor));
-    operatorController.povLeft().whileTrue(new ClimberPivotOutstate(m_ClimbPivotMotor));
-    operatorController.povRight().whileTrue(new ClimberPivotInstate(m_ClimbPivotMotor));
-    operatorController.povDown().whileTrue(new ClimberClimbDownstates(m_ClimbMotor));
+    operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
+    operatorController.povLeft().whileTrue(new ClimberPivotOutstate(m_Climber));
+    operatorController.povRight().whileTrue(new ClimberPivoitInstate(m_Climber));
+    operatorController.povDown().whileTrue(new ClimberHoldDownstate(m_Climber));
     }  
 
     public Command getAutonomousCommand() {

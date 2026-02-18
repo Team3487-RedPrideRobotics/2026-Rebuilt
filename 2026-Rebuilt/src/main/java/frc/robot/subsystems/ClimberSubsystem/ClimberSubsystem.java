@@ -114,4 +114,9 @@ public class ClimberSubsystem extends SubsystemBase {
             return direction;
 }
 
+    public double detectClimbMotorCurrent() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'detectClimbMotorCurrent'");
+    }
+
 }
