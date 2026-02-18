@@ -3,11 +3,11 @@ package frc.robot.subsystems.SpindexterSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
 
-public class spindexterLowstates extends Command{
+public class SpindexterLowstates extends Command{
     
     SpindexterSubsytem subsystem;
 
-    public spindexterLowstates( SpindexterSubsytem Subsystem){
+    public SpindexterLowstates( SpindexterSubsytem Subsystem){
         
         subsystem = Subsystem;
 
