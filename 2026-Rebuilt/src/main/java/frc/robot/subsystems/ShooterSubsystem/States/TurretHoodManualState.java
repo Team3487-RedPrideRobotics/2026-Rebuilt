@@ -4,17 +4,19 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.SubsystemConstants;
-import frc.robot.subsystems.ShooterSubsystem.*;
+import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 
 public class TurretHoodManualState extends Command {
 
     ShooterSubsystem subsystem;
     DoubleSupplier turretVelocity;
     DoubleSupplier hoodSpeed;
+    
 
     public TurretHoodManualState( ShooterSubsystem Subsystem, DoubleSupplier TurretVelocity, DoubleSupplier hoodSpeed){
         
         addRequirements(Subsystem);
+        
         subsystem = Subsystem;
         this.turretVelocity = TurretVelocity;
         this.hoodSpeed = hoodSpeed;
@@ -29,7 +31,7 @@ public class TurretHoodManualState extends Command {
     @Override
     public void execute() {
         subsystem.TurretPIDAngle(subsystem.getTurretAngle()+turretVelocity.getAsDouble()*SubsystemConstants.TurretRotationSpeed);
-        subsystem.RunHoodMotor(hoodSpeed.getAsDouble());
+        //subsystem.RunHoodMotor(hoodSpeed.getAsDouble());
     }
 
     @Override

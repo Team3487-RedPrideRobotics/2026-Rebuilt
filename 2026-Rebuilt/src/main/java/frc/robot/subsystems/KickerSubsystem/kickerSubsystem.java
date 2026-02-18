@@ -31,7 +31,7 @@ public class kickerSubsystem extends SubsystemBase {
 
     public void StopMotors(){
         m_motorRequest.Output = 0;
-        m_Motor.setControl(m_motorRequest);
+        m_Motor.stopMotor();
     }
 
    

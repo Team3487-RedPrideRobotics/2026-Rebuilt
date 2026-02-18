@@ -13,15 +13,14 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -35,13 +34,14 @@ import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotUpState;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakeState;
 import frc.robot.subsystems.IntakeSubsystem.states.OutakeState;
 import frc.robot.subsystems.KickerSubsystem.*;
+import frc.robot.subsystems.KickerSubsystem.states.KickerFeedState;
 import frc.robot.subsystems.ShooterSubsystem.*;
 import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
-import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
-import frc.robot.subsystems.ShooterSubsystem.States.RedHoodAutoAimState;
+//import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
 import frc.robot.subsystems.SpindexterSubsystem.*;
+import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterHighstate;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterLowstates;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.SwerveCommands.LimelightChassisAimState;
@@ -64,33 +64,40 @@ public class RobotContainer {
     private final CommandXboxController driverController = new CommandXboxController(1);
     private final CommandXboxController operatorController = new CommandXboxController(0);
 
-    
-
     public final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
 
     public final PoseEstimatorSubsystem  m_PoseEstimator = new PoseEstimatorSubsystem(m_drivetrain);
 
-    //instance other robot subsystems
-    public final kickerSubsystem m_kicker        = new kickerSubsystem();
-    public final SpindexterSubsytem m_Spindexter = new SpindexterSubsytem();
-    public final IntakeSubsystem m_Intake        = new IntakeSubsystem();
-    public final ShooterSubsystem m_Shooter      = new ShooterSubsystem(m_PoseEstimator);
-
-    public boolean IsRed; 
-
-    private final SendableChooser<Command> autoChooser;
-
-    private Alliance m_alliance;
     
-    public Alliance getAlliance(){
-        DriverStation.getAlliance().ifPresent((DriverStation.Alliance myAlliance) -> {
-            m_alliance = myAlliance;
-            if(m_alliance == Alliance.Red){
-                IsRed = true;
-            }
-        });
-        return m_alliance;
-    } 
+        //instance other robot subsystems
+        public final kickerSubsystem m_kicker        = new kickerSubsystem();
+        public final SpindexterSubsytem m_Spindexter = new SpindexterSubsytem();
+        public final IntakeSubsystem m_Intake        = new IntakeSubsystem();
+        public final ShooterSubsystem m_Shooter      = new ShooterSubsystem(m_PoseEstimator,this);
+    
+        public boolean IsRed; 
+    
+        private final SendableChooser<Command> autoChooser;
+    
+        private Alliance m_alliance;
+    
+        public CommandXboxController getDriveController(){
+            return this.driverController;
+        }
+        
+        public Alliance getAlliance(){
+            DriverStation.getAlliance().ifPresent((DriverStation.Alliance myAlliance) -> {
+                m_alliance = myAlliance;
+                if(m_alliance == Alliance.Red){
+                    IsRed = true;
+                }
+            });
+            return m_alliance;
+        } 
+    
+        public final RobotContainer getInstance(){
+            return this;
+        }
 
     public RobotContainer() {
         configureBindings();
@@ -154,29 +161,28 @@ public class RobotContainer {
         
         //OperatorControls
 
+
         m_Shooter.setDefaultCommand(
             new ParallelCommandGroup(
                 new FlywheelIdleState(m_Shooter),
                 new SpindexterLowstates(m_Spindexter),
                 new TurretHoodManualState(m_Shooter, () -> MathUtil.applyDeadband(operatorController.getLeftX(),SubsystemConstants.OperatorConstants.leftXdeadBand)
                                                    , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand)
-            )));
+            ).withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
 
 
-        //sets the rumble for the controllers and auto aims the turret to the 
-        if(getAlliance() == Alliance.Red){
-            
-            driverController.setRumble(RumbleType.kBothRumble, (m_Shooter.getDistanceToHub((LimelightConstants.RedHubPose2d))-2.1336)/2.7432);
-            operatorController.a().toggleOnTrue(new RedHoodAutoAimState(m_Shooter));
+        //auto aims the hood to the shooter :3
+        operatorController.a().toggleOnTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        
+        //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
+        operatorController.rightTrigger(0.25).whileTrue(
+            new ParallelCommandGroup(
+                    new KickerFeedState(m_kicker),
+                    new SpindexterHighstate(m_Spindexter)
+                ));
 
-        }
-        if(getAlliance() == Alliance.Blue){
-            driverController.setRumble(RumbleType.kBothRumble, (m_Shooter.getDistanceToHub((LimelightConstants.BlueHubPose2d))-2.1336)/2.7432);
-            operatorController.a().toggleOnTrue(new BlueHoodAutoAimState(m_Shooter));
-        }
-
-        //sends the 
-        operatorController.b().whileTrue(new HoodDownState(m_Shooter));
+        //sends the hood to the minimum position
+        //operatorController.b().whileTrue(new HoodDownState(m_Shooter));
 
         //Non Competition viable in current state
         //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));

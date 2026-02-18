@@ -11,8 +11,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
@@ -21,33 +23,35 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private TalonFX m_FlywheelMotor;
     private TalonFX m_TurretMotor;
-    private TalonFX m_HoodMotor;
+    //private TalonFX m_HoodMotor;
 
     private PoseEstimatorSubsystem m_PoseEstimatorSubsystem;
+    private RobotContainer m_RobotContainer;
 
     private VelocityDutyCycle m_FlywheelMotorRequest;
     private DutyCycleOut m_TurretMotorRequest;
-    private DutyCycleOut m_HoodMotorRequest;
+    //private DutyCycleOut m_HoodMotorRequest;
 
     boolean TurretAimed = false;
 
     Alert TurretRingOverrun = new Alert("Turret ring overrun!", AlertType.kWarning);
 
-    public ShooterSubsystem(PoseEstimatorSubsystem Goku) {
+    public ShooterSubsystem(PoseEstimatorSubsystem Goku, RobotContainer Vegeta) {
 
         m_PoseEstimatorSubsystem = Goku;
+        m_RobotContainer = Vegeta;
 
         m_FlywheelMotor = new TalonFX(SubsystemConstants.ShooterFlywheelKrakenCANID);
         m_TurretMotor = new TalonFX(SubsystemConstants.ShooterTurretKrakenCANID);
-        m_HoodMotor = new TalonFX(SubsystemConstants.ShooterHoodKrakenCANID);
+        //m_HoodMotor = new TalonFX(SubsystemConstants.ShooterHoodKrakenCANID);
 
         m_FlywheelMotorRequest = new VelocityDutyCycle(0.0);
         m_TurretMotorRequest = new DutyCycleOut(0.0);
-        m_HoodMotorRequest = new DutyCycleOut(0);
+        //m_HoodMotorRequest = new DutyCycleOut(0);
 
         m_FlywheelMotor.setNeutralMode(NeutralModeValue.Coast);
         m_TurretMotor.setNeutralMode(NeutralModeValue.Brake);
-        m_HoodMotor.setNeutralMode(NeutralModeValue.Brake);
+        //m_HoodMotor.setNeutralMode(NeutralModeValue.Brake);
 
         SmartDashboard.putBoolean("TurretAimed", TurretAimed);
 
@@ -84,6 +88,7 @@ public class ShooterSubsystem extends SubsystemBase {
         return(m_FlywheelMotor.getVelocity().getValueAsDouble()*60);
     }
 
+    /* This code is current not operational due to the current robot design
     //Hood Control
     public void RunHoodMotor(double speed) {
 
@@ -115,6 +120,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public double getHoodTurns(){
         return(m_HoodMotor.getPosition().getValueAsDouble());
     }
+    */
 
     //Turret Control
     public void RunTurretMotor(double speed) {
@@ -172,7 +178,7 @@ public class ShooterSubsystem extends SubsystemBase {
             distanceToHub = getDistanceToHub(robotPose);
             desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
             desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
-        if(Math.abs(desiredHoodAngle-getTurretAngle()) < tolerance && Math.abs(desiredHoodAngle-getHoodTurns()*360)<tolerance){
+        if(Math.abs(desiredHoodAngle-getTurretAngle()) < tolerance /*&& Math.abs(desiredHoodAngle-getHoodTurns()*360)<tolerance*/){
             RunFlywheelMotor(2500.0);
             TurretAimed = true;
             return true;
@@ -180,7 +186,7 @@ public class ShooterSubsystem extends SubsystemBase {
         else{
             TurretPIDAngle(desiredTurretAngle.getDegrees());
             RunFlywheelMotor(desiredRPM);
-            HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
+            //HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
             TurretAimed = false;
             return false;
         }
@@ -195,5 +201,11 @@ public class ShooterSubsystem extends SubsystemBase {
         double distanceToHub;
         distanceToHub = (hubPose2d.relativeTo(robotPose).getTranslation().plus(chassisSpeed)).getNorm();
         return distanceToHub;
+    }
+
+    @Override
+    public void periodic() {
+        m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
+    
     }
 }
