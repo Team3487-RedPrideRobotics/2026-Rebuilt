@@ -4,8 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 
 public class ClimberPivotOutstate extends Command{
-    
-    
+     
     ClimberSubsystem subsystem;
 
     double Position = 5;
