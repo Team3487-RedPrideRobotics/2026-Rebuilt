@@ -5,7 +5,7 @@ import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 
 public class ClimberPivotInstate extends Command{
     
-ClimberSubsystem subsystem;
+    ClimberSubsystem subsystem;
 
     double Position = 5;
 
