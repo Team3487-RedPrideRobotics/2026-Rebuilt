@@ -5,6 +5,7 @@
 
 package frc.robot.subsystems.ShooterSubsystem;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -52,6 +53,9 @@ public class ShooterSubsystem extends SubsystemBase {
         m_FlywheelMotorRequest = new VelocityDutyCycle(0.0);
         m_TurretMotorRequest = new DutyCycleOut(0.0);
         //m_HoodMotorRequest = new DutyCycleOut(0);
+
+        m_FlywheelMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ShooterFlywheelKrakenInverted));
+        m_TurretMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ShooterTurretKrakenInverted));
 
         m_FlywheelMotor.setNeutralMode(NeutralModeValue.Coast);
         m_TurretMotor.setNeutralMode(NeutralModeValue.Brake);

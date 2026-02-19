@@ -1,7 +1,10 @@
 package frc.robot.subsystems.ClimberSubsystem;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.SubsystemConstants;
@@ -24,10 +27,17 @@ public class ClimberSubsystem extends SubsystemBase {
     m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID);
     m_holdMotor = new TalonFX(SubsystemConstants.ClimerHoldKrakenCANID);
     m_ClimbPivotMotor = new TalonFX(SubsystemConstants.ClimberPivotKrakenCANID);
+    
+    m_holdMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ClimerHoldKrakenInverted));
+    m_ClimbPivotMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ClimberPivotKrakenInverted));
         
-        m_holdMotorRequest = new DutyCycleOut(0);
-        m_ClimbMotorRequest = new DutyCycleOut(0);
-        m_ClimbPivotMotorRequest = new DutyCycleOut(0);
+    m_holdMotorRequest = new DutyCycleOut(0);
+    m_ClimbMotorRequest = new DutyCycleOut(0);
+    m_ClimbPivotMotorRequest = new DutyCycleOut(0);
+
+    m_ClimbMotor.setNeutralMode(NeutralModeValue.Brake);
+    m_holdMotor.setNeutralMode(NeutralModeValue.Brake);
+    m_ClimbPivotMotor.setNeutralMode(NeutralModeValue.Brake);
 
     }
 
@@ -108,6 +118,8 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public void SetDirection(int Direction){
         direction = Direction;
+        m_ClimbMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(
+            Direction == 1? InvertedValue.Clockwise_Positive:InvertedValue.CounterClockwise_Positive));
     }
 
     public int GeDirection(){
@@ -115,8 +127,8 @@ public class ClimberSubsystem extends SubsystemBase {
 }
 
     public double detectClimbMotorCurrent() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'detectClimbMotorCurrent'");
+    
+        return m_ClimbMotor.getStatorCurrent().getValueAsDouble();
     }
 
 }
