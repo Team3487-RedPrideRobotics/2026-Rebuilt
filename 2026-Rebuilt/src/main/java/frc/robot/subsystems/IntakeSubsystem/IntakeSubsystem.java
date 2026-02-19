@@ -1,12 +1,12 @@
 package frc.robot.subsystems.IntakeSubsystem;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import frc.robot.generated.SubsystemConstants;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.generated.SubsystemConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     
@@ -26,6 +26,8 @@ public class IntakeSubsystem extends SubsystemBase {
     m_pivotMotorRequest = new DutyCycleOut(0.0);
     m_intakeMotorRequest = new DutyCycleOut(0.0);
     
+    m_pivotMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.IntakePivotKrakenInverted));
+    m_intakeMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.IntakeKrakenInverted));
     
     m_intakeMotor.setNeutralMode(NeutralModeValue.Coast);
     m_pivotMotor.setNeutralMode(NeutralModeValue.Brake);

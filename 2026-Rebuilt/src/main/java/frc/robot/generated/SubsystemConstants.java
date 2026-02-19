@@ -1,5 +1,7 @@
 package frc.robot.generated;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+
 public class SubsystemConstants {
 
     //subsystem Motor CAN Id's
@@ -14,7 +16,18 @@ public class SubsystemConstants {
     public final static int ClimerHoldKrakenCANID = 48;
     public final static int ClimberPivotKrakenCANID = 49;
 
-    //in turns
+    //diretions for every motor
+    public final static InvertedValue SpindexterKrakenInverted = InvertedValue.CounterClockwise_Positive;
+    public final static InvertedValue KickerKrakenInverted = InvertedValue.Clockwise_Positive;
+    public final static InvertedValue IntakeKrakenInverted = InvertedValue.Clockwise_Positive;
+    public final static InvertedValue IntakePivotKrakenInverted = InvertedValue.Clockwise_Positive;
+    public final static InvertedValue ShooterFlywheelKrakenInverted = InvertedValue.Clockwise_Positive;
+    public final static InvertedValue ShooterTurretKrakenInverted = InvertedValue.Clockwise_Positive;
+    public final static InvertedValue ShooterHoodKrakenInverted = InvertedValue.Clockwise_Positive;
+    public final static InvertedValue ClimerHoldKrakenInverted = InvertedValue.Clockwise_Positive;
+    public final static InvertedValue ClimberPivotKrakenInverted = InvertedValue.Clockwise_Positive;
+
+    //Hardlimits in turns
     public final static double ShooterHoodHardLimitTop = 5;
     public final static double ShooterHoodHardLimitBottom = 0;
 

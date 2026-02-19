@@ -1,5 +1,6 @@
 package frc.robot.subsystems.SpindexterSubsystem;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -18,6 +19,8 @@ public class SpindexterSubsytem extends SubsystemBase {
     m_Motor = new TalonFX(SubsystemConstants.SpindexterKrakenCANID);
 
     m_motorRequest = new DutyCycleOut(0.0);
+
+    m_Motor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.SpindexterKrakenInverted));
 
     m_Motor.setNeutralMode(NeutralModeValue.Coast);
     
