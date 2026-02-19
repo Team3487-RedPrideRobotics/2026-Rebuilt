@@ -62,4 +62,22 @@ public class LimelightConstants {
          ,Map.entry(4.27,3400.0)
          ,Map.entry(4.87,3400.0)
         );
+
+    public static final InterpolatingDoubleTreeMap InverseTurretFlywheelInterpolatorRPM = InterpolatingDoubleTreeMap.ofEntries(
+          Map.entry(2800.0,2.13)
+         ,Map.entry(2800.0,2.28)
+         ,Map.entry(2900.0,2.43)
+         ,Map.entry(2900.0,2.49)
+         ,Map.entry(3000.0,2.74)
+         ,Map.entry(3000.0,3.0)
+         ,Map.entry(3050.0,3.2)
+         ,Map.entry(3100.0,3.35)
+         ,Map.entry(3200.0,3.51)
+         ,Map.entry(3200.0,3.81)
+         ,Map.entry(3300.0,3.96)
+         ,Map.entry(3300.0,4.11)
+         ,Map.entry(3400.0,4.27)
+         ,Map.entry(3400.0,4.87)
+        );
+        
 }

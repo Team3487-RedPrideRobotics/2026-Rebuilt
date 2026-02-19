@@ -39,6 +39,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     Optional<PoseEstimate> visionEstimateFront;
     Optional<PoseEstimate> visionEstimateShooter;
 
+    public Field2d getField2d(){
+        return m_field;
+    }
+
     public Pose2d getRobotPose2d(){
         return(m_robotPose2d);
     }

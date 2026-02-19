@@ -11,6 +11,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,37 +20,27 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbUpstate;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberHoldDownstate;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotInstate;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotOutstate;
-import frc.robot.subsystems.IntakeSubsystem.*;
-import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotDownState;
-import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotUpState;
-import frc.robot.subsystems.IntakeSubsystem.states.IntakeState;
-import frc.robot.subsystems.IntakeSubsystem.states.OutakeState;
-import frc.robot.subsystems.KickerSubsystem.*;
+import frc.robot.subsystems.ClimberSubsystem.states.*;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.states.*;
+import frc.robot.subsystems.KickerSubsystem.kickerSubsystem;
 import frc.robot.subsystems.KickerSubsystem.states.KickerFeedState;
-import frc.robot.subsystems.ShooterSubsystem.*;
-import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
-import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
+import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.States.*;
 //import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
-import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
-import frc.robot.subsystems.SpindexterSubsystem.*;
+import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterHighstate;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterLowstates;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Swerve.SwerveCommands.LimelightChassisAimState;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -197,6 +188,27 @@ public class RobotContainer {
     operatorController.povRight().whileTrue(new ClimberPivotInstate(m_Climber));
     operatorController.povDown().whileTrue(new ClimberHoldDownstate(m_Climber));
     }  
+
+    public void buildNamedCommands(){
+        NamedCommands.registerCommand("Climber Diretion Test", new ClimberGetDirectionstate(m_Climber));
+        //Shooter:
+        NamedCommands.registerCommand("Turret Auto Aim",new BlueHoodAutoAimState(m_Shooter,this).withTimeout(1));
+        NamedCommands.registerCommand("Turret Shoot",new ParallelCommandGroup(
+                                                                                new KickerFeedState(m_kicker),
+                                                                                new SpindexterHighstate(m_Spindexter)
+                                                                                  ).withTimeout(5));
+        //Climber:
+        NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(2));
+        NamedCommands.registerCommand("Climber Arm Retract", new ClimberClimbDownstate(m_Climber).withTimeout(2));
+        NamedCommands.registerCommand("Climber Arm Out", new ClimberPivotOutstate(m_Climber).withTimeout(1));
+        NamedCommands.registerCommand("Climber Arm In", new ClimberPivotInstate(m_Climber).withTimeout(1));
+        NamedCommands.registerCommand("Climber Hold Arm Up", new ClimberHoldUpstate(m_Climber).withTimeout(1));
+        NamedCommands.registerCommand("Climber Hold Arm Down", new ClimberHoldDownstate(m_Climber).withTimeout(1));
+        //Intake:
+        NamedCommands.registerCommand("Intake Extend", new IntakePivotDownState(m_Intake).withTimeout(1));
+        NamedCommands.registerCommand("Intake Retract", new IntakePivotUpState(m_Intake).withTimeout(1));
+        NamedCommands.registerCommand("Intake", new IntakeState(m_Intake).withTimeout(1));
+    }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
