@@ -17,6 +17,7 @@ import frc.robot.generated.LimelightConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
+import limelight.networktables.LimelightResults;
 import limelight.networktables.LimelightPoseEstimator.EstimationMode;
 import limelight.networktables.Orientation3d;
 import limelight.networktables.PoseEstimate;
@@ -29,6 +30,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     Pigeon2   m_gyro;
     CommandSwerveDrivetrain m_CommandSwerveDrivetrain;
     double shooterRotation2d;
+    double shooterRotationalRate;
 
     Field2d m_field;
     Optional<Pose2d> tempPose;
@@ -88,6 +90,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble()),
 																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
 
+    limelightShooter.getLatestResults().ifPresent((LimelightResults results) -> {
+        shooterRotation2d = results.imuResults.data[6];
+    });
 
     // If the pose is present
     visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
@@ -95,7 +100,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds);
     });
     visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
-    m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds);
+        
+        if(Math.abs(shooterRotation2d) < 60){
+        m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds);
+        }
     });
 
     Optional<Pose2d> tempPose = m_CommandSwerveDrivetrain.samplePoseAt(Utils.getCurrentTimeSeconds());
