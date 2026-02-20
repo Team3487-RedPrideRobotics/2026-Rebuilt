@@ -38,8 +38,7 @@ import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.States.*;
 //import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
-import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterHighstate;
-import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterLowstates;
+import frc.robot.subsystems.SpindexterSubsystem.states.*;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 
 public class RobotContainer {
@@ -159,7 +158,7 @@ public class RobotContainer {
         m_Shooter.setDefaultCommand(
             new ParallelCommandGroup(
                 new FlywheelIdleState(m_Shooter),
-                new SpindexterLowstates(m_Spindexter),
+                new SpindexterLowstate(m_Spindexter),
                 new TurretHoodManualState(m_Shooter, () -> MathUtil.applyDeadband(operatorController.getLeftX(),SubsystemConstants.OperatorConstants.leftXdeadBand)
                                                    , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand)
             ).withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
