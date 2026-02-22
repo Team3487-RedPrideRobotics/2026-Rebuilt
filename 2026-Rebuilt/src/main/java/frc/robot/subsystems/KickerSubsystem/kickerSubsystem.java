@@ -17,7 +17,7 @@ public class kickerSubsystem extends SubsystemBase {
 
     public kickerSubsystem(){
     
-    m_Motor = new TalonFX(SubsystemConstants.KickerKrakenCANID);
+    m_Motor = new TalonFX(SubsystemConstants.KickerKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
 
     m_motorRequest = new DutyCycleOut(0.0);
 

@@ -16,7 +16,7 @@ public class SpindexterSubsytem extends SubsystemBase {
 
     public SpindexterSubsytem(){
     
-    m_Motor = new TalonFX(SubsystemConstants.SpindexterKrakenCANID);
+    m_Motor = new TalonFX(SubsystemConstants.SpindexterKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
 
     m_motorRequest = new DutyCycleOut(0.0);
 

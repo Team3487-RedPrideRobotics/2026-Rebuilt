@@ -20,8 +20,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public IntakeSubsystem(){
     
-    m_pivotMotor = new TalonFX(SubsystemConstants.IntakePivotKrakenCANID);
-    m_intakeMotor = new TalonFX(SubsystemConstants.IntakeKrakenCANID);
+    m_pivotMotor = new TalonFX(SubsystemConstants.IntakePivotKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
+    m_intakeMotor = new TalonFX(SubsystemConstants.IntakeKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
 
     m_pivotMotorRequest = new DutyCycleOut(0.0);
     m_intakeMotorRequest = new DutyCycleOut(0.0);

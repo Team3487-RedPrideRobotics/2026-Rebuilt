@@ -24,9 +24,9 @@ public class ClimberSubsystem extends SubsystemBase {
     
     public ClimberSubsystem(){
 
-    m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID);
-    m_holdMotor = new TalonFX(SubsystemConstants.ClimerHoldKrakenCANID);
-    m_ClimbPivotMotor = new TalonFX(SubsystemConstants.ClimberPivotKrakenCANID);
+    m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
+    m_holdMotor = new TalonFX(SubsystemConstants.ClimerHoldKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
+    m_ClimbPivotMotor = new TalonFX(SubsystemConstants.ClimberPivotKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
     
     m_holdMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ClimerHoldKrakenInverted));
     m_ClimbPivotMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ClimberPivotKrakenInverted));

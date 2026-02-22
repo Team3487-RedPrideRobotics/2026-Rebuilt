@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
         m_robotContainer = new RobotContainer();
         m_Drivetrain = m_robotContainer.m_drivetrain;
 
-        //Allows Operator to define the Alliance by hand incase the FMS is incorrect
+        //Allows Operator to know if the fms is disconected
         NoFmsAlliance = new Alert("The FMS is not sending Alliance!", AlertType.kError);
 
     }

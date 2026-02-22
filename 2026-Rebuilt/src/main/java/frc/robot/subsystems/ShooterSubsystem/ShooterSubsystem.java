@@ -1,3 +1,5 @@
+
+//TODO: warning!
 //THE HOOD CODE HAS BEEN COMMENTED OUT IN MANY FILES
 //The listed files are:
 //RobotContainer, TurretHoodManualState, BlueHoodAutoAimState, HoodDownState
@@ -47,8 +49,8 @@ public class ShooterSubsystem extends SubsystemBase {
         m_RobotContainer = Vegeta;
 
         m_FlywheelMotor = new TalonFX(SubsystemConstants.ShooterFlywheelKrakenCANID);
-        m_TurretMotor = new TalonFX(SubsystemConstants.ShooterTurretKrakenCANID);
-        //m_HoodMotor = new TalonFX(SubsystemConstants.ShooterHoodKrakenCANID);
+        m_TurretMotor = new TalonFX(SubsystemConstants.ShooterTurretKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
+        //m_HoodMotor = new TalonFX(SubsystemConstants.ShooterHoodKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
 
         m_FlywheelMotorRequest = new VelocityDutyCycle(0.0);
         m_TurretMotorRequest = new DutyCycleOut(0.0);
@@ -213,8 +215,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
+        //m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
     
-        m_PoseEstimatorSubsystem.getField2d().getObject("estimated shot").setPose(new Pose2d(new Translation2d(LimelightConstants.InverseTurretFlywheelInterpolatorRPM.get(getFlywheelSpeed()),0).rotateBy(new Rotation2d(getTurretAngle()).plus(m_PoseEstimatorSubsystem.getRobotPose2d().getRotation())),new Rotation2d()));
+        //m_PoseEstimatorSubsystem.getField2d().getObject("estimated shot").setPose(new Pose2d(new Translation2d(LimelightConstants.InverseTurretFlywheelInterpolatorRPM.get(getFlywheelSpeed()),0).rotateBy(new Rotation2d(getTurretAngle()).plus(m_PoseEstimatorSubsystem.getRobotPose2d().getRotation())),new Rotation2d()));
     }
 }

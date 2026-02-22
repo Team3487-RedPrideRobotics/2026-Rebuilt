@@ -1,20 +1,23 @@
 package frc.robot.generated;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 public class SubsystemConstants {
 
     //subsystem Motor CAN Id's
     public final static int SpindexterKrakenCANID = 40;
-    public final static int KickerKrakenCANID = 41;
-    public final static int IntakeKrakenCANID = 42;
-    public final static int IntakePivotKrakenCANID = 43;
-    public final static int ShooterFlywheelKrakenCANID = 44;
-    public final static int ShooterTurretKrakenCANID = 45;
+    public final static int KickerKrakenCANID = 4;
+    public final static int IntakeKrakenCANID = 6;
+    public final static int IntakePivotKrakenCANID = 7;
+    public final static int ShooterFlywheelKrakenCANID = 3000;
+    public final static int ShooterTurretKrakenCANID = 17;
     public final static int ShooterHoodKrakenCANID = 46;
-    public final static int ClimberKrakenCANID = 47;
-    public final static int ClimerHoldKrakenCANID = 48;
-    public final static int ClimberPivotKrakenCANID = 49;
+    public final static int ClimberKrakenCANID = 0;
+    public final static int ClimerHoldKrakenCANID = 1;
+    public final static int ClimberPivotKrakenCANID = 2;
+
+    public final static CANBus SUBSYSTEM_BUS = new CANBus("Canivore0");
 
     //diretions for every motor
     public final static InvertedValue SpindexterKrakenInverted = InvertedValue.CounterClockwise_Positive;

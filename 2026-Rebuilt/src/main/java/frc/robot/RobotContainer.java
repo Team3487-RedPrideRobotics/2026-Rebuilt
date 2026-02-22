@@ -168,7 +168,7 @@ public class RobotContainer {
         operatorController.a().toggleOnTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         
         //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
-        operatorController.rightTrigger(0.25).whileTrue(
+        operatorController.rightTrigger(0.5).whileTrue(
             new ParallelCommandGroup(
                     new KickerFeedState(m_kicker),
                     new SpindexterHighstate(m_Spindexter)
