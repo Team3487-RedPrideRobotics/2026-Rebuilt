@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -43,12 +44,30 @@ public class RobotContainer {
 
     
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final CommandSwerveDrivetrain drivetrain;
 
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        configureBindings();
+        // Construct drivetrain inside constructor so we can catch and report any
+        // exceptions that occur during hardware/device construction. If an
+        // exception occurs here, the robot code can enter a degraded mode
+        // instead of crashing and causing a boot loop.
+        CommandSwerveDrivetrain createdDrivetrain = null;
+        try {
+            createdDrivetrain = TunerConstants.createDrivetrain();
+        } catch (Exception ex) {
+            // Report the failure to the DriverStation so we can inspect logs
+            DriverStation.reportError("Failed to create drivetrain during RobotContainer construction", ex.getStackTrace());
+        }
+        drivetrain = createdDrivetrain;
+
+        // Only configure bindings if drivetrain successfully constructed
+        if (drivetrain != null) {
+            configureBindings();
+        } else {
+            DriverStation.reportError("Drivetrain is null; skipping configureBindings() to prevent NPEs", new Exception("DrivetrainUninitialized").getStackTrace());
+        }
 
         autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -56,6 +75,11 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        if (drivetrain == null) {
+            // Defensive: should not happen because constructor checks, but guard anyway.
+            DriverStation.reportError("configureBindings called with null drivetrain; skipping bindings", new Exception("DrivetrainUninitialized").getStackTrace());
+            return;
+        }
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
