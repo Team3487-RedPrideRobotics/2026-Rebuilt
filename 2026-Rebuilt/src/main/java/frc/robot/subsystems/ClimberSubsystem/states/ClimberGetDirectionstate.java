@@ -34,6 +34,7 @@ public ClimberGetDirectionstate(ClimberSubsystem Subsystem){
 
         if((subsystem.detectClimbMotorCurrent()-current)<=10){
             subsystem.SetDirection(-1);
+            System.out.println("climber reversed!");
             done = true;
         }
         

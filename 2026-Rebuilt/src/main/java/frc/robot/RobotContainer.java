@@ -113,6 +113,8 @@ public class RobotContainer {
 
         getAlliance();
 
+        DriverStation.silenceJoystickConnectionWarning(true);
+
         autoChooser = AutoBuilder.buildAutoChooser();
 
         SmartDashboard.putData("Auto Chooser", autoChooser);

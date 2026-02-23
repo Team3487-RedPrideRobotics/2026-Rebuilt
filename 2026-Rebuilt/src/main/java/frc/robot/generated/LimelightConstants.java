@@ -12,14 +12,14 @@ import edu.wpi.first.math.util.Units;
 
 public class LimelightConstants {
     //limelight-chassis/limelight-lront
-    public static final Pose3d limelightFrontPose = new Pose3d(Units.inchesToMeters(1.0)
-                                                        ,  Units.inchesToMeters(1.0) 
-                                                        ,  Units.inchesToMeters(1.0)
+    public static final Pose3d limelightFrontPose = new Pose3d(Units.inchesToMeters(-0.58)
+                                                        ,  Units.inchesToMeters(-7.5) 
+                                                        ,  Units.inchesToMeters(18)
                                                         ,  new Rotation3d());
     public static final String LimelightFrontID =  "limelight-chassis";
     //limelight-left
-    public static final Pose3d limelightShooterOffset = new Pose3d(Units.inchesToMeters(1.0)
-                                                        ,  Units.inchesToMeters(1.0) 
+    public static final Pose3d limelightShooterOffset = new Pose3d(Units.inchesToMeters(-5.75)
+                                                        ,  Units.inchesToMeters(1.) 
                                                         ,  Units.inchesToMeters(1.0)
                                                         ,  new Rotation3d());
     public static final Pose3d limelightShooterCenter = new Pose3d(Units.inchesToMeters(1.0)

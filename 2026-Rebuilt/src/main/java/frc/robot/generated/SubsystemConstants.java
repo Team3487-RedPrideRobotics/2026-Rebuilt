@@ -10,6 +10,7 @@ public class SubsystemConstants {
     public final static int KickerKrakenCANID = 4;
     public final static int IntakeKrakenCANID = 6;
     public final static int IntakePivotKrakenCANID = 7;
+<<<<<<< Updated upstream
     public final static int ShooterFlywheelKrakenCANID = 17;
     public final static int ShooterTurretKrakenCANID = 3000;
     public final static int ShooterHoodKrakenCANID = 46;
@@ -18,6 +19,14 @@ public class SubsystemConstants {
     public final static int ClimberPivotKrakenCANID = 2;
 
     public final static CANBus SUBSYSTEM_BUS = new CANBus("Canivore0");
+=======
+    public final static int ShooterFlywheelKrakenCANID = 8;
+    public final static int ShooterTurretKrakenCANID = 9;
+    public final static int ShooterHoodKrakenCANID = 400;
+    public final static int ClimberKrakenCANID = 0;
+    public final static int ClimerHoldKrakenCANID = 1;
+    public final static int ClimberPivotKrakenCANID = 2;
+>>>>>>> Stashed changes
 
     //diretions for every motor
     public final static InvertedValue SpindexterKrakenInverted = InvertedValue.CounterClockwise_Positive;
@@ -31,15 +40,14 @@ public class SubsystemConstants {
     public final static InvertedValue ClimberPivotKrakenInverted = InvertedValue.Clockwise_Positive;
 
     //Hardlimits in turns
-    public final static double ShooterHoodHardLimitTop = 5;
-    public final static double ShooterHoodHardLimitBottom = 0;
+    public final static double ShooterHoodHardLimitTop = 500;
+    public final static double ShooterHoodHardLimitBottom = 1000;
 
-
-    public final static double ClimberClimbHardLimitTop = 21.3; 
+    public final static double ClimberClimbHardLimitTop = 210; 
     public final static double ClimberClimbHardLimitBottom = 0; 
 
-    public final static double ShooterTurretHardLimitTop = 5;
-    public final static double ShooterTurretHardLimitBottom = 0;
+    public final static double ShooterTurretHardLimitTop = 500;
+    public final static double ShooterTurretHardLimitBottom = 500;
 
     public final static double IntakePiviotHardLimitTop = 25.6; 
     public final static double IntakePiviotHardLimitBototm = 0; 
