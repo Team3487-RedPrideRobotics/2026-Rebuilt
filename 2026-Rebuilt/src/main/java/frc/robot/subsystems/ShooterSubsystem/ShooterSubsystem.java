@@ -224,17 +224,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
         //m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
     
         //m_PoseEstimatorSubsystem.getField2d().getObject("estimated shot").setPose(new Pose2d(new Translation2d(LimelightConstants.InverseTurretFlywheelInterpolatorRPM.get(getFlywheelSpeed()),0).rotateBy(new Rotation2d(getTurretAngle()).plus(m_PoseEstimatorSubsystem.getRobotPose2d().getRotation())),new Rotation2d()));
-=======
-=======
->>>>>>> Stashed changes
+
         m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
         System.out.println(m_TurretMotor.getPosition().getValueAsDouble());
         m_PoseEstimatorSubsystem.getField2d().getObject("estimated shot").setPose(new Pose2d(new Translation2d(LimelightConstants.InverseTurretFlywheelInterpolatorRPM.get(getFlywheelSpeed()),0).rotateBy(new Rotation2d(getTurretAngle()).plus(m_PoseEstimatorSubsystem.getRobotPose2d().getRotation())),new Rotation2d()));
->>>>>>> Stashed changes
+
     }
 }

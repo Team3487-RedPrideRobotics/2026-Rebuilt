@@ -10,29 +10,15 @@ public class SubsystemConstants {
     public final static int KickerKrakenCANID = 4;
     public final static int IntakeKrakenCANID = 6;
     public final static int IntakePivotKrakenCANID = 7;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public final static int ShooterFlywheelKrakenCANID = 17;
-    public final static int ShooterTurretKrakenCANID = 3000;
-    public final static int ShooterHoodKrakenCANID = 46;
-    public final static int ClimberKrakenCANID = 0;
-    public final static int ClimerHoldKrakenCANID = 1;
-    public final static int ClimberPivotKrakenCANID = 2;
 
     public final static CANBus SUBSYSTEM_BUS = new CANBus("Canivore0");
-=======
-=======
->>>>>>> Stashed changes
-    public final static int ShooterFlywheelKrakenCANID = 8;
-    public final static int ShooterTurretKrakenCANID = 9;
-    public final static int ShooterHoodKrakenCANID = 400;
+
+    public final static int ShooterFlywheelKrakenCANID = 8; //17   The values of the code that was deleted
+    public final static int ShooterTurretKrakenCANID = 9;  //3000
+    public final static int ShooterHoodKrakenCANID = 400; //46
     public final static int ClimberKrakenCANID = 0;
     public final static int ClimerHoldKrakenCANID = 1;
     public final static int ClimberPivotKrakenCANID = 2;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
     //diretions for every motor
     public final static InvertedValue SpindexterKrakenInverted = InvertedValue.CounterClockwise_Positive;
