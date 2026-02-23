@@ -27,22 +27,27 @@ IntakeSubsystem subsystem;
 
     @Override
     public void execute() {
+        /* 
         if (subsystem.IntakePiviotPID(Position,1.0,0.1,0.5)) {
             done = true;
         }
         else{
             done = false;
         }
+        */
+        subsystem.RunMotorPivot(0.1);
     }
 
     @Override
     public void end(boolean interrupted) {
-        
+        subsystem.StopMotorPivot();
     }
 
+    /*
     @Override
     public boolean isFinished() {
         return done;
     }
 
+    */
 }

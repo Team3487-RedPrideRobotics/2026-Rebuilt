@@ -21,12 +21,12 @@ public class FlywheelIdleState extends Command {
 
     @Override
     public void execute() {
-        subsystem.RunFlywheelMotor(4000);
+        subsystem.RunFlywheelMotor(6000/60);
     }
 
     @Override
     public void end(boolean interrupted) {
-        
+        subsystem.StopFlywheelMotors();
     }
 
 }

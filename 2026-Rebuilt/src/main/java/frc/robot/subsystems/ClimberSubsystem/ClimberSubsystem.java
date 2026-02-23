@@ -62,14 +62,13 @@ public class ClimberSubsystem extends SubsystemBase {
             StopHoldMotor();
             return true;
     }
-
     }
 
 
-        public void RunClimbMotor(double speed) {
-
-        m_ClimbMotorRequest.Output = m_ClimbMotor.getPosition().getValueAsDouble() > SubsystemConstants.ClimberClimbHardLimitTop ? -speed*direction : speed*direction;
-        m_ClimbMotorRequest.Output = m_ClimbMotor.getPosition().getValueAsDouble() < SubsystemConstants.ClimberClimbHardLimitBottom ? -speed*direction : speed*direction; 
+    public void RunClimbMotor(double speed) {
+        m_ClimbMotorRequest.Output = speed;
+        //m_ClimbMotorRequest.Output = m_ClimbMotor.getPosition().getValueAsDouble() > SubsystemConstants.ClimberClimbHardLimitTop ? -speed: speed;
+        //m_ClimbMotorRequest.Output = m_ClimbMotor.getPosition().getValueAsDouble() < SubsystemConstants.ClimberClimbHardLimitBottom ? -speed : speed; 
         m_ClimbMotor.setControl(m_ClimbMotorRequest);
     }
 

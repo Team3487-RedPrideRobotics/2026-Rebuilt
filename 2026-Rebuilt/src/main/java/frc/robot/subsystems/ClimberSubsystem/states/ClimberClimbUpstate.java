@@ -27,16 +27,19 @@ ClimberSubsystem subsystem;
 
     @Override
     public void execute() {
+        /* 
         if (subsystem.ClimbMotorPID(24,1.0,0.1,0.1)) { 
         }
         else{
             done = false;
         }
+        */
+        subsystem.RunClimbMotor(0.75);
     }
 
     @Override
     public void end(boolean interrupted) {
-        
+        subsystem.StopClimbMotor();
     }
 
     @Override

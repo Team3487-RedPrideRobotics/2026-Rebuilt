@@ -21,7 +21,7 @@ public class OutakeState extends Command{
 
     @Override
     public void execute() {
-        subsystem.RunIntake(-1);
+        subsystem.RunIntake(0.5);
     }
 
     @Override

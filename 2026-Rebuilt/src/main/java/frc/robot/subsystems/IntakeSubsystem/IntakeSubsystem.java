@@ -41,7 +41,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void StopMotorPivot(){
-        m_pivotMotorRequest.Output = 0;
+        m_pivotMotorRequest.withOutput(0);
         m_pivotMotor.setControl(m_pivotMotorRequest);
     }
 
@@ -63,12 +63,12 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void RunIntake(double speed){
-        m_intakeMotorRequest.Output = speed;
+        m_intakeMotorRequest.withOutput(speed);
         m_intakeMotor.setControl(m_intakeMotorRequest);
     }
 
     public void StopIntake(){
-        m_intakeMotorRequest.Output = 0;
+        m_intakeMotorRequest.withOutput(0);
         m_intakeMotor.setControl(m_intakeMotorRequest);
     }
 

@@ -27,12 +27,12 @@ public class SpindexterSubsytem extends SubsystemBase {
     }
 
     public void RunMotor(double speed){
-        m_motorRequest.Output = speed;
+        m_motorRequest.withOutput(speed);
         m_Motor.setControl(m_motorRequest);
     }
 
     public void StopMotors(){
-        m_motorRequest.Output = 0;
+        m_motorRequest.withOutput(0);
         m_Motor.stopMotor();
     }
     

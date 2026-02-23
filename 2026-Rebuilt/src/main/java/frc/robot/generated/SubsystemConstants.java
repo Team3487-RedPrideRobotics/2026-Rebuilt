@@ -6,12 +6,12 @@ import com.ctre.phoenix6.signals.InvertedValue;
 public class SubsystemConstants {
 
     //subsystem Motor CAN Id's
-    public final static int SpindexterKrakenCANID = 40;
+    public final static int SpindexterKrakenCANID = 5;
     public final static int KickerKrakenCANID = 4;
     public final static int IntakeKrakenCANID = 6;
     public final static int IntakePivotKrakenCANID = 7;
-    public final static int ShooterFlywheelKrakenCANID = 3000;
-    public final static int ShooterTurretKrakenCANID = 17;
+    public final static int ShooterFlywheelKrakenCANID = 17;
+    public final static int ShooterTurretKrakenCANID = 3000;
     public final static int ShooterHoodKrakenCANID = 46;
     public final static int ClimberKrakenCANID = 0;
     public final static int ClimerHoldKrakenCANID = 1;

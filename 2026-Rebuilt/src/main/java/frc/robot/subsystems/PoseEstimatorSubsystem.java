@@ -75,7 +75,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-
+    /* 
     limelightShooter.getSettings().withCameraOffset(LimelightConstants.limelightShooterOffset.rotateAround(
                                  LimelightConstants.limelightShooterCenter.getTranslation()
                                 ,new Rotation3d(0,0,shooterRotation2d)));
@@ -93,7 +93,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     limelightShooter.getLatestResults().ifPresent((LimelightResults results) -> {
         shooterRotation2d = results.imuResults.data[6];
     });
-
+        */
+    /* 
     // If the pose is present
     visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
     // Add it to the pose estimator.
@@ -105,6 +106,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
         m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds);
         }
     });
+    */
 
     Optional<Pose2d> tempPose = m_CommandSwerveDrivetrain.samplePoseAt(Utils.getCurrentTimeSeconds());
 

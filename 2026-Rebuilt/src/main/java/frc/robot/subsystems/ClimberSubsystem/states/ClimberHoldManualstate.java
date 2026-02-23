@@ -3,20 +3,24 @@ package frc.robot.subsystems.ClimberSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 
-public class ClimberPivotOutstate extends Command{
-     
+public class ClimberHoldManualstate extends Command{
+    
+    
+    
     ClimberSubsystem subsystem;
 
-    double Position = 5;
+    double Speed = 0;
 
     boolean done;
 
-    public ClimberPivotOutstate(ClimberSubsystem Subsystem){
+    public ClimberHoldManualstate(ClimberSubsystem Subsystem, double speed){
         
         super();
 
         subsystem = Subsystem;
         addRequirements(Subsystem);
+
+        this.Speed = speed;
 
     }
 
@@ -28,18 +32,19 @@ public class ClimberPivotOutstate extends Command{
     @Override
     public void execute() {
         /*
-        if (subsystem.ClimbMotorPID(24,1.0,0.1,0.5)) { 
+        if (subsystem.HoldMotorPID(24,1.0,0.1,0.1)) { // 1.213680 in radius for the gear relating to this motor
+            done = true;
         }
         else{
             done = false;
         }
         */
-        subsystem.RunClimbPivotMotor(0.1);
+        subsystem.RunHoldMotor(Speed*0.1);
     }
 
     @Override
     public void end(boolean interrupted) {
-        subsystem.StopClimbPivotMotor();
+        subsystem.StopHoldMotor();
     }
 
     @Override

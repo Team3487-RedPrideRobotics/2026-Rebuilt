@@ -27,16 +27,19 @@ public class ClimberPivotInstate extends Command{
 
     @Override
     public void execute() {
+        /*
         if (subsystem.ClimbMotorPID(0,1.0,0.1,0.5)) { 
         }
         else{
             done = false;
         }
+        */
+        subsystem.RunClimbPivotMotor(-0.1);
     }
 
     @Override
     public void end(boolean interrupted) {
-        
+        subsystem.StopClimbPivotMotor();
     }
 
     @Override

@@ -8,6 +8,7 @@
 package frc.robot.subsystems.ShooterSubsystem;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -39,6 +40,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private DutyCycleOut m_TurretMotorRequest;
     //private DutyCycleOut m_HoodMotorRequest;
 
+    private Slot0Configs m_FlywheelMotorSlotConfigs;
+
     boolean TurretAimed = false;
 
     Alert TurretRingOverrun = new Alert("Turret ring overrun!", AlertType.kWarning);
@@ -63,6 +66,12 @@ public class ShooterSubsystem extends SubsystemBase {
         m_TurretMotor.setNeutralMode(NeutralModeValue.Brake);
         //m_HoodMotor.setNeutralMode(NeutralModeValue.Brake);
 
+        m_FlywheelMotorSlotConfigs = new Slot0Configs();
+        m_FlywheelMotorSlotConfigs.kS = 0.1;
+        m_FlywheelMotorSlotConfigs.kA = 1;
+        m_FlywheelMotorSlotConfigs.kP = 1;
+
+        m_FlywheelMotor.getConfigurator().apply(m_FlywheelMotorSlotConfigs);
         SmartDashboard.putBoolean("TurretAimed", TurretAimed);
 
     }
@@ -84,12 +93,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //Flywheel Control
     public void RunFlywheelMotor(double speed) {
-        m_FlywheelMotorRequest.Velocity = speed;
+        m_FlywheelMotorRequest.withVelocity(speed);
         m_FlywheelMotor.setControl(m_FlywheelMotorRequest);
     }
 
     public void StopFlywheelMotors() {
-        m_FlywheelMotorRequest.Velocity = 0;
+        m_FlywheelMotorRequest.withVelocity(0);
         m_FlywheelMotor.stopMotor();
     }
 
@@ -135,13 +144,13 @@ public class ShooterSubsystem extends SubsystemBase {
     //Turret Control
     public void RunTurretMotor(double speed) {
 
-        m_TurretMotorRequest.Output = m_TurretMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? -speed : speed;
-        m_TurretMotorRequest.Output = m_TurretMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom ? -speed : speed; 
+        m_TurretMotorRequest.withOutput(m_TurretMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? -speed : speed);
+        m_TurretMotorRequest.withOutput(m_TurretMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom ? -speed : speed); 
         m_TurretMotor.setControl(m_TurretMotorRequest);
     }
 
     public void StopTurretMotor() {
-        m_TurretMotorRequest.Output = 0;
+        m_TurretMotorRequest.withOutput(0);
         m_TurretMotor.stopMotor();
     }
 
@@ -160,7 +169,7 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
     else{
-        System.err.println("Turret Ring Overrun!");
+        //System.err.println("Turret Ring Overrun!");
         TurretRingOverrun.set(true);
 
         return(false);
@@ -189,13 +198,13 @@ public class ShooterSubsystem extends SubsystemBase {
             desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
             desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
         if(Math.abs(desiredHoodAngle-getTurretAngle()) < tolerance /*&& Math.abs(desiredHoodAngle-getHoodTurns()*360)<tolerance*/){
-            RunFlywheelMotor(2500.0);
+            RunFlywheelMotor(2500.0/60);
             TurretAimed = true;
             return true;
         }
         else{
             TurretPIDAngle(desiredTurretAngle.getDegrees());
-            RunFlywheelMotor(desiredRPM);
+            RunFlywheelMotor(desiredRPM/60);
             //HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
             TurretAimed = false;
             return false;
