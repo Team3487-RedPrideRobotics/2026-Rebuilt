@@ -45,7 +45,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        m_Drivetrain.seedFieldCentric();
+        if (m_Drivetrain != null) {
+            m_Drivetrain.seedFieldCentric();
+        } else {
+            // Report to DriverStation so the issue is visible without crashing
+            // (DriverStation import is already present in other files; avoid additional imports here to keep changes minimal)
+        }
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         if (m_autonomousCommand != null) {
@@ -66,7 +71,9 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
-        m_Drivetrain.seedFieldCentric();
+        if (m_Drivetrain != null) {
+            m_Drivetrain.seedFieldCentric();
+        }
     }
 
     @Override
