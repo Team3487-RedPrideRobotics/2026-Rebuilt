@@ -12,11 +12,11 @@ import frc.robot.generated.SubsystemConstants;
 public class ClimberSubsystem extends SubsystemBase {
     
     
-    private TalonFX m_holdMotor;
+    private TalonFX m_holdMotor;  // getting rid of it
     private TalonFX m_ClimbMotor;
     private TalonFX m_ClimbPivotMotor;
 
-    DutyCycleOut m_holdMotorRequest;
+    DutyCycleOut m_holdMotorRequest; // getting rid of it
     DutyCycleOut m_ClimbMotorRequest;
     DutyCycleOut m_ClimbPivotMotorRequest;
 
@@ -25,22 +25,22 @@ public class ClimberSubsystem extends SubsystemBase {
     public ClimberSubsystem(){
 
     m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
-    m_holdMotor = new TalonFX(SubsystemConstants.ClimerHoldKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
+    m_holdMotor = new TalonFX(SubsystemConstants.ClimerHoldKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS); // getting rid of it
     m_ClimbPivotMotor = new TalonFX(SubsystemConstants.ClimberPivotKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
     
-    m_holdMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ClimerHoldKrakenInverted));
+    m_holdMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ClimerHoldKrakenInverted));  // getting rid of it
     m_ClimbPivotMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ClimberPivotKrakenInverted));
         
-    m_holdMotorRequest = new DutyCycleOut(0);
+    m_holdMotorRequest = new DutyCycleOut(0); // getting rid of it
     m_ClimbMotorRequest = new DutyCycleOut(0);
     m_ClimbPivotMotorRequest = new DutyCycleOut(0);
 
     m_ClimbMotor.setNeutralMode(NeutralModeValue.Brake);
-    m_holdMotor.setNeutralMode(NeutralModeValue.Brake);
+    m_holdMotor.setNeutralMode(NeutralModeValue.Brake);  // getting rid of it
     m_ClimbPivotMotor.setNeutralMode(NeutralModeValue.Brake);
 
     }
-
+//getting rid of it through to /* 
     public void RunHoldMotor(double speed){
         m_holdMotorRequest.Output = speed;
         m_holdMotor.setControl(m_holdMotorRequest);
@@ -63,10 +63,12 @@ public class ClimberSubsystem extends SubsystemBase {
             return true;
     }
     }
+// getting rid of it though here */
 
-
+// the pid for the motor going up and down
     public void RunClimbMotor(double speed) {
         m_ClimbMotorRequest.Output = speed;
+    //hard stops
         //m_ClimbMotorRequest.Output = m_ClimbMotor.getPosition().getValueAsDouble() > SubsystemConstants.ClimberClimbHardLimitTop ? -speed: speed;
         //m_ClimbMotorRequest.Output = m_ClimbMotor.getPosition().getValueAsDouble() < SubsystemConstants.ClimberClimbHardLimitBottom ? -speed : speed; 
         m_ClimbMotor.setControl(m_ClimbMotorRequest);
@@ -90,6 +92,7 @@ public class ClimberSubsystem extends SubsystemBase {
             return true;
     }
 
+    // the pivoit motor's pid values
     }
 
      public void RunClimbPivotMotor(double speed){
@@ -114,7 +117,7 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     }
-
+// seting the direction for the motor becuase its on a winch
     public void SetDirection(int Direction){
         direction = Direction;
         m_ClimbMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(
