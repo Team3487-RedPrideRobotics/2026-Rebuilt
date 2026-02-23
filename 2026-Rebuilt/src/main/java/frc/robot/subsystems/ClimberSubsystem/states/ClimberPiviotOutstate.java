@@ -3,7 +3,7 @@ package frc.robot.subsystems.ClimberSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 
-public class ClimberPivotOutstate extends Command{
+public class ClimberPiviotOutstate extends Command{
      
     ClimberSubsystem subsystem;
 
@@ -11,7 +11,7 @@ public class ClimberPivotOutstate extends Command{
 
     boolean done;
 
-    public ClimberPivotOutstate(ClimberSubsystem Subsystem){
+    public ClimberPiviotOutstate(ClimberSubsystem Subsystem){
         
         super();
 
@@ -48,3 +48,4 @@ public class ClimberPivotOutstate extends Command{
     }
 
 }
+// name change
