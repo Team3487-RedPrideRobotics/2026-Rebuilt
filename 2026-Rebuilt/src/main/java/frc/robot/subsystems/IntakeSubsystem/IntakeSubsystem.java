@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.SubsystemConstants;
 
@@ -16,6 +17,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     DutyCycleOut m_pivotMotorRequest;
     DutyCycleOut m_intakeMotorRequest;
+
+    double customIntakeSpeed;
 
 
     public IntakeSubsystem(){
@@ -31,6 +34,8 @@ public class IntakeSubsystem extends SubsystemBase {
     
     m_intakeMotor.setNeutralMode(NeutralModeValue.Coast);
     m_pivotMotor.setNeutralMode(NeutralModeValue.Brake);
+
+    SmartDashboard.putNumber("Custom Intake Speed", customIntakeSpeed);
 
     }
 
@@ -63,13 +68,22 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void RunIntake(double speed){
+        if(customIntakeSpeed != 0){
+            m_intakeMotorRequest.withOutput(customIntakeSpeed);
+        }
+        else{
         m_intakeMotorRequest.withOutput(speed);
+        }
         m_intakeMotor.setControl(m_intakeMotorRequest);
     }
 
     public void StopIntake(){
         m_intakeMotorRequest.withOutput(0);
         m_intakeMotor.setControl(m_intakeMotorRequest);
+    }
+
+    public void periodic() {
+        customIntakeSpeed = SmartDashboard.getNumber("Custom Intake Speed", 0);
     }
 
 }

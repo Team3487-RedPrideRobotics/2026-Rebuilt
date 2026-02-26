@@ -35,7 +35,7 @@ import frc.robot.subsystems.ClimberSubsystem.states.ClimberGetDirectionstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberHoldDownstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberHoldUpstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotInstate;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberPiviotOutstate;
+import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotOutstate;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotDownState;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotUpState;
@@ -210,7 +210,7 @@ public class RobotContainer {
         operatorController.leftBumper().whileTrue(new ClimberHoldDownstate(m_Climber));
     // Moving the climber arm up/down and in/out
     operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
-    operatorController.povLeft().whileTrue(new ClimberPiviotOutstate(m_Climber));
+    operatorController.povLeft().whileTrue(new ClimberPivotOutstate(m_Climber));
     operatorController.povRight().whileTrue(new ClimberPivotInstate(m_Climber)); 
     operatorController.povDown().whileTrue(new ClimberClimbDownstate(m_Climber));
     }  
@@ -230,7 +230,7 @@ public class RobotContainer {
                                                                                   ).withTimeout(10));
         //Climber:
         NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(2));
-        NamedCommands.registerCommand("Climber Arm Out", new ClimberPiviotOutstate(m_Climber).withTimeout(1));
+        NamedCommands.registerCommand("Climber Arm Out", new ClimberPivotOutstate(m_Climber).withTimeout(1));
         NamedCommands.registerCommand("Climber Arm In", new ClimberPivotInstate(m_Climber).withTimeout(1));
         NamedCommands.registerCommand("Climber Hold Arm Up", new ClimberHoldUpstate(m_Climber).withTimeout(1));
         NamedCommands.registerCommand("Climber Hold Arm Down", new ClimberHoldDownstate(m_Climber).withTimeout(1));
