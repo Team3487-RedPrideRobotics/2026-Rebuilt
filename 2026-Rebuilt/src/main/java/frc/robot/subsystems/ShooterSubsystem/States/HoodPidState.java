@@ -3,23 +3,21 @@ package frc.robot.subsystems.ShooterSubsystem.States;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 
-public class TurretHoodManualState extends Command {
+public class HoodPidState extends Command {
 
     ShooterSubsystem subsystem;
     DoubleSupplier turretVelocity;
-    DoubleSupplier hoodSpeed;
+    double hoodAngle;
     
 
-    public TurretHoodManualState( ShooterSubsystem Subsystem, DoubleSupplier TurretVelocity, DoubleSupplier hoodSpeed){
+    public HoodPidState( ShooterSubsystem Subsystem, double customHoodAngle){
         
         addRequirements(Subsystem);
         
         subsystem = Subsystem;
-        this.turretVelocity = TurretVelocity;
-        this.hoodSpeed = hoodSpeed;
+        hoodAngle = customHoodAngle;
 
     }
 
@@ -30,8 +28,7 @@ public class TurretHoodManualState extends Command {
 
     @Override
     public void execute() {
-        subsystem.TurretPIDAngle(subsystem.getTurretAngle()+turretVelocity.getAsDouble()*SubsystemConstants.TurretRotationSpeed);
-        subsystem.RunHoodMotor(hoodSpeed.getAsDouble());
+        subsystem.HoodPID(hoodAngle,0.1,0.1,1);
     }
 
     @Override

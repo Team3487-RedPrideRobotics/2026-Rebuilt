@@ -12,11 +12,10 @@ import frc.robot.generated.SubsystemConstants;
 public class ClimberSubsystem extends SubsystemBase {
     
     
-    private TalonFX m_holdMotor;  // getting rid of it
+
     private TalonFX m_ClimbMotor;
     private TalonFX m_ClimbPivotMotor;
 
-    DutyCycleOut m_holdMotorRequest; // getting rid of it
     DutyCycleOut m_ClimbMotorRequest;
     DutyCycleOut m_ClimbPivotMotorRequest;
 
@@ -25,45 +24,17 @@ public class ClimberSubsystem extends SubsystemBase {
     public ClimberSubsystem(){
 
     m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
-    m_holdMotor = new TalonFX(SubsystemConstants.ClimerHoldKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS); // getting rid of it
     m_ClimbPivotMotor = new TalonFX(SubsystemConstants.ClimberPivotKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
     
-    m_holdMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ClimerHoldKrakenInverted));  // getting rid of it
     m_ClimbPivotMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ClimberPivotKrakenInverted));
         
-    m_holdMotorRequest = new DutyCycleOut(0); // getting rid of it
     m_ClimbMotorRequest = new DutyCycleOut(0);
     m_ClimbPivotMotorRequest = new DutyCycleOut(0);
 
     m_ClimbMotor.setNeutralMode(NeutralModeValue.Brake);
-    m_holdMotor.setNeutralMode(NeutralModeValue.Brake);  // getting rid of it
     m_ClimbPivotMotor.setNeutralMode(NeutralModeValue.Brake);
 
     }
-//getting rid of it through to /* 
-    public void RunHoldMotor(double speed){
-        m_holdMotorRequest.Output = speed;
-        m_holdMotor.setControl(m_holdMotorRequest);
-    }
-
-    public void StopHoldMotor(){
-        m_holdMotorRequest.Output = 0;
-        m_holdMotor.stopMotor();
-    }
-
-    public boolean HoldMotorPID(double goalValue,double limit, double kP, double threshold){
-        double delta = Math.abs(goalValue) - Math.abs(m_holdMotor.getPosition().getValueAsDouble());
-        if(Math.abs(delta) >= threshold){
-            var speed = -delta*kP;
-            speed = Math.abs(speed) > limit ? limit * Math.signum(speed) : speed;
-            RunHoldMotor(speed);
-            return false;
-    }   else {
-            StopHoldMotor();
-            return true;
-    }
-    }
-// getting rid of it though here */
 
 // the pid for the motor going up and down
     public void RunClimbMotor(double speed) {

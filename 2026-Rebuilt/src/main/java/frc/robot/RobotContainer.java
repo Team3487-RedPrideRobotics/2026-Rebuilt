@@ -32,8 +32,6 @@ import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbDownstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbUpstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberGetDirectionstate;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberHoldDownstate;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberHoldUpstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotInstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotOutstate;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
@@ -43,6 +41,7 @@ import frc.robot.subsystems.IntakeSubsystem.states.IntakeState;
 import frc.robot.subsystems.IntakeSubsystem.states.OutakeState;
 import frc.robot.subsystems.KickerSubsystem.kickerSubsystem;
 import frc.robot.subsystems.KickerSubsystem.states.KickerFeedState;
+import frc.robot.subsystems.KickerSubsystem.states.KickerReverseState;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
@@ -65,7 +64,7 @@ public class RobotContainer {
     public final SwerveRequest.RobotCentric RobotCentricDrive = new SwerveRequest.RobotCentric().withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt(); //
 
     private final Telemetry m_logger = new Telemetry(MaxSpeed);
 
@@ -136,7 +135,7 @@ public class RobotContainer {
             )
         );
 
-        //when Y on the driver controller is pressed, toggle Robot Centric Driving.
+        //when Y on the driver controller is pressed, toggle Robot Centric Driving (toggle)
         driverController.y().toggleOnTrue(m_drivetrain.applyRequest(() -> 
             RobotCentricDrive.withVelocityX(-driverController.getLeftY() * MaxSpeed)
             .withVelocityY(-driverController.getLeftX() * MaxSpeed)
@@ -147,12 +146,13 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
             m_drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
-        //brake the robot's movemet
+        //brake the robot's movement
         driverController.a().whileTrue(m_drivetrain.applyRequest(() -> brake));
-        // Reset the robot's odometry 
+
+        /* 
         driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(driverController.getLeftY(), driverController.getLeftX()))
-        ));
+        ));*/
         
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -161,28 +161,26 @@ public class RobotContainer {
         driverController.start().and(driverController.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
         driverController.start().and(driverController.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // Reset the field-centric heading on left bumper press
-        // !!!!! this is the same button as the outake !!!!!
-        driverController.leftBumper().onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
+        // reset the field-centric heading on b press
+        driverController.b().onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
 
         // Robot intake
         driverController.leftTrigger().whileTrue(new IntakeState(m_Intake)); // while the LT button is held it will intake fuel
         driverController.leftBumper().whileTrue(new OutakeState(m_Intake));  // while the LB button is held it will outake fuel
-        driverController.rightTrigger().whileTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake                          picolo from dragon ball 
+        driverController.rightTrigger().whileTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake 
         driverController.rightBumper().whileTrue(new IntakePivotDownState(m_Intake));  // when RB button is pressed deploy the intake
         
 
-        //OperatorControls
+        //OPERATOR CONTROLS
 
         m_Spindexter.setDefaultCommand(
             new ParallelCommandGroup(
-                /*new FlywheelIdleState(m_Shooter),*/
-                new SpindexterLowstate(m_Spindexter)
-                /*new TurretHoodManualState(m_Shooter, () -> MathUtil.applyDeadband(operatorController.getLeftX(),SubsystemConstants.OperatorConstants.leftXdeadBand)
-                                                   , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand)
-            */.withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
+                new SpindexterLowstate(m_Spindexter),
+                new TurretHoodManualState(m_Shooter, () -> MathUtil.applyDeadband(operatorController.getLeftX(),SubsystemConstants.OperatorConstants.leftXdeadBand)
+                                                   , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand))
+            .withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
 
-        //auto aims the hood to the shooter  | :3 |(prison)
+        //auto aims the hood to the shooter
         operatorController.a().toggleOnTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         
         //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
@@ -192,27 +190,24 @@ public class RobotContainer {
                     new SpindexterHighstate(m_Spindexter)
                 ));
 
-        /*//sends the hood to the minimum position
-        operatorController.b().whileTrue(new HoodDownState(m_Shooter));
+        
+        //operatorController.b().whileTrue(new HoodDownState(m_Shooter));
 
         //Non Competition viable in current state
-        driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
-        */
+        //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
         
-        //spining th flywheel motor.
+        
+        //spining the flywheel up to idle speed(3000rpm) on Y (toggle)
         operatorController.y().toggleOnTrue(new FlywheelIdleState(m_Shooter));
-        //seweve and limelight????
+        //Start up swerve telemetry logging
         m_drivetrain.registerTelemetry(m_logger::telemeterize);
         //switch the direction of the spindexter
         operatorController.rightBumper().whileTrue(new SpindexterReversestate(m_Spindexter));
-        //move the hold arm up and down. !!!!! we are getting rid of this arm !!!!
-        operatorController.leftBumper().whileTrue(new ClimberHoldUpstate(m_Climber));
-        operatorController.leftBumper().whileTrue(new ClimberHoldDownstate(m_Climber));
-    // Moving the climber arm up/down and in/out
-    operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
-    operatorController.povLeft().whileTrue(new ClimberPivotOutstate(m_Climber));
-    operatorController.povRight().whileTrue(new ClimberPivotInstate(m_Climber)); 
-    operatorController.povDown().whileTrue(new ClimberClimbDownstate(m_Climber));
+        // Moving the climber arm up/down and in/out
+        operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
+        operatorController.povLeft().whileTrue(new ClimberPivotOutstate(m_Climber));
+        operatorController.povRight().whileTrue(new ClimberPivotInstate(m_Climber)); 
+        operatorController.povDown().whileTrue(new ClimberClimbDownstate(m_Climber));
     }  
 
     public void buildNamedCommands(){
@@ -232,8 +227,6 @@ public class RobotContainer {
         NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(2));
         NamedCommands.registerCommand("Climber Arm Out", new ClimberPivotOutstate(m_Climber).withTimeout(1));
         NamedCommands.registerCommand("Climber Arm In", new ClimberPivotInstate(m_Climber).withTimeout(1));
-        NamedCommands.registerCommand("Climber Hold Arm Up", new ClimberHoldUpstate(m_Climber).withTimeout(1));
-        NamedCommands.registerCommand("Climber Hold Arm Down", new ClimberHoldDownstate(m_Climber).withTimeout(1));
         //Intake:
         NamedCommands.registerCommand("Intake Extend", new IntakePivotDownState(m_Intake).withTimeout(1));
         NamedCommands.registerCommand("Intake Retract", new IntakePivotUpState(m_Intake).withTimeout(1));

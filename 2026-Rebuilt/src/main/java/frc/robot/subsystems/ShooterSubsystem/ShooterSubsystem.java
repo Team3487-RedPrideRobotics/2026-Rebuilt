@@ -1,8 +1,4 @@
 
-//TODO: warning!
-//THE HOOD CODE HAS BEEN COMMENTED OUT IN MANY FILES
-//The listed files are:
-//RobotContainer, TurretHoodManualState, BlueHoodAutoAimState, HoodDownState
 
 
 package frc.robot.subsystems.ShooterSubsystem;
@@ -19,32 +15,39 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
+import frc.robot.subsystems.ShooterSubsystem.States.HoodPidState;
 
 public class ShooterSubsystem extends SubsystemBase {
 
     private TalonFX m_FlywheelMotor;
     private TalonFX m_TurretMotor;
-    //private TalonFX m_HoodMotor;
+    private TalonFX m_HoodMotor;
 
     private PoseEstimatorSubsystem m_PoseEstimatorSubsystem;
     private RobotContainer m_RobotContainer;
 
     private VelocityDutyCycle m_FlywheelMotorRequest;
     private DutyCycleOut m_TurretMotorRequest;
-    //private DutyCycleOut m_HoodMotorRequest;
+    private DutyCycleOut m_HoodMotorRequest;
 
     private Slot0Configs m_FlywheelMotorSlotConfigs;
 
     boolean TurretAimed = false;
 
     Alert TurretRingOverrun = new Alert("Turret ring overrun!", AlertType.kWarning);
+
+    double CustomShooterSpeed = 0.0;
+
+    double CustomHoodAngle = 0.0;
 
     public ShooterSubsystem(PoseEstimatorSubsystem Goku, RobotContainer Vegeta) {
 
@@ -53,18 +56,18 @@ public class ShooterSubsystem extends SubsystemBase {
 
         m_FlywheelMotor = new TalonFX(SubsystemConstants.ShooterFlywheelKrakenCANID);
         m_TurretMotor = new TalonFX(SubsystemConstants.ShooterTurretKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
-        //m_HoodMotor = new TalonFX(SubsystemConstants.ShooterHoodKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
+        m_HoodMotor = new TalonFX(SubsystemConstants.ShooterHoodKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
 
         m_FlywheelMotorRequest = new VelocityDutyCycle(0.0);
         m_TurretMotorRequest = new DutyCycleOut(0.0);
-        //m_HoodMotorRequest = new DutyCycleOut(0);
+        m_HoodMotorRequest = new DutyCycleOut(0);
 
         m_FlywheelMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ShooterFlywheelKrakenInverted));
         m_TurretMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ShooterTurretKrakenInverted));
 
         m_FlywheelMotor.setNeutralMode(NeutralModeValue.Coast);
         m_TurretMotor.setNeutralMode(NeutralModeValue.Brake);
-        //m_HoodMotor.setNeutralMode(NeutralModeValue.Brake);
+        m_HoodMotor.setNeutralMode(NeutralModeValue.Brake);
 
         m_FlywheelMotorSlotConfigs = new Slot0Configs();
         m_FlywheelMotorSlotConfigs.kS = 0.1;
@@ -73,7 +76,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
         m_FlywheelMotor.getConfigurator().apply(m_FlywheelMotorSlotConfigs);
         SmartDashboard.putBoolean("TurretAimed", TurretAimed);
-
+        SmartDashboard.putNumber("Custom Shooter Speed", CustomShooterSpeed);
+        SmartDashboard.putNumber("Custom Hood Angle", CustomHoodAngle);
     }
 
     //takes a value above 360 degrees and wraps it around to 0
@@ -93,7 +97,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //Flywheel Control
     public void RunFlywheelMotor(double speed) {
+        if(CustomShooterSpeed != 0){
+            m_FlywheelMotorRequest.withVelocity(CustomShooterSpeed);
+        }
+        else{
         m_FlywheelMotorRequest.withVelocity(speed);
+        }
         m_FlywheelMotor.setControl(m_FlywheelMotorRequest);
     }
 
@@ -107,7 +116,7 @@ public class ShooterSubsystem extends SubsystemBase {
         return(m_FlywheelMotor.getVelocity().getValueAsDouble()*60);
     }
 
-    /* This code is current not operational due to the current robot design
+    //This code IS currently operational due to the current robot design
     //Hood Control
     public void RunHoodMotor(double speed) {
 
@@ -139,13 +148,14 @@ public class ShooterSubsystem extends SubsystemBase {
     public double getHoodTurns(){
         return(m_HoodMotor.getPosition().getValueAsDouble());
     }
-    */
+    
 
     //Turret Control
     public void RunTurretMotor(double speed) {
-
+        
         m_TurretMotorRequest.withOutput(m_TurretMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? -speed : speed);
         m_TurretMotorRequest.withOutput(m_TurretMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom ? -speed : speed); 
+        
         m_TurretMotor.setControl(m_TurretMotorRequest);
     }
 
@@ -193,7 +203,7 @@ public class ShooterSubsystem extends SubsystemBase {
         double desiredHoodAngle;
         double desiredRPM;
         Rotation2d desiredTurretAngle;
-            desiredTurretAngle = Rotation2d.fromDegrees(Math.atan2(AimPose.relativeTo(robotPose).getY()+chassisSpeed.getY(),AimPose.relativeTo(robotPose).getX()+chassisSpeed.getX()));
+            desiredTurretAngle = new Rotation2d(Math.atan2(AimPose.relativeTo(robotPose).getY()+chassisSpeed.getY(),AimPose.relativeTo(robotPose).getX()+chassisSpeed.getX()));
             distanceToHub = getDistanceToHub(robotPose);
             desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
             desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
@@ -205,7 +215,7 @@ public class ShooterSubsystem extends SubsystemBase {
         else{
             TurretPIDAngle(desiredTurretAngle.getDegrees());
             RunFlywheelMotor(desiredRPM/60);
-            //HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
+            HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
             TurretAimed = false;
             return false;
         }
@@ -224,14 +234,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
         //m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
-    
-        //m_PoseEstimatorSubsystem.getField2d().getObject("estimated shot").setPose(new Pose2d(new Translation2d(LimelightConstants.InverseTurretFlywheelInterpolatorRPM.get(getFlywheelSpeed()),0).rotateBy(new Rotation2d(getTurretAngle()).plus(m_PoseEstimatorSubsystem.getRobotPose2d().getRotation())),new Rotation2d()));
-
-        m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
-        System.out.println(m_TurretMotor.getPosition().getValueAsDouble());
+        //System.out.println(m_TurretMotor.getPosition().getValueAsDouble());
         m_PoseEstimatorSubsystem.getField2d().getObject("estimated shot").setPose(new Pose2d(new Translation2d(LimelightConstants.InverseTurretFlywheelInterpolatorRPM.get(getFlywheelSpeed()),0).rotateBy(new Rotation2d(getTurretAngle()).plus(m_PoseEstimatorSubsystem.getRobotPose2d().getRotation())),new Rotation2d()));
-
+        CustomShooterSpeed = SmartDashboard.getNumber("Custom Shooter Speed", 0);
+        CustomHoodAngle = SmartDashboard.getNumber("Custom Hood Angle", 0);
+            if(CustomHoodAngle != 0){
+            CommandScheduler.getInstance().schedule(new HoodPidState(this,CustomHoodAngle).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+            }
     }
 }
