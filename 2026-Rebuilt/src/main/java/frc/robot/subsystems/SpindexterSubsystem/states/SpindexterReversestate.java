@@ -3,11 +3,11 @@ package frc.robot.subsystems.SpindexterSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
 
-public class SpindexterReversestate extends Command{
+public class SpindexterReverseState extends Command{
     
     SpindexterSubsytem subsystem;
 
-    public SpindexterReversestate( SpindexterSubsytem Subsystem){
+    public SpindexterReverseState( SpindexterSubsytem Subsystem){
         
         subsystem = Subsystem;
         addRequirements(Subsystem);

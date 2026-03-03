@@ -13,9 +13,9 @@ public class SubsystemConstants {
 
     public final static CANBus SUBSYSTEM_BUS = new CANBus("Canivore0");
 
-    public final static int ShooterFlywheelKrakenCANID = 8; //17   The values of the code that was deleted
-    public final static int ShooterTurretKrakenCANID = 9;  //3000
-    public final static int ShooterHoodKrakenCANID = 400; //46
+    public final static int ShooterFlywheelKrakenCANID = 8; 
+    public final static int ShooterTurretKrakenCANID = 9; 
+    public final static int ShooterHoodKrakenCANID = 10; 
     public final static int ClimberKrakenCANID = 0;
     public final static int ClimerHoldKrakenCANID = 1;
     public final static int ClimberPivotKrakenCANID = 2;
@@ -32,28 +32,29 @@ public class SubsystemConstants {
     public final static InvertedValue ClimberPivotKrakenInverted = InvertedValue.Clockwise_Positive;
 
     //Hardlimits in turns
-    public final static double ShooterHoodHardLimitTop = 500;
-    public final static double ShooterHoodHardLimitBottom = 1000;
+    public final static double ShooterHoodHardLimitTop = 500; //angled fully back (closest to flat)
+    public final static double ShooterHoodHardLimitBottom = 1000; //angled fully forward (closest to vertical)
 
-    public final static double ClimberClimbHardLimitTop = 210; 
-    public final static double ClimberClimbHardLimitBottom = 0; 
+    public final static double ClimberClimbHardLimitTop = 210; //max extention
+    public final static double ClimberClimbHardLimitBottom = 0; //fully retracted
 
-    public final static double ShooterTurretHardLimitTop = 500;
-    public final static double ShooterTurretHardLimitBottom = 500;
+    public final static double ShooterTurretHardLimitTop = -19*10; //the rightmost rotational hardstop
+    public final static double ShooterTurretHardLimitBottom = 0; //the leftmost roational hardstop
 
-    public final static double IntakePiviotHardLimitTop = 25.6; 
-    public final static double IntakePiviotHardLimitBototm = 0; 
+    public final static double IntakePiviotHardLimitTop = 25.6; //fully deployed ,90 intaking angle
+    public final static double IntakePiviotHardLimitBototm = 0; //stowed ,-25.1549 stowed angle(from vertical)
 
     //Gear ratios
-    public final static double ShooterTurretGearRatio = 1/10;
+    public final static double ShooterTurretGearRatio = 19/200;
     public final static double IntakePivotGearRatio = 1/80;
-    //-25.1549 resting agnle
-    //90 intaking angle
 
     //Manual Speed values
     public final static double TurretRotationSpeed = 0.1; // in Deg/(1/50 of a second)
 
     public final static double HoodRotationSpeed = 0.1;
+
+    //The amount of turns of the motor required to turn from the left-most hardstop to face forward
+    public final static double ShooterCenteredRotation = 5.26;
 
     //Controller Deadbands
     public static class OperatorConstants{

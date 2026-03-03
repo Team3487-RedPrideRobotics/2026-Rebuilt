@@ -50,7 +50,7 @@ import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterHighstate;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterLowstate;
-import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterReversestate;
+import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterReverseState;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 
 public class RobotContainer {
@@ -202,7 +202,7 @@ public class RobotContainer {
         //Start up swerve telemetry logging
         m_drivetrain.registerTelemetry(m_logger::telemeterize);
         //switch the direction of the spindexter
-        operatorController.rightBumper().whileTrue(new SpindexterReversestate(m_Spindexter));
+        operatorController.rightBumper().whileTrue(new SpindexterReverseState(m_Spindexter));
         // Moving the climber arm up/down and in/out
         operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
         operatorController.povLeft().whileTrue(new ClimberPivotOutstate(m_Climber));
