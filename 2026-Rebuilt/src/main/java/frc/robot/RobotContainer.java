@@ -32,19 +32,20 @@ import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbDownstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbUpstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberGetDirectionstate;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotInstate;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberPivotOutstate;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotDownState;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotUpState;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakeState;
 import frc.robot.subsystems.IntakeSubsystem.states.OutakeState;
+import frc.robot.subsystems.IntakeSubsystem.states.OutakeStatePerm;
 import frc.robot.subsystems.KickerSubsystem.kickerSubsystem;
 import frc.robot.subsystems.KickerSubsystem.states.KickerFeedState;
 import frc.robot.subsystems.KickerSubsystem.states.KickerReverseState;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
+import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleStatePerm;
+import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
 //import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
@@ -170,9 +171,12 @@ public class RobotContainer {
         driverController.rightTrigger().whileTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake 
         driverController.rightBumper().whileTrue(new IntakePivotDownState(m_Intake));  // when RB button is pressed deploy the intake
         
+        //Non Competition viable in current state
+        //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
 
         //OPERATOR CONTROLS
 
+        //Automatically set th turret to follow manual control and for the spindexter to spin
         m_Spindexter.setDefaultCommand(
             new ParallelCommandGroup(
                 new SpindexterLowstate(m_Spindexter),
@@ -180,7 +184,7 @@ public class RobotContainer {
                                                    , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand))
             .withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
 
-        //auto aims the hood to the shooter
+        //auto aims the Turret, Hood, and Flywheel to the hub
         operatorController.a().toggleOnTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         
         //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
@@ -191,46 +195,39 @@ public class RobotContainer {
                 ));
 
         
-        //operatorController.b().whileTrue(new HoodDownState(m_Shooter));
-
-        //Non Competition viable in current state
-        //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
-        
+        operatorController.b().whileTrue(new HoodDownState(m_Shooter));
         
         //spining the flywheel up to idle speed(3000rpm) on Y (toggle)
-        operatorController.y().toggleOnTrue(new FlywheelIdleState(m_Shooter));
+        operatorController.y().toggleOnTrue(new FlywheelIdleState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
+        //switch the direction of the spindexter
+        operatorController.rightBumper().whileTrue(new ParallelCommandGroup(new SpindexterReverseState(m_Spindexter),
+                                                                            new KickerReverseState(m_kicker))
+                                                                            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        // Moving the climber arm up/down
+        operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
+        operatorController.povDown().whileTrue(new ClimberClimbDownstate(m_Climber));
+
         //Start up swerve telemetry logging
         m_drivetrain.registerTelemetry(m_logger::telemeterize);
-        //switch the direction of the spindexter
-        operatorController.rightBumper().whileTrue(new SpindexterReverseState(m_Spindexter));
-        // Moving the climber arm up/down and in/out
-        operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
-        operatorController.povLeft().whileTrue(new ClimberPivotOutstate(m_Climber));
-        operatorController.povRight().whileTrue(new ClimberPivotInstate(m_Climber)); 
-        operatorController.povDown().whileTrue(new ClimberClimbDownstate(m_Climber));
     }  
 
     public void buildNamedCommands(){
-        NamedCommands.registerCommand("Flywheel Spinup", new FlywheelIdleState(m_Shooter).withTimeout(10));
+        NamedCommands.registerCommand("Flywheel Spinup", new FlywheelIdleStatePerm(m_Shooter));
         NamedCommands.registerCommand("Climber Diretion Test", new ClimberGetDirectionstate(m_Climber));
         //Shooter:
-        NamedCommands.registerCommand("Turret Auto Aim",new BlueHoodAutoAimState(m_Shooter,this).withTimeout(1));
-        NamedCommands.registerCommand("Turret Shoot 0.5s",new ParallelCommandGroup(
+        NamedCommands.registerCommand("Turret Auto Aim",new BlueHoodAutoAimState(m_Shooter,this).withTimeout(5));
+        NamedCommands.registerCommand("Turret Shoot",new ParallelCommandGroup(
                                                                                 new KickerFeedState(m_kicker),
                                                                                 new SpindexterHighstate(m_Spindexter)
-                                                                                  ).withTimeout(0.5));
-        NamedCommands.registerCommand("Turret Shoot 10s",new ParallelCommandGroup(
-                                                                                new KickerFeedState(m_kicker),
-                                                                                new SpindexterHighstate(m_Spindexter)
-                                                                                  ).withTimeout(10));
+                                                                                  ));
         //Climber:
         NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(2));
-        NamedCommands.registerCommand("Climber Arm Out", new ClimberPivotOutstate(m_Climber).withTimeout(1));
-        NamedCommands.registerCommand("Climber Arm In", new ClimberPivotInstate(m_Climber).withTimeout(1));
         //Intake:
         NamedCommands.registerCommand("Intake Extend", new IntakePivotDownState(m_Intake).withTimeout(1));
         NamedCommands.registerCommand("Intake Retract", new IntakePivotUpState(m_Intake).withTimeout(1));
         NamedCommands.registerCommand("Intake", new IntakeState(m_Intake).withTimeout(5));
+        NamedCommands.registerCommand("OutakePerm", new OutakeStatePerm(m_Intake));
     }
 
     public Command getAutonomousCommand() {

@@ -33,15 +33,19 @@ public class LimelightConstants {
     public static final Pose2d BlueHubPose2d = new Pose2d(4.6228,4.034536,new Rotation2d(0));
     public static final Pose2d RedHubPose2d = new Pose2d(11.9126,4.034536,new Rotation2d(0));
 
+    //Goal pose for passing to alliance zone
+    public static final Rotation2d BlueAlliancePassRotation2d = Rotation2d.k180deg;
+    public static final Rotation2d RedAlliancePassRotation2d = Rotation2d.kZero;
+
 
     //Interpolator values 
     //WARNING: All current values do not actually represent the current robot's data!
 
     //Hood interpolator; distance to goal in (meters), pitch out (degrees)
     public static final InterpolatingDoubleTreeMap TurretHoodInterpolatorDEG = InterpolatingDoubleTreeMap.ofEntries(
-          Map.entry(2.13, 60.0)
-         ,Map.entry(4.57,56.0)
-         ,Map.entry(4.87,52.0)
+          Map.entry(2.13, 30.0)
+         ,Map.entry(4.57,36.0)
+         ,Map.entry(4.87,32.0)
         );
 
 

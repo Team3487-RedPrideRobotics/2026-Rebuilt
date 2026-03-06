@@ -23,7 +23,6 @@ import frc.robot.RobotContainer;
 import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
-import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.ShooterSubsystem.States.HoodPidState;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -48,6 +47,8 @@ public class ShooterSubsystem extends SubsystemBase {
     double CustomShooterSpeed = 0.0;
 
     double CustomHoodAngle = 0.0;
+
+    double FlywheelRPM = 0;
 
     public ShooterSubsystem(PoseEstimatorSubsystem Goku, RobotContainer Vegeta) {
 
@@ -78,6 +79,7 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("TurretAimed", TurretAimed);
         SmartDashboard.putNumber("Custom Shooter Speed", CustomShooterSpeed);
         SmartDashboard.putNumber("Custom Hood Angle", CustomHoodAngle);
+        SmartDashboard.putNumber("Shooter RPM", FlywheelRPM);
     }
 
     //takes a value above 360 degrees and wraps it around to 0
@@ -116,12 +118,11 @@ public class ShooterSubsystem extends SubsystemBase {
         return(m_FlywheelMotor.getVelocity().getValueAsDouble()*60);
     }
 
-    //This code IS currently operational due to the current robot design
     //Hood Control
     public void RunHoodMotor(double speed) {
 
-        m_HoodMotorRequest.Output = m_HoodMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? -speed : speed;
-        m_HoodMotorRequest.Output = m_HoodMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom ? -speed : speed; 
+        m_HoodMotorRequest.Output = m_HoodMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? speed : -1;
+        m_HoodMotorRequest.Output = m_HoodMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom ? speed : 1; 
         m_HoodMotor.setControl(m_HoodMotorRequest);
     }
 
@@ -130,9 +131,9 @@ public class ShooterSubsystem extends SubsystemBase {
         m_HoodMotor.stopMotor();
     }
 
-    //Goal in turns, Limit in max speed, kP as P value, threshold as in tolerance
+    //Goal in Deg, Limit in max speed, kP as P value(influencing speed), threshold as in tolerance
     public boolean HoodPID(double goalValue, double limit, double kP, double threshold) {
-        double delta = Math.abs(goalValue) - Math.abs(m_HoodMotor.getPosition().getValueAsDouble());
+        double delta = Math.abs(goalValue) - Math.abs(getHoodAngle().getDegrees());
         if (Math.abs(delta) >= threshold) {
             var speed = -delta * kP;
             speed = Math.abs(speed) > limit ? limit * Math.signum(speed) : speed;
@@ -148,13 +149,19 @@ public class ShooterSubsystem extends SubsystemBase {
     public double getHoodTurns(){
         return(m_HoodMotor.getPosition().getValueAsDouble());
     }
+
+    public Rotation2d getHoodAngle(){
+        Rotation2d hoodAngle = new Rotation2d();
+        hoodAngle = Rotation2d.fromDegrees(getHoodTurns()*SubsystemConstants.ShooterHoodGearRatio*360+SubsystemConstants.ShooterHoodLowestAngle);
+        return hoodAngle;
+    }
     
 
     //Turret Control
     public void RunTurretMotor(double speed) {
         
-        m_TurretMotorRequest.withOutput(m_TurretMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? -speed : speed);
-        m_TurretMotorRequest.withOutput(m_TurretMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom ? -speed : speed); 
+        m_TurretMotorRequest.withOutput(m_TurretMotor.getPosition().getValueAsDouble() > SubsystemConstants.ShooterHoodHardLimitTop ? speed : -1);
+        m_TurretMotorRequest.withOutput(m_TurretMotor.getPosition().getValueAsDouble() < SubsystemConstants.ShooterHoodHardLimitBottom && m_TurretMotorRequest.Output != speed ? speed : 1); 
         
         m_TurretMotor.setControl(m_TurretMotorRequest);
     }
@@ -167,7 +174,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public boolean TurretPID(double goalValue, double limit, double kP, double threshold) {
         if(goalValue >= SubsystemConstants.ShooterTurretHardLimitTop || goalValue <= SubsystemConstants.ShooterTurretHardLimitBottom){
         TurretRingOverrun.set(false);
-        double delta = Math.abs(goalValue) - Math.abs(m_TurretMotor.getPosition().getValueAsDouble());
+        double delta = Math.abs(goalValue) - Math.abs(getTurretAngle());
         if (Math.abs(delta) >= threshold) {
             var speed = -delta * kP;
             speed = Math.abs(speed) > limit ? limit * Math.signum(speed) : speed;
@@ -179,19 +186,41 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
     else{
-        //System.err.println("Turret Ring Overrun!");
         TurretRingOverrun.set(true);
-
         return(false);
     }}
 
-    public double getTurretAngle(){
-        return(TurretTurnsToDeg(m_TurretMotor.getPosition().getValueAsDouble()));
+    public boolean TurretPIDRobotRelative(double angle){
+        boolean done;
+        done = TurretPID(angle+SubsystemConstants.ShooterCenteredRotation
+                        ,SubsystemConstants.TurretRotationSpeed
+                        ,SubsystemConstants.TurretRotationSpeed
+                        ,0.1);
+        return done;
     }
 
-    public boolean TurretPIDAngle(double angle){
-    return(TurretPID(DegToTurretTurns(DegreesAngleClamp(angle),SubsystemConstants.ShooterTurretGearRatio), 1, 0.1, 0.02));
+    public boolean TurretPIDFieldRelative(double angle){
+        boolean done;
+        done = TurretPIDRobotRelative(m_PoseEstimatorSubsystem.getRobotPose2d().getRotation().getDegrees()-angle);
+        return done;
     }
+
+    public double getTurretAngle(){
+        double angle;
+        angle = m_TurretMotor.getPosition().getValueAsDouble();
+        angle = TurretTurnsToDeg(angle*360);
+        return angle;
+    }
+
+    public double getTurretAngleRobotRelative(){
+        double angle;
+        angle = getTurretAngle();
+        angle = angle-SubsystemConstants.ShooterCenteredRotation;
+        return angle;
+    }
+
+
+
 
     //AimPose: the pose to aim at, tolearance: how close it finds 'acceptable' in deg
     public boolean FullTurretAutoAim(Pose2d AimPose,double tolerance){
@@ -208,18 +237,16 @@ public class ShooterSubsystem extends SubsystemBase {
             desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
             desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
         if(Math.abs(desiredHoodAngle-getTurretAngle()) < tolerance /*&& Math.abs(desiredHoodAngle-getHoodTurns()*360)<tolerance*/){
-            RunFlywheelMotor(2500.0/60);
             TurretAimed = true;
             return true;
         }
         else{
-            TurretPIDAngle(desiredTurretAngle.getDegrees());
+            TurretPIDFieldRelative(desiredTurretAngle.getDegrees());
             RunFlywheelMotor(desiredRPM/60);
             HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
             TurretAimed = false;
             return false;
         }
-
     }
 
     public double getDistanceToHub(Pose2d hubPose2d){
@@ -235,12 +262,11 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         //m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
-        //System.out.println(m_TurretMotor.getPosition().getValueAsDouble());
-        m_PoseEstimatorSubsystem.getField2d().getObject("estimated shot").setPose(new Pose2d(new Translation2d(LimelightConstants.InverseTurretFlywheelInterpolatorRPM.get(getFlywheelSpeed()),0).rotateBy(new Rotation2d(getTurretAngle()).plus(m_PoseEstimatorSubsystem.getRobotPose2d().getRotation())),new Rotation2d()));
         CustomShooterSpeed = SmartDashboard.getNumber("Custom Shooter Speed", 0);
         CustomHoodAngle = SmartDashboard.getNumber("Custom Hood Angle", 0);
             if(CustomHoodAngle != 0){
             CommandScheduler.getInstance().schedule(new HoodPidState(this,CustomHoodAngle).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
             }
+        FlywheelRPM = getFlywheelSpeed();
     }
 }

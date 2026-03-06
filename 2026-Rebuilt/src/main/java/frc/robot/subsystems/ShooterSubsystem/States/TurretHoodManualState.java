@@ -30,7 +30,7 @@ public class TurretHoodManualState extends Command {
 
     @Override
     public void execute() {
-        subsystem.TurretPIDAngle(subsystem.getTurretAngle()+turretVelocity.getAsDouble()*SubsystemConstants.TurretRotationSpeed);
+        subsystem.TurretPIDRobotRelative(subsystem.getTurretAngle()+SubsystemConstants.TurretRotationSpeed*turretVelocity.getAsDouble());
         subsystem.RunHoodMotor(hoodSpeed.getAsDouble());
     }
 

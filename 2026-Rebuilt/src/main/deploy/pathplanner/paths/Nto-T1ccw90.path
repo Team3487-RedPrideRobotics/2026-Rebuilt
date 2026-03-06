@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5484320175438597,
-        "y": 2.4579385964912275
+        "x": 7.7,
+        "y": 7.25
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8752083333333334,
-        "y": 2.4290899122807
+        "x": 6.600912981455064,
+        "y": 7.625477888730385
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Nto"
     },
     {
       "anchor": {
-        "x": 0.866,
-        "y": 0.8520285087719299
+        "x": 3.7,
+        "y": 7.25
       },
       "prevControl": {
-        "x": 2.4430614035087714,
-        "y": 0.8904934210526312
+        "x": 2.7,
+        "y": 7.25
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Human player"
+      "linkedName": "T1ccw90"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 0.5,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

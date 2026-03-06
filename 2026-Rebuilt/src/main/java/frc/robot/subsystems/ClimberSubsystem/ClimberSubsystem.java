@@ -14,25 +14,18 @@ public class ClimberSubsystem extends SubsystemBase {
     
 
     private TalonFX m_ClimbMotor;
-    private TalonFX m_ClimbPivotMotor;
 
     DutyCycleOut m_ClimbMotorRequest;
-    DutyCycleOut m_ClimbPivotMotorRequest;
 
     private int direction;
     
     public ClimberSubsystem(){
 
     m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
-    m_ClimbPivotMotor = new TalonFX(SubsystemConstants.ClimberPivotKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
-    
-    m_ClimbPivotMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ClimberPivotKrakenInverted));
         
     m_ClimbMotorRequest = new DutyCycleOut(0);
-    m_ClimbPivotMotorRequest = new DutyCycleOut(0);
 
     m_ClimbMotor.setNeutralMode(NeutralModeValue.Brake);
-    m_ClimbPivotMotor.setNeutralMode(NeutralModeValue.Brake);
 
     }
 
@@ -63,32 +56,9 @@ public class ClimberSubsystem extends SubsystemBase {
             return true;
     }
 
-    // the pivoit motor's pid values
     }
 
-     public void RunClimbPivotMotor(double speed){
-        m_ClimbPivotMotorRequest.Output = speed;
-        m_ClimbPivotMotor.setControl(m_ClimbPivotMotorRequest);
-    }
-
-    public void StopClimbPivotMotor(){
-        m_ClimbPivotMotor.stopMotor();
-    }
-
-    public boolean ClimbPivotMotorPID(double goalValue,double limit, double kP, double threshold){
-        double delta = Math.abs(goalValue) - Math.abs(m_ClimbPivotMotor.getPosition().getValueAsDouble());
-        if(Math.abs(delta) >= threshold){
-            var speed = -delta*kP;
-            speed = Math.abs(speed) > limit ? limit * Math.signum(speed) : speed;
-            RunClimbPivotMotor(speed);
-            return false;
-    }   else {
-            StopClimbPivotMotor();
-            return true;
-    }
-
-    }
-// seting the direction for the motor becuase its on a winch
+// setting the direction for the motor becuase its on a winch
     public void SetDirection(int Direction){
         direction = Direction;
         m_ClimbMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(

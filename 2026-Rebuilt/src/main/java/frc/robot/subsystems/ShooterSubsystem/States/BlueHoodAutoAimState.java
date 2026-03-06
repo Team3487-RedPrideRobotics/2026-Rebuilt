@@ -40,7 +40,8 @@ public class BlueHoodAutoAimState extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        
+        subsystem.StopHoodMotor();
+        subsystem.StopTurretMotor();
     }
 
     @Override

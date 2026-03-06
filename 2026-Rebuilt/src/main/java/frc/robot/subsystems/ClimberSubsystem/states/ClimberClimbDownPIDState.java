@@ -3,15 +3,15 @@ package frc.robot.subsystems.ClimberSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 
-public class ClimberPivotOutstate extends Command{
-     
-    ClimberSubsystem subsystem;
+public class ClimberClimbDownPIDState extends Command{
+    
+ClimberSubsystem subsystem;
 
     double Position = 5;
 
     boolean done;
 
-    public ClimberPivotOutstate(ClimberSubsystem Subsystem){
+    public ClimberClimbDownPIDState(ClimberSubsystem Subsystem){
         
         super();
 
@@ -27,19 +27,17 @@ public class ClimberPivotOutstate extends Command{
 
     @Override
     public void execute() {
-        /*
-        if (subsystem.ClimbMotorPID(24,1.0,0.1,0.5)) { 
+        if (subsystem.ClimbMotorPID(0,1,1,0.1)) { 
+            done = true;
         }
         else{
             done = false;
         }
-        */
-        subsystem.RunClimbPivotMotor(0.1);
     }
 
     @Override
     public void end(boolean interrupted) {
-        subsystem.StopClimbPivotMotor();
+        subsystem.StopClimbMotor();
     }
 
     @Override
@@ -48,4 +46,4 @@ public class ClimberPivotOutstate extends Command{
     }
 
 }
-// name change
+
