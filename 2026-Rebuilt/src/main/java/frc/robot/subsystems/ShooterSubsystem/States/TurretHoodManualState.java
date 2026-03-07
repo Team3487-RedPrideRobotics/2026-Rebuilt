@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 
+
 public class TurretHoodManualState extends Command {
 
     ShooterSubsystem subsystem;
@@ -30,8 +31,18 @@ public class TurretHoodManualState extends Command {
 
     @Override
     public void execute() {
-        subsystem.TurretPIDRobotRelative(subsystem.getTurretAngle()+SubsystemConstants.TurretRotationSpeed*turretVelocity.getAsDouble());
-        subsystem.RunHoodMotor(hoodSpeed.getAsDouble());
+        if(turretVelocity.getAsDouble() != 0 ){
+        subsystem.RunTurretMotor(turretVelocity.getAsDouble()*SubsystemConstants.TurretRotationSpeed);
+        }
+        else{
+            subsystem.StopTurretMotor();
+        }
+        //subsystem.setAngle(subsystem.DegreesAngleClamp(subsystem.getTurretAngle()+turretVelocity.getAsDouble()*SubsystemConstants.TurretRotationSpeed));
+        if(hoodSpeed.getAsDouble() != 0){
+        subsystem.RunHoodMotor(hoodSpeed.getAsDouble()*0.1);}
+        else{
+            subsystem.StopHoodMotor();
+        }
     }
 
     @Override

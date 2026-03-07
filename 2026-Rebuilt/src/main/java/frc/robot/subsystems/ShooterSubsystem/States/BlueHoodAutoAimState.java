@@ -30,12 +30,14 @@ public class BlueHoodAutoAimState extends Command {
 
     @Override
     public void execute() {
+        /*
         if (subsystem.FullTurretAutoAim(m_RobotContainer.getInstance().IsRed ?LimelightConstants.RedHubPose2d : LimelightConstants.BlueHubPose2d , 0.1)) {
             done = true;
         }
         else{
             done = false;
         }
+        */
     }
 
     @Override

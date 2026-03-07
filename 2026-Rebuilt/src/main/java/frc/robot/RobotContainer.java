@@ -45,7 +45,9 @@ import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleStatePerm;
+import frc.robot.subsystems.ShooterSubsystem.States.FlywheelOffState;
 import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
+import frc.robot.subsystems.ShooterSubsystem.States.Turret90cwPIDState;
 import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
 //import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
@@ -166,13 +168,16 @@ public class RobotContainer {
         driverController.b().onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
 
         // Robot intake
-        driverController.leftTrigger().whileTrue(new IntakeState(m_Intake)); // while the LT button is held it will intake fuel
-        driverController.leftBumper().whileTrue(new OutakeState(m_Intake));  // while the LB button is held it will outake fuel
+        driverController.leftTrigger().toggleOnTrue(new IntakeState(m_Intake)); // while the LT button is held it will intake fuel
+        driverController.leftBumper().toggleOnTrue(new OutakeState(m_Intake));  // while the LB button is held it will outake fuel
         driverController.rightTrigger().whileTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake 
         driverController.rightBumper().whileTrue(new IntakePivotDownState(m_Intake));  // when RB button is pressed deploy the intake
         
         //Non Competition viable in current state
         //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
+
+
+
 
         //OPERATOR CONTROLS
 
@@ -185,7 +190,8 @@ public class RobotContainer {
             .withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
 
         //auto aims the Turret, Hood, and Flywheel to the hub
-        operatorController.a().toggleOnTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        //operatorController.a().toggleOnTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        operatorController.a().whileTrue(new Turret90cwPIDState(m_Shooter));
         
         //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
         operatorController.rightTrigger(0.5).whileTrue(
@@ -195,7 +201,7 @@ public class RobotContainer {
                 ));
 
         
-        operatorController.b().whileTrue(new HoodDownState(m_Shooter));
+        //operatorController.b().whileTrue(new HoodDownState(m_Shooter));
         
         //spining the flywheel up to idle speed(3000rpm) on Y (toggle)
         operatorController.y().toggleOnTrue(new FlywheelIdleState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));

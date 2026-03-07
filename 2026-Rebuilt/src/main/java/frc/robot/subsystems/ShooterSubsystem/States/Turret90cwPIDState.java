@@ -3,17 +3,16 @@ package frc.robot.subsystems.ShooterSubsystem.States;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem.*;
 
-public class FlywheelIdleStatePerm extends Command {
+public class Turret90cwPIDState extends Command {
 
     ShooterSubsystem subsystem;
 
-    boolean done;
 
-
-    public FlywheelIdleStatePerm( ShooterSubsystem Subsystem){
+    public Turret90cwPIDState( ShooterSubsystem Subsystem){
         
         subsystem = Subsystem;
-        done = false;
+        addRequirements(subsystem);
+
     }
 
     @Override
@@ -23,11 +22,12 @@ public class FlywheelIdleStatePerm extends Command {
 
     @Override
     public void execute() {
-        subsystem.RunFlywheelMotor(3000/60);
+        subsystem.setAngle(90);
     }
 
     @Override
     public void end(boolean interrupted) {
+        subsystem.StopTurretMotor();
     }
 
 }

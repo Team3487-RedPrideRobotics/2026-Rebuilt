@@ -7,6 +7,7 @@ public class SpindexterLowstate extends Command{
     
     SpindexterSubsytem subsystem;
 
+
     public SpindexterLowstate( SpindexterSubsytem Subsystem){
         
         subsystem = Subsystem;
@@ -21,7 +22,7 @@ public class SpindexterLowstate extends Command{
 
     @Override
     public void execute() {
-        subsystem.RunMotor(-0.1);
+        subsystem.RunMotor(0);
     }
 
     @Override

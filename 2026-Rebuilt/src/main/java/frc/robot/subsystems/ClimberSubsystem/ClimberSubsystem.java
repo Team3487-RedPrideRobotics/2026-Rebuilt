@@ -22,7 +22,7 @@ public class ClimberSubsystem extends SubsystemBase {
     public ClimberSubsystem(){
 
     m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
-        
+    
     m_ClimbMotorRequest = new DutyCycleOut(0);
 
     m_ClimbMotor.setNeutralMode(NeutralModeValue.Brake);

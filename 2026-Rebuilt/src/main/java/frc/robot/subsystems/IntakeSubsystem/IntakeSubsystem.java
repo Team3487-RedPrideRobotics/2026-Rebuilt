@@ -20,6 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     double customIntakeSpeed;
 
+    double intakeAngle;
 
     public IntakeSubsystem(){
     
@@ -35,13 +36,15 @@ public class IntakeSubsystem extends SubsystemBase {
     m_intakeMotor.setNeutralMode(NeutralModeValue.Coast);
     m_pivotMotor.setNeutralMode(NeutralModeValue.Brake);
 
+    SmartDashboard.putNumber("Intake Angle", intakeAngle);
+
     SmartDashboard.putNumber("Custom Intake Speed", customIntakeSpeed);
 
     }
 
     public void RunMotorPivot(double speed){
-        m_pivotMotorRequest.Output = m_pivotMotor.getPosition().getValueAsDouble() > SubsystemConstants.IntakePiviotHardLimitTop ? -speed : speed;
-        m_pivotMotorRequest.Output = m_pivotMotor.getPosition().getValueAsDouble() < SubsystemConstants.IntakePiviotHardLimitBototm ? -speed : speed; 
+        m_pivotMotorRequest.Output = m_pivotMotor.getPosition().getValueAsDouble() > SubsystemConstants.IntakePiviotHardLimitTop ? speed : speed;
+        m_pivotMotorRequest.Output = m_pivotMotor.getPosition().getValueAsDouble() < SubsystemConstants.IntakePiviotHardLimitBototm ? speed : speed; 
         m_pivotMotor.setControl(m_pivotMotorRequest);
     }
 
@@ -84,6 +87,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void periodic() {
         customIntakeSpeed = SmartDashboard.getNumber("Custom Intake Speed", 0);
+        intakeAngle = m_pivotMotor.getPosition().getValueAsDouble();
     }
 
 }

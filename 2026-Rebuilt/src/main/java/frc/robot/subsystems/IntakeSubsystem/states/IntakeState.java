@@ -21,7 +21,7 @@ public class IntakeState extends Command{
 
     @Override
     public void execute() {
-        subsystem.RunIntake(-0.5);
+        subsystem.RunIntake(0.75);
     }
 
     @Override

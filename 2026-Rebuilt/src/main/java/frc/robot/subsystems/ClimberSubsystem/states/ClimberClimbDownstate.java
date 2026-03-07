@@ -35,7 +35,7 @@ ClimberSubsystem subsystem;
             done = false;
         }
         */
-        subsystem.RunClimbMotor(-0.75);
+        subsystem.RunClimbMotor(-0.5);
     }
 
     @Override
