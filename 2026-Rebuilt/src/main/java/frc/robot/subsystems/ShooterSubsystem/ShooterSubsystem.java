@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -38,9 +39,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private VelocityDutyCycle m_FlywheelMotorRequest;
     private DutyCycleOut m_TurretMotorRequest;
+    private PositionDutyCycle m_TurretPositionRequest;
     private DutyCycleOut m_HoodMotorRequest;
-    private final PositionVoltage m_TurretPositionRequest;
-    private final VelocityVoltage m_TurretVelocityRequest;
+    
 
     private Slot0Configs m_FlywheelMotorSlotConfigs;
 
@@ -67,14 +68,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
         m_FlywheelMotorRequest = new VelocityDutyCycle(0.0);
         m_TurretMotorRequest = new DutyCycleOut(0.0);
+        m_TurretPositionRequest = new PositionDutyCycle(0.0);
         m_HoodMotorRequest = new DutyCycleOut(0);
 
         m_FlywheelMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ShooterFlywheelKrakenInverted));
         m_TurretMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ShooterTurretKrakenInverted));
 
         m_FlywheelMotor.setNeutralMode(NeutralModeValue.Coast);
-        m_TurretMotor.setNeutralMode(NeutralModeValue.Brake);
-        m_HoodMotor.setNeutralMode(NeutralModeValue.Brake);
 
         TalonFXConfiguration m_TurretConfig = new TalonFXConfiguration();
         TalonFXConfiguration m_FlywheelConfig = new TalonFXConfiguration();
@@ -101,10 +101,9 @@ public class ShooterSubsystem extends SubsystemBase {
         softLimitsTurret.ReverseSoftLimitThreshold = SubsystemConstants.ShooterTurretHardLimitBottom;
         softLimitsTurret.ReverseSoftLimitEnable = true;
 
-        m_TurretConfig.Feedback.SensorToMechanismRatio = SubsystemConstants.ShooterTurretGearRatio;
+        m_TurretConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        m_TurretPositionRequest = new PositionVoltage(0).withSlot(0);
-        m_TurretVelocityRequest = new VelocityVoltage(0).withSlot(0);
+        m_TurretConfig.Feedback.SensorToMechanismRatio = SubsystemConstants.ShooterTurretGearRatio;
 
         //hood configs
 
@@ -113,6 +112,8 @@ public class ShooterSubsystem extends SubsystemBase {
         softLimitsHood.ForwardSoftLimitEnable = true;
         softLimitsHood.ReverseSoftLimitThreshold = SubsystemConstants.ShooterHoodHardLimitBottom;
         softLimitsHood.ReverseSoftLimitEnable = true;
+
+        m_HoodConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         //Apply configs
         m_TurretMotor.getConfigurator().apply(m_TurretConfig);
@@ -145,12 +146,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //Flywheel Control
     public void RunFlywheelMotor(double speed) {
-        //if(CustomShooterSpeed != 0){
-        //    m_FlywheelMotorRequest.withVelocity(CustomShooterSpeed);
-        //}
-        //else{
         m_FlywheelMotorRequest.withVelocity(speed);
-        //}
         m_FlywheelMotor.setControl(m_FlywheelMotorRequest);
     }
 
@@ -212,37 +208,16 @@ public class ShooterSubsystem extends SubsystemBase {
         m_TurretMotor.stopMotor();
     }
 
-    //YamG code :3
-
-    public void setVelocity(double velocityDegPerSec) {
-    setVelocity(velocityDegPerSec, 0);
-    }
-
-    public void setVelocity(double velocityDegPerSec, double acceleration) {
-    // Convert degrees/sec to rotations/sec
-    double velocityRadPerSec = Units.degreesToRadians(velocityDegPerSec);
-    double velocityRotations = velocityRadPerSec / (2.0 * Math.PI);
-
-    m_TurretMotor.setControl(m_TurretVelocityRequest.withVelocity(velocityRotations));
-  }
-
-
     public void setAngle(double angleDegrees) {
     setAngle(angleDegrees, 0);
-  }
+    }
 
-  /** 
-   * Set pivot angle with acceleration.
-   * @param angleDegrees The target angle in degrees
-   * @param acceleration The acceleration in rad/s²
-   */
-  public void setAngle(double angleDegrees, double acceleration) {
+    public void setAngle(double angleDegrees, double acceleration) {
     // Convert degrees to rotations
     double angleRadians = Units.degreesToRadians(angleDegrees);
     double positionRotations = angleRadians / (2.0 * Math.PI);
-
-    //motor.setControl(positionRequest.withPosition(positionRotations).withFeedForward(ffVolts));
-    m_TurretMotor.setControl(m_TurretPositionRequest.withPosition(positionRotations));
+    
+    m_TurretPositionRequest.withPosition(positionRotations);
     }
 
     public boolean TurretPIDRobotRelative(double angle){

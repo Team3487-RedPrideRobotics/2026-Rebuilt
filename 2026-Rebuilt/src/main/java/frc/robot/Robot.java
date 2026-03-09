@@ -45,7 +45,9 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        m_Drivetrain.seedFieldCentric();
+    }
 
     @Override
     public void disabledPeriodic() {
@@ -80,7 +82,7 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
-        m_Drivetrain.seedFieldCentric();
+        
     }
 
     @Override
