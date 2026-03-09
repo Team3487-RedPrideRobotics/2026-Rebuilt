@@ -214,10 +214,20 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setAngle(double angleDegrees, double acceleration) {
     // Convert degrees to rotations
-    double angleRadians = Units.degreesToRadians(angleDegrees);
-    double positionRotations = angleRadians / (2.0 * Math.PI);
-    
-    m_TurretPositionRequest.withPosition(positionRotations);
+    double positionRotations = DegreesAngleClamp(angleDegrees)/360;
+    if(positionRotations<SubsystemConstants.ShooterTurretHardLimitTop
+       &&positionRotations>SubsystemConstants.ShooterTurretHardLimitBottom){
+        m_TurretPositionRequest.withPosition(positionRotations);
+        m_TurretMotor.setControl(m_TurretPositionRequest);
+        TurretRingOverrun.set(false);
+       }
+    else{
+        m_TurretMotorRequest.withOutput(0);
+        m_TurretMotor.setControl(m_FlywheelMotorRequest);
+        m_TurretMotor.stopMotor();
+        TurretRingOverrun.set(true);
+    }
+     
     }
 
     public boolean TurretPIDRobotRelative(double angle){

@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.LimelightConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
@@ -55,6 +56,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     public CommandSwerveDrivetrain getDrivetrain(){
         return m_CommandSwerveDrivetrain;
+    }
+
+    public void setThermalManagement(boolean ThermalManagement){
+        if(ThermalManagement){limelightShooter.getSettings().withPipelineIndex(9);}
+        else{limelightShooter.getSettings().withPipelineIndex(2).save();}
     }
 
 
@@ -115,7 +121,5 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     m_field.setRobotPose(getRobotPose2d());
 }
-    
-
 
 }

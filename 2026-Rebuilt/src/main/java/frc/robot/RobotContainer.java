@@ -190,8 +190,8 @@ public class RobotContainer {
             .withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
 
         //auto aims the Turret, Hood, and Flywheel to the hub
-        //operatorController.a().toggleOnTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        operatorController.a().whileTrue(new Turret90cwPIDState(m_Shooter));
+        operatorController.x().whileTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        operatorController.a().whileTrue(new Turret90cwPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         
         //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
         operatorController.rightTrigger(0.5).whileTrue(
@@ -203,7 +203,7 @@ public class RobotContainer {
         
         //operatorController.b().whileTrue(new HoodDownState(m_Shooter));
         
-        //spining the flywheel up to idle speed(3000rpm) on Y (toggle)
+        //spinning the flywheel up to idle speed(3000rpm) on Y (toggle)
         operatorController.y().toggleOnTrue(new FlywheelIdleState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
         //switch the direction of the spindexter
