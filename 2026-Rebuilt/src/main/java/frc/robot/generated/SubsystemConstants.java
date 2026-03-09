@@ -25,11 +25,11 @@ public class SubsystemConstants {
     public final static InvertedValue IntakePivotKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue ShooterFlywheelKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue ShooterTurretKrakenInverted = InvertedValue.CounterClockwise_Positive;
-    public final static InvertedValue ShooterHoodKrakenInverted = InvertedValue.Clockwise_Positive;
+    public final static InvertedValue ShooterHoodKrakenInverted = InvertedValue.CounterClockwise_Positive;
 
     //Hardlimits in turns
-    public final static double ShooterHoodHardLimitTop = 70; //angled fully forward (closest to vertical)
-    public final static double ShooterHoodHardLimitBottom = 0; //angled fully back (closest to flat)
+    public final static double ShooterHoodHardLimitTop = 0; //angled fully forward (closest to vertical)
+    public final static double ShooterHoodHardLimitBottom = -1.5; //angled fully back (closest to flat)
 
     public final static double ClimberClimbHardLimitTop = 210; //max extention
     public final static double ClimberClimbHardLimitBottom = 0; //fully retracted
@@ -51,7 +51,7 @@ public class SubsystemConstants {
     public final static double HoodRotationSpeed = 0.1; 
 
     //The amount of turns of the motor required to turn from the left-most hardstop to face forward
-    public final static double ShooterCenteredRotation = 7.5;
+    public final static double ShooterCenteredRotation = 90;
     public final static double ShooterHoodLowestAngle = 30; //the angle in deg that the hood starts at
 
     //Controller Deadbands

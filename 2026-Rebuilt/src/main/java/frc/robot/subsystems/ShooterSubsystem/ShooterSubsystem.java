@@ -3,6 +3,8 @@
 
 package frc.robot.subsystems.ShooterSubsystem;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -19,6 +21,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,7 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     double FlywheelRPM = 0;
 
-    double TurretAngle = 0;
+    private final StatusSignal<Angle> TurretAngle;
 
     public ShooterSubsystem(PoseEstimatorSubsystem Goku, RobotContainer Vegeta) {
 
@@ -65,6 +68,8 @@ public class ShooterSubsystem extends SubsystemBase {
         m_FlywheelMotor = new TalonFX(SubsystemConstants.ShooterFlywheelKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
         m_TurretMotor = new TalonFX(SubsystemConstants.ShooterTurretKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
         m_HoodMotor = new TalonFX(SubsystemConstants.ShooterHoodKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
+
+        TurretAngle = m_TurretMotor.getPosition();
 
         m_FlywheelMotorRequest = new VelocityDutyCycle(0.0);
         m_TurretMotorRequest = new DutyCycleOut(0.0);
@@ -91,9 +96,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
         //turret configs
         Slot0Configs slot0 = m_TurretConfig.Slot0;
-        slot0.kP = 1;//5
+        slot0.kP = 0.25;//5
         slot0.kI = 0;//0.6
-        slot0.kD = 0.1;//0.3
+        slot0.kD = 0;//0.3
 
         SoftwareLimitSwitchConfigs softLimitsTurret = m_TurretConfig.SoftwareLimitSwitch;
         softLimitsTurret.ForwardSoftLimitThreshold = SubsystemConstants.ShooterTurretHardLimitTop;
@@ -126,7 +131,6 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("TurretAimed", TurretAimed);
         SmartDashboard.putNumber("Custom Hood Angle", CustomHoodAngle);
         SmartDashboard.putNumber("Shooter RPM", FlywheelRPM);
-        SmartDashboard.putNumber("Shooter Angle", TurretAngle);
     }
 
     //takes a value above 360 degrees and wraps it around to 0
@@ -214,7 +218,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setAngle(double angleDegrees, double acceleration) {
     // Convert degrees to rotations
-    double positionRotations = DegreesAngleClamp(angleDegrees)/360;
+    double positionRotations = DegreesAngleClamp(angleDegrees)/360*10;
     if(positionRotations<SubsystemConstants.ShooterTurretHardLimitTop
        &&positionRotations>SubsystemConstants.ShooterTurretHardLimitBottom){
         m_TurretPositionRequest.withPosition(positionRotations);
@@ -223,7 +227,7 @@ public class ShooterSubsystem extends SubsystemBase {
        }
     else{
         m_TurretMotorRequest.withOutput(0);
-        m_TurretMotor.setControl(m_FlywheelMotorRequest);
+        m_TurretMotor.setControl(m_TurretMotorRequest);
         m_TurretMotor.stopMotor();
         TurretRingOverrun.set(true);
     }
@@ -233,11 +237,10 @@ public class ShooterSubsystem extends SubsystemBase {
     public boolean TurretPIDRobotRelative(double angle){
         boolean done;
         double delta;
-        delta = Math.abs(angle-getTurretAngle());
+        delta = Math.abs(angle-SubsystemConstants.ShooterCenteredRotation+getTurretAngle());
         done = true;
-        if(delta > 0.1){
-        setAngle(angle+SubsystemConstants.ShooterCenteredRotation
-                        ,SubsystemConstants.TurretRotationSpeed);
+        if(delta > 5){
+        setAngle(angle+SubsystemConstants.ShooterCenteredRotation);
         done = false;
         }
         return done;
@@ -245,14 +248,15 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public boolean TurretPIDFieldRelative(double angle){
         boolean done;
-        done = TurretPIDRobotRelative(m_PoseEstimatorSubsystem.getRobotPose2d().getRotation().getDegrees()-angle);
+        done = TurretPIDRobotRelative(angle+m_PoseEstimatorSubsystem.getRobotPose2d().getRotation().getDegrees());
         return done;
     }
 
     public double getTurretAngle(){
         double angle;
-        angle = m_TurretMotor.getPosition().getValueAsDouble();
-        angle = TurretTurnsToDeg(angle*360);
+        angle = TurretAngle.getValueAsDouble()/10;
+        angle = DegreesAngleClamp(angle*360);
+        System.out.println(angle);
         return angle;
     }
 
@@ -286,8 +290,8 @@ public class ShooterSubsystem extends SubsystemBase {
         }
         else{
             TurretPIDFieldRelative(desiredTurretAngle.getDegrees());
-            RunFlywheelMotor(desiredRPM/60);
-            HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
+            //RunFlywheelMotor(desiredRPM/60);
+            //HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
             TurretAimed = false;
             return false;
         }
@@ -308,7 +312,9 @@ public class ShooterSubsystem extends SubsystemBase {
         //m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
         CustomShooterSpeed = SmartDashboard.getNumber("Custom Shooter Speed", 0);
         FlywheelRPM = getFlywheelSpeed();
-        TurretAngle = m_TurretMotor.getPosition().getValueAsDouble();
+        getTurretAngle();
+        BaseStatusSignal.refreshAll(TurretAngle);
+        m_PoseEstimatorSubsystem.putShooterRotation(getTurretAngle()+SubsystemConstants.ShooterCenteredRotation);
         SmartDashboard.updateValues();
     }
 }

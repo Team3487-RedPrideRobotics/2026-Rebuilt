@@ -184,7 +184,7 @@ public class RobotContainer {
             new ParallelCommandGroup(
                 new SpindexterLowstate(m_Spindexter),
                 new TurretHoodManualState(m_Shooter, () -> MathUtil.applyDeadband(operatorController.getLeftX(),SubsystemConstants.OperatorConstants.leftXdeadBand)
-                                                   , () -> MathUtil.applyDeadband(-operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand))
+                                                   , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand))
             .withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
 
         //auto aims the Turret, Hood, and Flywheel to the hub

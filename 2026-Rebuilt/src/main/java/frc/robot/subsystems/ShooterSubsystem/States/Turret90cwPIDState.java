@@ -22,7 +22,7 @@ public class Turret90cwPIDState extends Command {
 
     @Override
     public void execute() {
-        subsystem.setAngle(90);
+        subsystem.TurretPIDFieldRelative(0);
     }
 
     @Override

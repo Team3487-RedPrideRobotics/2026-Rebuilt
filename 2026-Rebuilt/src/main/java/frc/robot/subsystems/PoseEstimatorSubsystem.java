@@ -71,6 +71,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
         m_CommandSwerveDrivetrain = MySillyLittleDrivetrain;
         m_field = new Field2d();
         SmartDashboard.putData("Field",m_field);
+        m_field.getObject("turretPose").setPose(Pose2d.kZero);
 
         limelightFront.getSettings().withCameraOffset(LimelightConstants.limelightFrontPose).save();  
         
@@ -120,6 +121,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     }
 
     m_field.setRobotPose(getRobotPose2d());
+
+    m_field.getObject("turretPose").setPose(new Pose2d(getRobotPose2d().getTranslation(),getRobotPose2d().getRotation().plus(Rotation2d.fromDegrees(shooterRotation2d))));
 }
 
 }
