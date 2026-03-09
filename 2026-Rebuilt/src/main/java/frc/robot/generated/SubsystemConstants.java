@@ -25,7 +25,7 @@ public class SubsystemConstants {
     public final static InvertedValue IntakePivotKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue ShooterFlywheelKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue ShooterTurretKrakenInverted = InvertedValue.CounterClockwise_Positive;
-    public final static InvertedValue ShooterHoodKrakenInverted = InvertedValue.CounterClockwise_Positive;
+    public final static InvertedValue ShooterHoodKrakenInverted = InvertedValue.Clockwise_Positive;
 
     //Hardlimits in turns
     public final static double ShooterHoodHardLimitTop = 70; //angled fully forward (closest to vertical)

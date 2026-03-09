@@ -45,11 +45,9 @@ import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleStatePerm;
-import frc.robot.subsystems.ShooterSubsystem.States.FlywheelOffState;
 import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.ShooterSubsystem.States.Turret90cwPIDState;
 import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
-//import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterHighstate;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterLowstate;
@@ -186,7 +184,7 @@ public class RobotContainer {
             new ParallelCommandGroup(
                 new SpindexterLowstate(m_Spindexter),
                 new TurretHoodManualState(m_Shooter, () -> MathUtil.applyDeadband(operatorController.getLeftX(),SubsystemConstants.OperatorConstants.leftXdeadBand)
-                                                   , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand))
+                                                   , () -> MathUtil.applyDeadband(-operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand))
             .withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
 
         //auto aims the Turret, Hood, and Flywheel to the hub
@@ -201,7 +199,7 @@ public class RobotContainer {
                 ));
 
         
-        //operatorController.b().whileTrue(new HoodDownState(m_Shooter));
+        operatorController.b().whileTrue(new HoodDownState(m_Shooter));
         
         //spinning the flywheel up to idle speed(3000rpm) on Y (toggle)
         operatorController.y().toggleOnTrue(new FlywheelIdleState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
