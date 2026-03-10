@@ -30,23 +30,12 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.6,
-        "y": 4.0
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.19109195402298854,
-      "maxWaypointRelativePos": 0.8994252873563208,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Turret Shoot 1s",
-      "waypointRelativePos": 0.19,
-      "endWaypointRelativePos": null,
+      "name": "Turret Shoot",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],

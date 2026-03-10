@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.LimelightConstants;
+import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
@@ -72,6 +73,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
         m_field = new Field2d();
         SmartDashboard.putData("Field",m_field);
         m_field.getObject("turretPose").setPose(Pose2d.kZero);
+        m_field.getObject("BlueHub").setPose(Pose2d.kZero);
+        m_field.getObject("RedHub").setPose(Pose2d.kZero);
 
         limelightFront.getSettings().withCameraOffset(LimelightConstants.limelightFrontPose).save();  
         
@@ -85,7 +88,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     
     limelightShooter.getSettings().withCameraOffset(LimelightConstants.limelightShooterOffset.rotateAround(
                                  LimelightConstants.limelightShooterCenter.getTranslation()
-                                ,new Rotation3d(0,0,shooterRotation2d)));
+                                ,new Rotation3d(Rotation2d.fromDegrees(shooterRotation2d))));
     
     //Update each of the limelights with the current robot orientation
     limelightFront.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d(),
@@ -121,7 +124,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     }
 
     m_field.setRobotPose(getRobotPose2d());
-
+    m_field.getObject("BlueHub").setPose(LimelightConstants.BlueHubPose2d);
+    m_field.getObject("RedHub").setPose(LimelightConstants.RedHubPose2d);
     m_field.getObject("turretPose").setPose(new Pose2d(getRobotPose2d().getTranslation(),getRobotPose2d().getRotation().plus(Rotation2d.fromDegrees(shooterRotation2d))));
 }
 

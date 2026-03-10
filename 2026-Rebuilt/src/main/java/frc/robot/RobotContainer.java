@@ -46,7 +46,7 @@ import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleStatePerm;
 import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
-import frc.robot.subsystems.ShooterSubsystem.States.Turret90cwPIDState;
+import frc.robot.subsystems.ShooterSubsystem.States.TurretSlowblowPIDState;
 import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterHighstate;
@@ -81,7 +81,7 @@ public class RobotContainer {
         public final kickerSubsystem m_kicker        = new kickerSubsystem();
         public final SpindexterSubsytem m_Spindexter = new SpindexterSubsytem();
         public final IntakeSubsystem m_Intake        = new IntakeSubsystem();
-        public final ShooterSubsystem m_Shooter      = new ShooterSubsystem(m_PoseEstimator,this);
+        public final ShooterSubsystem m_Shooter      = new ShooterSubsystem(m_PoseEstimator);
         public final ClimberSubsystem m_Climber      = new ClimberSubsystem();
     
         //checking which aliance that the robot is on
@@ -110,6 +110,9 @@ public class RobotContainer {
         }
 
     public RobotContainer() {
+
+        buildNamedCommands();
+
         configureBindings();
 
         getAlliance();
@@ -189,7 +192,7 @@ public class RobotContainer {
 
         //auto aims the Turret, Hood, and Flywheel to the hub
         operatorController.x().whileTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        operatorController.a().whileTrue(new Turret90cwPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        operatorController.a().whileTrue(new TurretSlowblowPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         
         //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
         operatorController.rightTrigger(0.5).whileTrue(
@@ -217,10 +220,10 @@ public class RobotContainer {
     }  
 
     public void buildNamedCommands(){
-        NamedCommands.registerCommand("Flywheel Spinup", new FlywheelIdleStatePerm(m_Shooter));
+        NamedCommands.registerCommand("Flywheel Spinup", new FlywheelIdleStatePerm(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
         NamedCommands.registerCommand("Climber Diretion Test", new ClimberGetDirectionstate(m_Climber));
         //Shooter:
-        NamedCommands.registerCommand("Turret Auto Aim",new BlueHoodAutoAimState(m_Shooter,this).withTimeout(5));
+        NamedCommands.registerCommand("Turret Auto Aim",new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         NamedCommands.registerCommand("Turret Shoot",new ParallelCommandGroup(
                                                                                 new KickerFeedState(m_kicker),
                                                                                 new SpindexterHighstate(m_Spindexter)
