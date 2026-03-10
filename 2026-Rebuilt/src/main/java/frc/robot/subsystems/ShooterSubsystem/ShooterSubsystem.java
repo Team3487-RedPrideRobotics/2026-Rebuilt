@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
@@ -64,6 +63,9 @@ public class ShooterSubsystem extends SubsystemBase {
     double CustomShooterSpeed = 0.0;
     double CustomHoodAngle = 0.0;
     double FlywheelRPM = 0;
+    boolean constantAutoAim = false;
+    boolean constantSnowblow = false;
+    boolean constantGoalRedAlliance = false;
 
     private final StatusSignal<Angle> TurretAngle;
 
@@ -260,7 +262,9 @@ public class ShooterSubsystem extends SubsystemBase {
         if(delta > 5){
         setAngle(angle+SubsystemConstants.ShooterCenteredRotation);
         done = false;
+        TurretAimed = false;
         }
+        else{TurretAimed = true;}
         return done;
     }
 
@@ -327,15 +331,27 @@ public class ShooterSubsystem extends SubsystemBase {
         return distanceToHub;
     }
 
+    public void continueousTurretAutoAim(boolean enable,boolean redAlliance){
+        constantGoalRedAlliance = redAlliance;
+        constantAutoAim = enable;
+    }
+
+    public void continueousTurretSlowblowAim(boolean enable,boolean redAlliance){
+        constantGoalRedAlliance = redAlliance;
+        constantSnowblow = enable;
+    }
+
     @Override
     public void periodic() {
         //m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
         CustomShooterSpeed = SmartDashboard.getNumber("Custom Shooter Speed", 0);
         FlywheelRPM = getFlywheelSpeed();
         getTurretAngle();
-        BaseStatusSignal.refreshAll(TurretAngle);
+        BaseStatusSignal.refreshAll(TurretAngle,m_FlywheelMotor.getVelocity(),m_HoodMotor.getPosition());
         m_PoseEstimatorSubsystem.putShooterRotation(SubsystemConstants.ShooterCenteredRotation-getTurretAngle());
         SmartDashboard.updateValues();
+        if(constantAutoAim){FullTurretAutoAim(constantGoalRedAlliance ?LimelightConstants.RedHubPose2d : LimelightConstants.BlueHubPose2d, 5); constantSnowblow = false;}
+        if(constantSnowblow){TurretPIDFieldRelative(constantGoalRedAlliance ? 0:180); constantAutoAim = false;}
     }
 
     public void simulationPeriodic() {

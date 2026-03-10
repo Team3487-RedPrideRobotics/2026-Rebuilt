@@ -23,39 +23,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Ntc-Nto"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Nto-T1ccw90"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "T1ccw90-Nto"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Nto-i-Ntc"
+            "name": "Stop Turret Auto Aim"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Ntc-Nto"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Nto-T1cw90"
           }
         }
       ]

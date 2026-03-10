@@ -42,6 +42,8 @@ import frc.robot.subsystems.KickerSubsystem.kickerSubsystem;
 import frc.robot.subsystems.KickerSubsystem.states.KickerFeedState;
 import frc.robot.subsystems.KickerSubsystem.states.KickerReverseState;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.States.AutoHubAimStateOff;
+import frc.robot.subsystems.ShooterSubsystem.States.AutoHubAimStatePerm;
 import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleStatePerm;
@@ -111,11 +113,11 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-        buildNamedCommands();
+        getAlliance();
+
+        //buildNamedCommands();
 
         configureBindings();
-
-        getAlliance();
 
         DriverStation.silenceJoystickConnectionWarning(true);
 
@@ -220,21 +222,24 @@ public class RobotContainer {
     }  
 
     public void buildNamedCommands(){
-        NamedCommands.registerCommand("Flywheel Spinup", new FlywheelIdleStatePerm(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-        NamedCommands.registerCommand("Climber Diretion Test", new ClimberGetDirectionstate(m_Climber));
+        //NamedCommands.registerCommand("Flywheel Spinup", new FlywheelIdleStatePerm(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+        //NamedCommands.registerCommand("Climber Diretion Test", new ClimberGetDirectionstate(m_Climber));
         //Shooter:
-        NamedCommands.registerCommand("Turret Auto Aim",new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        NamedCommands.registerCommand("Turret Shoot",new ParallelCommandGroup(
-                                                                                new KickerFeedState(m_kicker),
-                                                                                new SpindexterHighstate(m_Spindexter)
-                                                                                  ));
+        //NamedCommands.registerCommand("Turret Auto Aim",new AutoHubAimStatePerm(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        //NamedCommands.registerCommand("Stop Turret Auto Aim",new AutoHubAimStateOff(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        //new EventTrigger("Turret Auto Aim").toggleOnTrue(new AutoHubAimStatePerm(m_Shooter,this));
+        
+        //NamedCommands.registerCommand("Turret Shoot",new ParallelCommandGroup(
+        //                                                                        new KickerFeedState(m_kicker),
+        //                                                                        new SpindexterHighstate(m_Spindexter)
+        //                                                                          ));
         //Climber:
-        NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(2));
+        //NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(2));
         //Intake:
-        NamedCommands.registerCommand("Intake Extend", new IntakePivotDownState(m_Intake).withTimeout(1));
-        NamedCommands.registerCommand("Intake Retract", new IntakePivotUpState(m_Intake).withTimeout(1));
-        NamedCommands.registerCommand("Intake", new IntakeState(m_Intake).withTimeout(5));
-        NamedCommands.registerCommand("OutakePerm", new OutakeStatePerm(m_Intake));
+        //NamedCommands.registerCommand("Intake Extend", new IntakePivotDownState(m_Intake).withTimeout(1));
+        //NamedCommands.registerCommand("Intake Retract", new IntakePivotUpState(m_Intake).withTimeout(1));
+        //NamedCommands.registerCommand("Intake", new IntakeState(m_Intake).withTimeout(5));
+        //NamedCommands.registerCommand("OutakePerm", new OutakeStatePerm(m_Intake));
     }
 
     public Command getAutonomousCommand() {
