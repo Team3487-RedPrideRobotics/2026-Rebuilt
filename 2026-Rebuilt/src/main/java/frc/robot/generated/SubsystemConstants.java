@@ -37,7 +37,7 @@ public class SubsystemConstants {
     public final static double ShooterTurretHardLimitTop = 5; //the rightmost rotational hardstop
     public final static double ShooterTurretHardLimitBottom = 0; //the leftmost roational hardstop
 
-    public final static double IntakePiviotHardLimitTop = 25.6; //fully deployed ,90 intaking angle
+    public final static double IntakePiviotHardLimitTop = 20.58; //fully deployed ,90 intaking angle
     public final static double IntakePiviotHardLimitBototm = 0; //stowed ,-25.1549 stowed angle(from vertical)
 
     //Gear ratios

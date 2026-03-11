@@ -34,7 +34,7 @@ IntakeSubsystem subsystem;
             done = false;
         }
     */
-    subsystem.RunMotorPivot(-0.5);
+    subsystem.RunMotorPivot(0.5);
     }
 
     @Override

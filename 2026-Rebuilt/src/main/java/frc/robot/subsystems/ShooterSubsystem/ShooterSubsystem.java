@@ -44,7 +44,7 @@ public class ShooterSubsystem extends SubsystemBase {
   ); // Kraken X44;
 
     private TalonFX m_FlywheelMotor;
-    private TalonFX m_TurretMotor;
+    public TalonFX m_TurretMotor;
     private TalonFX m_HoodMotor;
     private final SingleJointedArmSim m_TurretSim;
 

@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -19,6 +20,7 @@ import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
+import limelight.networktables.LimelightPoseEstimator;
 import limelight.networktables.LimelightPoseEstimator.EstimationMode;
 import limelight.networktables.LimelightResults;
 import limelight.networktables.Orientation3d;
@@ -35,10 +37,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     double shooterRotationalRate;
 
     Field2d m_field;
-    Optional<Pose2d> tempPose;
     Pose2d  m_robotPose2d = new Pose2d(0.0,0.0, new Rotation2d(0.0));
 
     boolean   tooFast;
+    Optional<Pose2d> tempPose;
+    double shooterSeenAprilTags;
+    double chassisSeenAprilTags;
+
+    LimelightPoseEstimator shooterPoseEstimator;
+    LimelightPoseEstimator frontPoseEstimator;
 
     Optional<PoseEstimate> visionEstimateFront;
     Optional<PoseEstimate> visionEstimateShooter;
@@ -60,8 +67,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     }
 
     public void setThermalManagement(boolean ThermalManagement){
-        if(ThermalManagement){limelightShooter.getSettings().withPipelineIndex(9);}
-        else{limelightShooter.getSettings().withPipelineIndex(2).save();}
+        if(ThermalManagement){limelightShooter.getSettings().withPipelineIndex(9).save();;}
+        else{limelightShooter.getSettings().withPipelineIndex(0).save();}
     }
 
 
@@ -77,15 +84,18 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
         m_field.getObject("RedHub").setPose(Pose2d.kZero);
 
         limelightFront.getSettings().withCameraOffset(LimelightConstants.limelightFrontPose).save();  
+
+        shooterPoseEstimator = limelightShooter.createPoseEstimator(EstimationMode.MEGATAG1);
+        frontPoseEstimator = limelightFront.createPoseEstimator(EstimationMode.MEGATAG1);
         
-            //get the pose estimates from the limelights
-        visionEstimateFront = limelightFront.createPoseEstimator(EstimationMode.MEGATAG2).getPoseEstimate();
-        visionEstimateShooter = limelightShooter.createPoseEstimator(EstimationMode.MEGATAG2).getPoseEstimate();
     }
 
     @Override
     public void periodic() {
     
+    visionEstimateShooter = shooterPoseEstimator.getPoseEstimate();
+    visionEstimateFront = frontPoseEstimator.getPoseEstimate();
+
     limelightShooter.getSettings().withCameraOffset(LimelightConstants.limelightShooterOffset.rotateAround(
                                  LimelightConstants.limelightShooterCenter.getTranslation()
                                 ,new Rotation3d(Rotation2d.fromDegrees(shooterRotation2d))));
@@ -100,19 +110,22 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble()),
 																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
 
-    limelightShooter.getLatestResults().ifPresent((LimelightResults results) -> {
-        shooterRotation2d = results.imuResults.data[6];
-    });
     
     // If the pose is present
     visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
     // Add it to the pose estimator.
+    //check if you can actually see tags
+    if(poseEstimateFront.tagCount >0 ){
     m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds);
+    }
     });
+
     visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
-        
-        if(Math.abs(shooterRotation2d) < 60){
+        if(poseEstimateShooter.tagCount >1 ){
+
         m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds);
+
+
         }
     });
     

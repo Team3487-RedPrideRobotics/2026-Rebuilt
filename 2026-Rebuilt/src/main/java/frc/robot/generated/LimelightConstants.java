@@ -26,7 +26,7 @@ public class LimelightConstants {
                                                         ,  Units.inchesToMeters(1.0) 
                                                         ,  Units.inchesToMeters(1.0)
                                                         ,  new Rotation3d());
-    public static final String LimelightShooterID =  "limelight-Shooter";
+    public static final String LimelightShooterID =  "limelight-shooter";
         
 
     //Global pose of the hubs

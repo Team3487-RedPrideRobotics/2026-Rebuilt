@@ -171,9 +171,9 @@ public class RobotContainer {
         driverController.b().onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
 
         // Robot intake
-        driverController.leftTrigger().toggleOnTrue(new IntakeState(m_Intake)); // while the LT button is held it will intake fuel
-        driverController.leftBumper().toggleOnTrue(new OutakeState(m_Intake));  // while the LB button is held it will outake fuel
-        driverController.rightTrigger().whileTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake 
+        driverController.rightTrigger().whileTrue(new IntakeState(m_Intake)); // while the LT button is held it will intake fuel
+        driverController.leftTrigger().whileTrue(new OutakeState(m_Intake));  // while the LB button is held it will outake fuel
+        driverController.leftBumper().whileTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake 
         driverController.rightBumper().whileTrue(new IntakePivotDownState(m_Intake));  // when RB button is pressed deploy the intake
         
         //Non Competition viable in current state
@@ -207,10 +207,11 @@ public class RobotContainer {
         operatorController.b().whileTrue(new HoodDownState(m_Shooter));
         
         //spinning the flywheel up to idle speed(3000rpm) on Y (toggle)
-        operatorController.y().toggleOnTrue(new FlywheelIdleState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+        operatorController.rightBumper().whileTrue(new FlywheelIdleState(m_Shooter
+        ).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
         //switch the direction of the spindexter
-        operatorController.rightBumper().whileTrue(new ParallelCommandGroup(new SpindexterReverseState(m_Spindexter),
+        operatorController.leftBumper().whileTrue(new ParallelCommandGroup(new SpindexterReverseState(m_Spindexter),
                                                                             new KickerReverseState(m_kicker))
                                                                             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         // Moving the climber arm up/down

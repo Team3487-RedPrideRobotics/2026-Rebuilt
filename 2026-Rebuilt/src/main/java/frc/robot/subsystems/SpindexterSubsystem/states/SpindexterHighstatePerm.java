@@ -21,7 +21,7 @@ public class SpindexterHighstatePerm extends Command{
 
     @Override
     public void execute() {
-        subsystem.RunMotor(-1);
+        subsystem.RunMotor(1);
     }
 
     @Override

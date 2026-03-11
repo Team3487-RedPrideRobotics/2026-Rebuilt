@@ -1,6 +1,9 @@
 package frc.robot.subsystems.IntakeSubsystem;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -12,11 +15,13 @@ import frc.robot.generated.SubsystemConstants;
 public class IntakeSubsystem extends SubsystemBase {
     
     
-    private TalonFX m_pivotMotor;
+    public TalonFX m_pivotMotor;
     private TalonFX m_intakeMotor;
 
     DutyCycleOut m_pivotMotorRequest;
     DutyCycleOut m_intakeMotorRequest;
+
+    
 
     double customIntakeSpeed;
 
@@ -32,9 +37,31 @@ public class IntakeSubsystem extends SubsystemBase {
     
     m_pivotMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.IntakePivotKrakenInverted));
     m_intakeMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.IntakeKrakenInverted));
+
+    TalonFXConfiguration m_intakePivotConfig = new TalonFXConfiguration();
+    TalonFXConfiguration m_intakeConfig = new TalonFXConfiguration();
+
+    SoftwareLimitSwitchConfigs softLimitsIntakePivot = m_intakePivotConfig.SoftwareLimitSwitch;
+        softLimitsIntakePivot.ForwardSoftLimitThreshold = SubsystemConstants.IntakePiviotHardLimitTop;
+        softLimitsIntakePivot.ForwardSoftLimitEnable = true;
+        softLimitsIntakePivot.ReverseSoftLimitThreshold = SubsystemConstants.IntakePiviotHardLimitBototm;
+        softLimitsIntakePivot.ReverseSoftLimitEnable = true;
+
+    m_intakePivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+    SoftwareLimitSwitchConfigs softLimitsIntake = m_intakeConfig.SoftwareLimitSwitch;
+    softLimitsIntake.ForwardSoftLimitThreshold = SubsystemConstants.IntakePiviotHardLimitTop;
+    softLimitsIntake.ForwardSoftLimitEnable = false;
+    softLimitsIntake.ReverseSoftLimitThreshold = SubsystemConstants.IntakePiviotHardLimitBototm;
+    softLimitsIntake.ReverseSoftLimitEnable = false;
+
+    m_intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+
+    m_pivotMotor.getConfigurator().apply(m_intakePivotConfig);
+    m_intakeMotor.getConfigurator().apply(m_intakeConfig);
     
-    m_intakeMotor.setNeutralMode(NeutralModeValue.Coast);
-    m_pivotMotor.setNeutralMode(NeutralModeValue.Brake);
+
+    m_pivotMotor.setPosition(0);
 
     SmartDashboard.putNumber("Intake Angle", intakeAngle);
 
@@ -88,6 +115,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         customIntakeSpeed = SmartDashboard.getNumber("Custom Intake Speed", 0);
         intakeAngle = m_pivotMotor.getPosition().getValueAsDouble();
+        BaseStatusSignal.refreshAll(m_pivotMotor.getPosition());
     }
 
 }

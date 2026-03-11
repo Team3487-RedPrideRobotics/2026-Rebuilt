@@ -63,6 +63,8 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledExit() {
         m_PoseEstimator.setThermalManagement(false);
+        m_robotContainer.m_Shooter.m_TurretMotor.setPosition(0);
+        m_robotContainer.m_Intake.m_pivotMotor.setPosition(0);
     }
 
     @Override
