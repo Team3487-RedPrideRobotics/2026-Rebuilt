@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import java.util.Optional;
 
@@ -37,6 +37,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     Field2d m_field;
     Pose2d  m_robotPose2d = new Pose2d(0.0,0.0, new Rotation2d(0.0));
+    Rotation3d robotRotation = new Rotation3d();
 
     boolean   tooFast;
     Optional<Pose2d> tempPose;
@@ -98,7 +99,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     BaseStatusSignal.refreshAll(m_gyro.getAngularVelocityXWorld(),
                                 m_gyro.getAngularVelocityYWorld(),
-                                m_gyro.getAngularVelocityZWorld());
+                                m_gyro.getAngularVelocityZWorld(),
+                                m_gyro.getRoll(),
+                                m_gyro.getYaw(),
+                                m_gyro.getPitch());
+
+    robotRotation = new Rotation3d(
+                    Degrees.of(m_gyro.getRoll().getValueAsDouble()),
+                    Degrees.of(m_gyro.getPitch().getValueAsDouble()),
+                    Degrees.of(m_gyro.getYaw().getValueAsDouble()));
     
     visionEstimateShooter = shooterPoseEstimator.getPoseEstimate();
     visionEstimateFront = frontPoseEstimator.getPoseEstimate();
@@ -108,16 +117,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
                                 ,new Rotation3d(Rotation2d.fromDegrees(shooterRotation2d))));
     
     //Update each of the limelights with the current robot orientation
-    limelightFront.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d(),
+    limelightFront.getSettings().withRobotOrientation(new Orientation3d(robotRotation,
 												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXWorld().getValueAsDouble()),
-																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()),
-																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYWorld().getValueAsDouble())))).save();
-    limelightShooter.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d().plus(new Rotation3d(Rotation2d.fromDegrees(shooterRotation2d))),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYWorld().getValueAsDouble()),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble())))).save();
+    limelightShooter.getSettings().withRobotOrientation(new Orientation3d(robotRotation,
 												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXWorld().getValueAsDouble()),
-																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()),
-																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYWorld().getValueAsDouble()+shooterDegPerSecond)))).save();
-
-    System.out.println(shooterRotation2d);
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYWorld().getValueAsDouble()),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble())))).save();
     // If the pose is present
     //visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
     // Add it to the pose estimator.
@@ -130,8 +137,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
         if(poseEstimateShooter.tagCount >1 ){
             if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
-        m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d().rotateBy(Rotation2d.fromDegrees(-shooterRotation2d)), poseEstimateShooter.timestampSeconds);
-        }}
+        m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds);
+    }}
     });
     
 

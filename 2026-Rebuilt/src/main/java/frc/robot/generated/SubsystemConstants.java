@@ -21,7 +21,7 @@ public class SubsystemConstants {
     //diretions for every motor
     public final static InvertedValue SpindexterKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue KickerKrakenInverted = InvertedValue.Clockwise_Positive;
-    public final static InvertedValue IntakeKrakenInverted = InvertedValue.Clockwise_Positive;
+    public final static InvertedValue IntakeKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue IntakePivotKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue ShooterFlywheelKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue ShooterTurretKrakenInverted = InvertedValue.CounterClockwise_Positive;
@@ -37,7 +37,7 @@ public class SubsystemConstants {
     public final static double ShooterTurretHardLimitTop = 5; //the rightmost rotational hardstop
     public final static double ShooterTurretHardLimitBottom = 0; //the leftmost roational hardstop
 
-    public final static double IntakePiviotHardLimitTop = 20.58; //fully deployed ,90 intaking angle
+    public final static double IntakePiviotHardLimitTop = 17; //fully deployed ,90 intaking angle
     public final static double IntakePiviotHardLimitBototm = 0; //stowed ,-25.1549 stowed angle(from vertical)
 
     //Gear ratios

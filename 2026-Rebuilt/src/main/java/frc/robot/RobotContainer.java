@@ -54,7 +54,7 @@ import frc.robot.subsystems.ShooterSubsystem.States.TurretResetPIDState;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterHighstate;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterLowstate;
-import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterReverseState;
+import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterReversestate;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 
 public class RobotContainer {
@@ -214,7 +214,7 @@ public class RobotContainer {
         ).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
         //switch the direction of the spindexter
-        operatorController.x().whileTrue(new ParallelCommandGroup(new SpindexterReverseState(m_Spindexter),
+        operatorController.x().whileTrue(new ParallelCommandGroup(new SpindexterReversestate(m_Spindexter),
                                                                             new KickerReverseState(m_kicker))
                                                                             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         // Moving the climber arm up/down
