@@ -7,22 +7,18 @@ import java.util.Optional;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
-import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.LimelightConstants;
-import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.LimelightPoseEstimator;
 import limelight.networktables.LimelightPoseEstimator.EstimationMode;
-import limelight.networktables.LimelightResults;
 import limelight.networktables.Orientation3d;
 import limelight.networktables.PoseEstimate;
 
@@ -34,6 +30,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     Pigeon2   m_gyro;
     CommandSwerveDrivetrain m_CommandSwerveDrivetrain;
     double shooterRotation2d;
+    double shooterDegPerSecond;
     double shooterRotationalRate;
 
     Field2d m_field;
@@ -60,6 +57,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     public void putShooterRotation(double shooterTurretAngle){
         shooterRotation2d = shooterTurretAngle;
+    }
+
+    public void putShooterRotationalVelocity(double shooterTurretDegPerSecond){
+        shooterDegPerSecond = shooterTurretDegPerSecond;
     }
 
     public CommandSwerveDrivetrain getDrivetrain(){
@@ -105,10 +106,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXDevice().getValueAsDouble()),
 																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble()),
 																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
-    limelightShooter.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d(),
+    limelightShooter.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d().plus(new Rotation3d(Rotation2d.fromDegrees(shooterRotation2d))),
 												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXDevice().getValueAsDouble()),
 																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble()),
-																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble()+shooterDegPerSecond)))).save();
 
     
     // If the pose is present

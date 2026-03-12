@@ -55,6 +55,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+        m_robotContainer.getAlliance();
         if(DriverStation.isDSAttached()){
             NoFmsAlliance.set(DriverStation.getAlliance().isEmpty() ? true: false);
         }

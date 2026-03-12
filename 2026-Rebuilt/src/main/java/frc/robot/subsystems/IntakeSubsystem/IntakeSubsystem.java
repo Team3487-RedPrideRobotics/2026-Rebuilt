@@ -2,9 +2,11 @@ package frc.robot.subsystems.IntakeSubsystem;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -18,10 +20,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public TalonFX m_pivotMotor;
     private TalonFX m_intakeMotor;
 
-    DutyCycleOut m_pivotMotorRequest;
-    DutyCycleOut m_intakeMotorRequest;
-
-    
+    DutyCycleOut        m_pivotMotorRequest;
+    DutyCycleOut        m_intakeMotorRequest;
+    PositionDutyCycle   m_pivotPIDRequest;
 
     double customIntakeSpeed;
 
@@ -29,25 +30,31 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public IntakeSubsystem(){
     
-    m_pivotMotor = new TalonFX(SubsystemConstants.IntakePivotKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
+    m_pivotMotor = new TalonFX(SubsystemConstants.IntakePivotKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS); //initalize motors
     m_intakeMotor = new TalonFX(SubsystemConstants.IntakeKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
 
-    m_pivotMotorRequest = new DutyCycleOut(0.0);
-    m_intakeMotorRequest = new DutyCycleOut(0.0);
+    m_pivotMotorRequest  = new DutyCycleOut(0.0);
+    m_pivotPIDRequest    = new PositionDutyCycle(0);
+    m_intakeMotorRequest = new DutyCycleOut(0.0).withIgnoreHardwareLimits(true);
     
     m_pivotMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.IntakePivotKrakenInverted));
     m_intakeMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.IntakeKrakenInverted));
 
-    TalonFXConfiguration m_intakePivotConfig = new TalonFXConfiguration();
+    TalonFXConfiguration m_intakePivotConfig = new TalonFXConfiguration(); //make configs
     TalonFXConfiguration m_intakeConfig = new TalonFXConfiguration();
 
-    SoftwareLimitSwitchConfigs softLimitsIntakePivot = m_intakePivotConfig.SoftwareLimitSwitch;
+    Slot0Configs m_pivotPIDs = new Slot0Configs(); //set PIDs
+    m_pivotPIDs.kP = 0.25;
+    m_pivotPIDs.kI = 0;
+    m_pivotPIDs.kD = 0;
+
+    SoftwareLimitSwitchConfigs softLimitsIntakePivot = m_intakePivotConfig.SoftwareLimitSwitch; //set limits
         softLimitsIntakePivot.ForwardSoftLimitThreshold = SubsystemConstants.IntakePiviotHardLimitTop;
         softLimitsIntakePivot.ForwardSoftLimitEnable = true;
         softLimitsIntakePivot.ReverseSoftLimitThreshold = SubsystemConstants.IntakePiviotHardLimitBototm;
         softLimitsIntakePivot.ReverseSoftLimitEnable = true;
 
-    m_intakePivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    m_intakePivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake; //set breaking
 
     SoftwareLimitSwitchConfigs softLimitsIntake = m_intakeConfig.SoftwareLimitSwitch;
     softLimitsIntake.ForwardSoftLimitThreshold = SubsystemConstants.IntakePiviotHardLimitTop;
@@ -57,7 +64,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     m_intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-    m_pivotMotor.getConfigurator().apply(m_intakePivotConfig);
+    m_pivotMotor.getConfigurator().apply(m_intakePivotConfig); //apply configs
     m_intakeMotor.getConfigurator().apply(m_intakeConfig);
     
 
@@ -80,12 +87,10 @@ public class IntakeSubsystem extends SubsystemBase {
         m_pivotMotor.setControl(m_pivotMotorRequest);
     }
 
-    public boolean IntakePiviotPID(double goalValue,double limit, double kP, double threshold){
-        double delta = Math.abs(goalValue) - Math.abs(m_pivotMotor.getPosition().getValueAsDouble());
+    public boolean IntakePiviotPID(double goalValueDeg, double threshold){
+        double delta = Math.abs(goalValueDeg) - Math.abs(m_pivotMotor.getPosition().getValueAsDouble());
         if(Math.abs(delta) >= threshold){
-            var speed = -delta*kP;
-            speed = Math.abs(speed) > limit ? limit * Math.signum(speed) : speed;
-            RunMotorPivot(speed);
+            m_pivotPIDRequest.withPosition(goalValueDeg/360*80);
             return false;
     }   else {
             StopMotorPivot();

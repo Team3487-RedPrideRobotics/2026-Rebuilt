@@ -18,13 +18,13 @@ public class LimelightConstants {
                                                         ,  new Rotation3d());
     public static final String LimelightFrontID =  "limelight-chassis";
     //limelight-left
-    public static final Pose3d limelightShooterOffset = new Pose3d(Units.inchesToMeters(-5.75)
-                                                        ,  Units.inchesToMeters(1.) 
-                                                        ,  Units.inchesToMeters(1.0)
+    public static final Pose3d limelightShooterOffset = new Pose3d(Units.inchesToMeters(6.76)
+                                                        ,  Units.inchesToMeters(0.44) 
+                                                        ,  Units.inchesToMeters(4.1)
                                                         ,  new Rotation3d());
-    public static final Pose3d limelightShooterCenter = new Pose3d(Units.inchesToMeters(1.0)
-                                                        ,  Units.inchesToMeters(1.0) 
-                                                        ,  Units.inchesToMeters(1.0)
+    public static final Pose3d limelightShooterCenter = new Pose3d(Units.inchesToMeters(-5.75)
+                                                        ,  Units.inchesToMeters(-4) 
+                                                        ,  Units.inchesToMeters(17)
                                                         ,  new Rotation3d());
     public static final String LimelightShooterID =  "limelight-shooter";
         

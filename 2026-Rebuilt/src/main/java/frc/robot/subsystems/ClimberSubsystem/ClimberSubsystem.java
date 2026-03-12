@@ -1,5 +1,6 @@
 package frc.robot.subsystems.ClimberSubsystem;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -32,9 +33,6 @@ public class ClimberSubsystem extends SubsystemBase {
 // the pid for the motor going up and down
     public void RunClimbMotor(double speed) {
         m_ClimbMotorRequest.Output = speed;
-    //hard stops
-        //m_ClimbMotorRequest.Output = m_ClimbMotor.getPosition().getValueAsDouble() > SubsystemConstants.ClimberClimbHardLimitTop ? -speed: speed;
-        //m_ClimbMotorRequest.Output = m_ClimbMotor.getPosition().getValueAsDouble() < SubsystemConstants.ClimberClimbHardLimitBottom ? -speed : speed; 
         m_ClimbMotor.setControl(m_ClimbMotorRequest);
     }
 
@@ -74,4 +72,9 @@ public class ClimberSubsystem extends SubsystemBase {
         return m_ClimbMotor.getStatorCurrent().getValueAsDouble();
     }
 
+    @Override
+    public void periodic() {
+        BaseStatusSignal.refreshAll(m_ClimbMotor.getPosition());
+
+    }
 }

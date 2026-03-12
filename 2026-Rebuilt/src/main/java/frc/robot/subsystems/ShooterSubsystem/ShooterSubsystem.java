@@ -23,32 +23,26 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    private final DCMotor m_TurretMotorSim = new DCMotor(
-    12,
-    4.05,
-    275,
-    1.4,
-    Units.rotationsPerMinuteToRadiansPerSecond(7530),
-    1
-  ); // Kraken X44;
-
     private TalonFX m_FlywheelMotor;
-    public TalonFX m_TurretMotor;
+    public  TalonFX m_TurretMotor;
     private TalonFX m_HoodMotor;
     private final SingleJointedArmSim m_TurretSim;
 
     private PoseEstimatorSubsystem m_PoseEstimatorSubsystem;
+    private RobotContainer         m_RobotContainer;
 
     private VelocityDutyCycle m_FlywheelMotorRequest;
     private DutyCycleOut m_TurretMotorRequest;
@@ -69,10 +63,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final StatusSignal<Angle> TurretAngle;
 
-    public ShooterSubsystem(PoseEstimatorSubsystem Goku) {
+    public ShooterSubsystem(PoseEstimatorSubsystem Goku, RobotContainer myLittleRobotContainer) {
 
         m_PoseEstimatorSubsystem = Goku;
-
+        m_RobotContainer = myLittleRobotContainer;
 
         m_TurretSim = new SingleJointedArmSim(
         DCMotor.getKrakenX44(1), 
@@ -91,7 +85,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         TurretAngle = m_TurretMotor.getPosition();
 
-        m_FlywheelMotorRequest = new VelocityDutyCycle(0.0);
+        m_FlywheelMotorRequest = new VelocityDutyCycle(0.0).withIgnoreHardwareLimits(true);
         m_TurretMotorRequest = new DutyCycleOut(0.0);
         m_TurretPositionRequest = new PositionDutyCycle(0.0);
         m_HoodMotorRequest = new DutyCycleOut(0);
@@ -113,6 +107,7 @@ public class ShooterSubsystem extends SubsystemBase {
         m_FlywheelConfig.Slot0 = m_FlywheelMotorSlotConfigs;
         m_FlywheelConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
         m_FlywheelConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+        
 
         //turret configs
         Slot0Configs slot0 = m_TurretConfig.Slot0;
@@ -237,6 +232,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setAngle(double angleDegrees, double acceleration) {
+    m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, 0); //set rumble for driver to default
     // Convert degrees to rotations
     double positionRotations = DegreesAngleClamp(angleDegrees)/360*10;
     if(positionRotations<SubsystemConstants.ShooterTurretHardLimitTop
@@ -246,10 +242,11 @@ public class ShooterSubsystem extends SubsystemBase {
         TurretRingOverrun.set(false);
        }
     else{
-        m_TurretMotorRequest.withOutput(0);
+        m_TurretMotorRequest.withOutput(0);//stop motors
         m_TurretMotor.setControl(m_TurretMotorRequest);
         m_TurretMotor.stopMotor();
-        TurretRingOverrun.set(true);
+        m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, 1); //set rumble for driver
+        TurretRingOverrun.set(true); //set Overun to true
     }
      
     }
@@ -308,7 +305,6 @@ public class ShooterSubsystem extends SubsystemBase {
         }
         else{
             desiredTurretAngle = new Rotation2d(-Math.atan2(AimPose.getY()-robotPose.getY(),AimPose.getX()-robotPose.getX()));
-            System.out.println(desiredTurretAngle);
             
             distanceToHub = getDistanceToHub(robotPose);
             desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
@@ -344,18 +340,24 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         //m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
-        CustomShooterSpeed = SmartDashboard.getNumber("Custom Shooter Speed", 0);
+        //Set own values
         FlywheelRPM = getFlywheelSpeed();
         getTurretAngle();
-        BaseStatusSignal.refreshAll(TurretAngle,m_FlywheelMotor.getVelocity(),m_HoodMotor.getPosition());
+        SmartDashboard.getEntry("TurretAimed").setBoolean(TurretAimed);
+        //update motor status signals
+        BaseStatusSignal.refreshAll(TurretAngle,m_FlywheelMotor.getVelocity(),m_HoodMotor.getPosition(),m_TurretMotor.getVelocity());
+        //feed the pose estimator numbers
         m_PoseEstimatorSubsystem.putShooterRotation(SubsystemConstants.ShooterCenteredRotation-getTurretAngle());
+        m_PoseEstimatorSubsystem.putShooterRotationalVelocity(m_TurretMotor.getVelocity().getValueAsDouble()*36);
+        //update smartdashboard
         SmartDashboard.updateValues();
+        //Do constant PIDs when issued
         if(constantAutoAim){FullTurretAutoAim(constantGoalRedAlliance ?LimelightConstants.RedHubPose2d : LimelightConstants.BlueHubPose2d, 5); constantSnowblow = false;}
         if(constantSnowblow){TurretPIDFieldRelative(constantGoalRedAlliance ? 0:180); constantAutoAim = false;}
     }
 
+    //handle Turret Simulation
     public void simulationPeriodic() {
-    // Note: This may need to be talonfx.getSimState().getMotorVoltage() as the input
     m_TurretSim.setInput(m_TurretMotor.getSimState().getMotorVoltage());
 
     // Update simulation by 20ms

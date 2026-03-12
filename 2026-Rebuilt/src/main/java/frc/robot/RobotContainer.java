@@ -50,6 +50,7 @@ import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleStatePerm;
 import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.ShooterSubsystem.States.TurretSlowblowPIDState;
 import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
+import frc.robot.subsystems.ShooterSubsystem.States.TurretResetPIDState;
 import frc.robot.subsystems.SpindexterSubsystem.SpindexterSubsytem;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterHighstate;
 import frc.robot.subsystems.SpindexterSubsystem.states.SpindexterLowstate;
@@ -67,7 +68,7 @@ public class RobotContainer {
     public final SwerveRequest.RobotCentric RobotCentricDrive = new SwerveRequest.RobotCentric().withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt(); //
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt(); //unused but may come back for
 
     private final Telemetry m_logger = new Telemetry(MaxSpeed);
 
@@ -80,11 +81,11 @@ public class RobotContainer {
 
     
         //instance other robot subsystems
-        public final kickerSubsystem m_kicker        = new kickerSubsystem();
-        public final SpindexterSubsytem m_Spindexter = new SpindexterSubsytem();
-        public final IntakeSubsystem m_Intake        = new IntakeSubsystem();
-        public final ShooterSubsystem m_Shooter      = new ShooterSubsystem(m_PoseEstimator);
-        public final ClimberSubsystem m_Climber      = new ClimberSubsystem();
+        public final kickerSubsystem    m_kicker       = new kickerSubsystem();
+        public final SpindexterSubsytem m_Spindexter   = new SpindexterSubsytem();
+        public final IntakeSubsystem    m_Intake       = new IntakeSubsystem();
+        public final ShooterSubsystem   m_Shooter      = new ShooterSubsystem(m_PoseEstimator,this);
+        public final ClimberSubsystem   m_Climber      = new ClimberSubsystem();
     
         //checking which aliance that the robot is on
         public boolean IsRed; 
@@ -103,6 +104,7 @@ public class RobotContainer {
                 if(m_alliance == Alliance.Red){
                     IsRed = true;
                 }
+                else{IsRed = false;}
             });
             return m_alliance;
         } 
@@ -192,10 +194,11 @@ public class RobotContainer {
                                                    , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand))
             .withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
 
-        //auto aims the Turret, Hood, and Flywheel to the hub
-        operatorController.x().whileTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        operatorController.a().whileTrue(new TurretSlowblowPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        
+        //auto aims the Turret, Hood, and Flywheel to the hub; aims the turret to snowblow; resets to front
+        operatorController.leftTrigger().whileTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        operatorController.leftBumper().whileTrue(new TurretSlowblowPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        operatorController.y().whileTrue(new TurretResetPIDState(m_Shooter));
+
         //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
         operatorController.rightTrigger(0.5).whileTrue(
             new ParallelCommandGroup(
@@ -211,7 +214,7 @@ public class RobotContainer {
         ).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
         //switch the direction of the spindexter
-        operatorController.leftBumper().whileTrue(new ParallelCommandGroup(new SpindexterReverseState(m_Spindexter),
+        operatorController.x().whileTrue(new ParallelCommandGroup(new SpindexterReverseState(m_Spindexter),
                                                                             new KickerReverseState(m_kicker))
                                                                             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         // Moving the climber arm up/down

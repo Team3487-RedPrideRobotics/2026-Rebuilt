@@ -18,7 +18,7 @@ public class SpindexterSubsytem extends SubsystemBase {
     
     m_Motor = new TalonFX(SubsystemConstants.SpindexterKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
 
-    m_motorRequest = new DutyCycleOut(0.0);
+    m_motorRequest = new DutyCycleOut(0.0).withIgnoreHardwareLimits(true);
 
     m_Motor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.SpindexterKrakenInverted));
 
