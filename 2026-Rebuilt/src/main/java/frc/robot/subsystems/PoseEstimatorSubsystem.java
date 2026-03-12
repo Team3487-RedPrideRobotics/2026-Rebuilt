@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import java.util.Optional;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
@@ -93,6 +95,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
+
+    BaseStatusSignal.refreshAll(m_gyro.getAngularVelocityXWorld(),
+                                m_gyro.getAngularVelocityYWorld(),
+                                m_gyro.getAngularVelocityZWorld());
     
     visionEstimateShooter = shooterPoseEstimator.getPoseEstimate();
     visionEstimateFront = frontPoseEstimator.getPoseEstimate();
@@ -103,13 +109,13 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     
     //Update each of the limelights with the current robot orientation
     limelightFront.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d(),
-												 new AngularVelocity3d(RadiansPerSecond.of(m_gyro.getAngularVelocityXDevice().getValueAsDouble()),
-																	   RadiansPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble()),
-																	   RadiansPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble())))).save();
-    limelightShooter.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d(),
-												 new AngularVelocity3d(RadiansPerSecond.of(m_gyro.getAngularVelocityXDevice().getValueAsDouble()),
-																	   RadiansPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble()),
-																	   RadiansPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble())))).save();
+												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXWorld().getValueAsDouble()),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYWorld().getValueAsDouble())))).save();
+    limelightShooter.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d().plus(new Rotation3d(Rotation2d.fromDegrees(shooterRotation2d))),
+												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXWorld().getValueAsDouble()),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()),
+																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYWorld().getValueAsDouble()+shooterDegPerSecond)))).save();
 
     System.out.println(shooterRotation2d);
     // If the pose is present
