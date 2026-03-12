@@ -27,7 +27,7 @@ IntakeSubsystem subsystem;
 
     @Override
     public void execute() {
-        subsystem.IntakePiviotPID(0, 1);
+        subsystem.RunMotorPivot(0.5);
     }
 
     @Override

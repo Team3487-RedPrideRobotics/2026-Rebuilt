@@ -88,7 +88,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean IntakePiviotPID(double goalValueDeg, double threshold){
-        double delta = Math.abs(goalValueDeg*360/80) - Math.abs(m_pivotMotor.getPosition().getValueAsDouble());
+        double delta = Math.abs(goalValueDeg*360/80) - Math.abs(intakeAngle);
         if(Math.abs(delta) >= threshold){
             m_pivotPIDRequest.withPosition(goalValueDeg/360*80);
             return false;
@@ -119,8 +119,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void periodic() {
         customIntakeSpeed = SmartDashboard.getNumber("Custom Intake Speed", 0);
-        intakeAngle = m_pivotMotor.getPosition().getValueAsDouble();
         BaseStatusSignal.refreshAll(m_pivotMotor.getPosition());
+        intakeAngle = m_pivotMotor.getPosition().getValueAsDouble();
     }
 
 }

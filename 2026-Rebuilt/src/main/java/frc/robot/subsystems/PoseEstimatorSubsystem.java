@@ -127,12 +127,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     //}
     //});
 
-    visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
+    /*visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
         if(poseEstimateShooter.tagCount >1 ){
             if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
         m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d().rotateBy(Rotation2d.fromDegrees(-shooterRotation2d)), poseEstimateShooter.timestampSeconds);
         }}
-    });
+    });*/
     
 
     Optional<Pose2d> tempPose = m_CommandSwerveDrivetrain.samplePoseAt(Utils.getCurrentTimeSeconds());

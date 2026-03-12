@@ -195,9 +195,9 @@ public class RobotContainer {
             .withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
 
         //auto aims the Turret, Hood, and Flywheel to the hub; aims the turret to snowblow; resets to front
-        operatorController.leftTrigger().whileTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        operatorController.leftBumper().whileTrue(new TurretSlowblowPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        operatorController.y().whileTrue(new TurretResetPIDState(m_Shooter));
+        //operatorController.leftTrigger().whileTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        operatorController.leftTrigger().whileTrue(new TurretSlowblowPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        operatorController.leftBumper().whileTrue(new TurretResetPIDState(m_Shooter));
 
         //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
         operatorController.rightTrigger(0.5).whileTrue(
