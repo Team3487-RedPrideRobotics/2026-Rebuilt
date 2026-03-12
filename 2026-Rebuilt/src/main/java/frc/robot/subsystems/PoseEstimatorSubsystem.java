@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import java.util.Optional;
 
@@ -86,8 +86,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
         limelightFront.getSettings().withCameraOffset(LimelightConstants.limelightFrontPose).save();  
 
-        shooterPoseEstimator = limelightShooter.createPoseEstimator(EstimationMode.MEGATAG1);
-        frontPoseEstimator = limelightFront.createPoseEstimator(EstimationMode.MEGATAG1);
+        shooterPoseEstimator = limelightShooter.createPoseEstimator(EstimationMode.MEGATAG2);
+        frontPoseEstimator = limelightFront.createPoseEstimator(EstimationMode.MEGATAG2);
         
     }
 
@@ -103,31 +103,29 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     
     //Update each of the limelights with the current robot orientation
     limelightFront.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d(),
-												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXDevice().getValueAsDouble()),
-																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble()),
-																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble())))).save();
-    limelightShooter.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d().plus(new Rotation3d(Rotation2d.fromDegrees(shooterRotation2d))),
-												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXDevice().getValueAsDouble()),
-																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble()),
-																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble()+shooterDegPerSecond)))).save();
+												 new AngularVelocity3d(RadiansPerSecond.of(m_gyro.getAngularVelocityXDevice().getValueAsDouble()),
+																	   RadiansPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble()),
+																	   RadiansPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble())))).save();
+    limelightShooter.getSettings().withRobotOrientation(new Orientation3d(m_gyro.getRotation3d(),
+												 new AngularVelocity3d(RadiansPerSecond.of(m_gyro.getAngularVelocityXDevice().getValueAsDouble()),
+																	   RadiansPerSecond.of(m_gyro.getAngularVelocityYDevice().getValueAsDouble()),
+																	   RadiansPerSecond.of(m_gyro.getAngularVelocityZDevice().getValueAsDouble())))).save();
 
-    
+    System.out.println(shooterRotation2d);
     // If the pose is present
-    visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
+    //visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
     // Add it to the pose estimator.
     //check if you can actually see tags
-    if(poseEstimateFront.tagCount >0 ){
-    m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds);
-    }
-    });
+    //if(poseEstimateFront.tagCount >0 ){
+    //m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds);
+    //}
+    //});
 
     visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
         if(poseEstimateShooter.tagCount >1 ){
-
-        m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds);
-
-
-        }
+            if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
+        m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d().rotateBy(Rotation2d.fromDegrees(-shooterRotation2d)), poseEstimateShooter.timestampSeconds);
+        }}
     });
     
 

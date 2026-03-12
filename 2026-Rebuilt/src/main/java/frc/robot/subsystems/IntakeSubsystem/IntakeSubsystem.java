@@ -88,7 +88,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean IntakePiviotPID(double goalValueDeg, double threshold){
-        double delta = Math.abs(goalValueDeg) - Math.abs(m_pivotMotor.getPosition().getValueAsDouble());
+        double delta = Math.abs(goalValueDeg*360/80) - Math.abs(m_pivotMotor.getPosition().getValueAsDouble());
         if(Math.abs(delta) >= threshold){
             m_pivotPIDRequest.withPosition(goalValueDeg/360*80);
             return false;
