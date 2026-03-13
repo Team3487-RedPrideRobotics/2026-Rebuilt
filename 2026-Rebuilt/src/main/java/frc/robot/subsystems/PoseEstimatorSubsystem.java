@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.LimelightConstants;
+import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
@@ -137,8 +138,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
         if(poseEstimateShooter.tagCount >1 ){
             if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
+                if(shooterDegPerSecond<40){
         m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds);
-    }}
+    }}}
     });
     
 
