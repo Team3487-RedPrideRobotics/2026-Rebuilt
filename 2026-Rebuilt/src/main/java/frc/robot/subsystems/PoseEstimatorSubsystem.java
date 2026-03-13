@@ -114,7 +114,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     limelightShooter.getSettings().withCameraOffset(LimelightConstants.limelightShooterOffset.rotateAround(
                                  LimelightConstants.limelightShooterCenter.getTranslation()
-                                ,new Rotation3d(Rotation2d.fromDegrees(shooterRotation2d))));
+                                ,new Rotation3d(Rotation2d.fromDegrees(shooterRotation2d)))).save();
     
     //Update each of the limelights with the current robot orientation
     limelightFront.getSettings().withRobotOrientation(new Orientation3d(robotRotation,

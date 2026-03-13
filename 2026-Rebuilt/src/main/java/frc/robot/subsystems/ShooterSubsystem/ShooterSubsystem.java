@@ -304,13 +304,13 @@ public class ShooterSubsystem extends SubsystemBase {
             return true;
         }
         else{
-            desiredTurretAngle = new Rotation2d(-Math.atan2(AimPose.getY()-robotPose.getY(),AimPose.getX()-robotPose.getX()));
+            desiredTurretAngle = new Rotation2d(-Math.atan2(AimPose.getY()-chassisSpeed.getY()*0.25-robotPose.getY(),AimPose.getX()-chassisSpeed.getX()*0.25-robotPose.getX()));
             
-            distanceToHub = getDistanceToHub(robotPose);
+            distanceToHub = getDistanceToHub(AimPose);
             desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
             desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
             TurretPIDFieldRelative(desiredTurretAngle.getDegrees());
-            //RunFlywheelMotor(desiredRPM/60);
+            RunFlywheelMotor(desiredRPM/60);
             //HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
             TurretAimed = false;
             return false;
