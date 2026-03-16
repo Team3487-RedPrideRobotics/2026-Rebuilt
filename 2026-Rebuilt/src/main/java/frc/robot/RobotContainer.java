@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -117,7 +118,7 @@ public class RobotContainer {
 
         getAlliance();
 
-        //buildNamedCommands();
+        buildNamedCommands();
 
         configureBindings();
 
@@ -229,9 +230,9 @@ public class RobotContainer {
         //NamedCommands.registerCommand("Flywheel Spinup", new FlywheelIdleStatePerm(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
         //NamedCommands.registerCommand("Climber Diretion Test", new ClimberGetDirectionstate(m_Climber));
         //Shooter:
-        //NamedCommands.registerCommand("Turret Auto Aim",new AutoHubAimStatePerm(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        //NamedCommands.registerCommand("Turret Auto Aim",new BlueHoodAutoAimState(m_Shooter,this));
         //NamedCommands.registerCommand("Stop Turret Auto Aim",new AutoHubAimStateOff(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        //new EventTrigger("Turret Auto Aim").toggleOnTrue(new AutoHubAimStatePerm(m_Shooter,this));
+        //new EventTrigger("Turret Auto Aim").whileTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         
         //NamedCommands.registerCommand("Turret Shoot",new ParallelCommandGroup(
         //                                                                        new KickerFeedState(m_kicker),

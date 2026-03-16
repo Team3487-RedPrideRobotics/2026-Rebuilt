@@ -13,12 +13,6 @@
                 "data": {
                   "pathName": "T1-Test"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Turret Auto Aim"
-                }
               }
             ]
           }
