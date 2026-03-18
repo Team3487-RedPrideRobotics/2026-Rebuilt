@@ -139,7 +139,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
         if(poseEstimateShooter.tagCount >1 ){
             if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
                 if(shooterDegPerSecond<40){
-        m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds);
+        m_CommandSwerveDrivetrain.addVisionMeasurement(new Pose2d(poseEstimateShooter.pose.toPose2d().getTranslation(),getRobotPose2d().getRotation()), poseEstimateShooter.timestampSeconds);
     }}}
     });
     

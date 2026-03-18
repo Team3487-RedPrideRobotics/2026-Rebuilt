@@ -31,9 +31,7 @@ public class BlueHoodAutoAimState extends Command {
 
     @Override
     public void execute() {
-        System.out.println(m_RobotContainer.getInstance().IsRed);
         if (subsystem.FullTurretAutoAim(m_RobotContainer.getInstance().IsRed ?LimelightConstants.RedHubPose2d : LimelightConstants.BlueHubPose2d , 0.1)) {
-            System.out.println("Oh Im aimin' it! OwO");
             done = true;
         }
         else{

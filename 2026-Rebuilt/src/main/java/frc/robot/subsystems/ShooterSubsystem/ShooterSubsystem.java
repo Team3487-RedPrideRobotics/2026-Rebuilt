@@ -254,14 +254,18 @@ public class ShooterSubsystem extends SubsystemBase {
     public boolean TurretPIDRobotRelative(double angle){
         boolean done;
         double delta;
-        delta = Math.abs(angle-SubsystemConstants.ShooterCenteredRotation+getTurretAngle());
+        delta = Math.abs(angle-(TurretAngle.getValueAsDouble()*360/10-SubsystemConstants.ShooterCenteredRotation));
         done = true;
-        if(delta > 5){
+        if(delta > 5 || delta<350){
         setAngle(angle+SubsystemConstants.ShooterCenteredRotation);
         done = false;
         TurretAimed = false;
         }
         else{TurretAimed = true;}
+        System.out.println(TurretAimed);
+        System.out.println(delta);
+        System.out.println(angle);
+        System.out.println(TurretAngle.getValueAsDouble()*360/10-SubsystemConstants.ShooterCenteredRotation);
         return done;
     }
 
