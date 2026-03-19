@@ -69,11 +69,6 @@ public class IntakeSubsystem extends SubsystemBase {
     
 
     m_pivotMotor.setPosition(0);
-
-    SmartDashboard.putNumber("Intake Angle", intakeAngle);
-
-    SmartDashboard.putNumber("Custom Intake Speed", customIntakeSpeed);
-
     }
 
     public void RunMotorPivot(double speed){
@@ -88,7 +83,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean IntakePiviotPID(double goalValueDeg, double threshold){
-        double delta = Math.abs(goalValueDeg*360/80) - Math.abs(m_pivotMotor.getPosition().getValueAsDouble());
+        double delta = Math.abs(goalValueDeg/360*80 - m_pivotMotor.getPosition().getValueAsDouble());
         if(Math.abs(delta) >= threshold){
             m_pivotPIDRequest.withPosition(goalValueDeg/360*80);
             return false;
@@ -96,10 +91,6 @@ public class IntakeSubsystem extends SubsystemBase {
             StopMotorPivot();
             return true;
     }
-    }
-
-    public double TurretTurnsToDeg(double turns){
-        return(((turns*SubsystemConstants.IntakePivotGearRatio)-Math.floor(turns*SubsystemConstants.IntakePivotGearRatio))/360); 
     }
 
     public void RunIntake(double speed){
@@ -118,6 +109,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
+        intakeAngle = m_pivotMotor.getPosition().getValueAsDouble();
         BaseStatusSignal.refreshAll(m_pivotMotor.getPosition());
     }
 

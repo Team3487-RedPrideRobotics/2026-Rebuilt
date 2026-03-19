@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.7,
-        "y": 7.25
+        "x": 7.7,
+        "y": 0.8
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4943457616522955,
-        "y": 7.25
+        "x": 7.7,
+        "y": 1.7999999999999992
       },
       "isLocked": false,
-      "linkedName": "T1"
+      "linkedName": "Ntob"
     },
     {
       "anchor": {
-        "x": 0.5,
-        "y": 7.5
+        "x": 7.7,
+        "y": 3.5
       },
       "prevControl": {
-        "x": 1.5421524781842937,
-        "y": 7.5
+        "x": 7.7,
+        "y": 2.2041444009325772
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "D"
+      "linkedName": "Ntcb"
     }
   ],
   "rotationTargets": [],
@@ -33,15 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake Extend",
-      "waypointRelativePos": 0.3404558404558348,
-      "endWaypointRelativePos": null,
+      "name": "Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 10.4,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -49,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 106.0
+    "rotation": 90.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

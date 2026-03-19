@@ -12,7 +12,7 @@
         "y": 7.25
       },
       "isLocked": false,
-      "linkedName": "T1ccw90"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 9.4,
+    "maxAcceleration": 10.4,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

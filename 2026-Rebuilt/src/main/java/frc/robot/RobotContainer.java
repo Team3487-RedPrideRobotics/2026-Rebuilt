@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -181,10 +182,10 @@ public class RobotContainer {
         driverController.b().onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
 
         // Robot intake
-        driverController.rightTrigger().whileTrue(new IntakeState(m_Intake)); // while the LT button is held it will intake fuel
+        driverController.leftBumper().whileTrue(new IntakeState(m_Intake)); // while the LT button is held it will intake fuel
         driverController.leftTrigger().whileTrue(new OutakeState(m_Intake));  // while the LB button is held it will outake fuel
-        driverController.leftBumper().whileTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake 
-        driverController.rightBumper().whileTrue(new IntakePivotDownState(m_Intake));  // when RB button is pressed deploy the intake
+        driverController.rightBumper().whileTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake 
+        driverController.rightTrigger().whileTrue(new IntakePivotDownState(m_Intake));  // when RB button is pressed deploy the intake
         
         //Non Competition viable in current state
         //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));

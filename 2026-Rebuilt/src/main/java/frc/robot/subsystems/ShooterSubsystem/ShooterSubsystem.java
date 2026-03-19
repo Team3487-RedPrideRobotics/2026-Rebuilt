@@ -74,7 +74,7 @@ public class ShooterSubsystem extends SubsystemBase {
         0.05, // Arm moment of inertia
         0, // Arm length (m)
         Units.degreesToRadians(0), // Min angle of the motor (deg)
-        Units.degreesToRadians( 180), // Max angle of the motor(deg)
+        Units.degreesToRadians( 360), // Max angle of the motor(deg)
         false, // Simulate gravity NO
         Units.degreesToRadians(0) // Starting position (rad)
         );
@@ -266,6 +266,10 @@ public class ShooterSubsystem extends SubsystemBase {
         TurretAimed = false;
         }
         else{TurretAimed = true;}
+        System.out.println(TurretAimed);
+        System.out.println(delta);
+        System.out.println(angle);
+        System.out.println(TurretAngle.getValueAsDouble()*360/10-SubsystemConstants.ShooterCenteredRotation);
         return done;
     }
 

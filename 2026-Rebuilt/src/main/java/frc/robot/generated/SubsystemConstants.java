@@ -34,7 +34,7 @@ public class SubsystemConstants {
     public final static double ClimberClimbHardLimitTop = 210; //max extention
     public final static double ClimberClimbHardLimitBottom = 0; //fully retracted
 
-    public final static double ShooterTurretHardLimitTop = 5; //the rightmost rotational hardstop
+    public final static double ShooterTurretHardLimitTop = 10; //the rightmost rotational hardstop
     public final static double ShooterTurretHardLimitBottom = 0; //the leftmost roational hardstop
 
     public final static double IntakePiviotHardLimitTop = 19; //fully deployed ,90 intaking angle
@@ -51,7 +51,7 @@ public class SubsystemConstants {
     public final static double HoodRotationSpeed = 0.1; 
 
     //The amount of turns of the motor required to turn from the left-most hardstop to face forward
-    public final static double ShooterCenteredRotation = 90;
+    public final static double ShooterCenteredRotation = 260;
     public final static double ShooterHoodLowestAngle = 30; //the angle in deg that the hood starts at
 
     //Controller Deadbands

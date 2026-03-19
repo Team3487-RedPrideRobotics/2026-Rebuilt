@@ -27,14 +27,4 @@ public class AutoHubAimStatePerm extends Command {
         done = false;
         subsystem.continueousTurretAutoAim(true, m_RobotContainer.IsRed);
     }
-
-    @Override
-    public void execute() {
-        done = true;
-    }
-
-    @Override
-    public boolean isFinished() {
-        return done;
-    }
 }
