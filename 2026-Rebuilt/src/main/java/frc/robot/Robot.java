@@ -6,10 +6,15 @@ package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
 
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
+
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
@@ -18,6 +23,10 @@ public class Robot extends TimedRobot {
 
     private final CommandSwerveDrivetrain m_Drivetrain;
 
+    private final PoseEstimatorSubsystem m_PoseEstimator;
+
+    private final Alert NoFmsAlliance;
+
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
         .withTimestampReplay()
@@ -25,7 +34,11 @@ public class Robot extends TimedRobot {
 
     public Robot() {
         m_robotContainer = new RobotContainer();
-        m_Drivetrain = m_robotContainer.drivetrain;
+        m_Drivetrain = m_robotContainer.m_drivetrain;
+        m_PoseEstimator = m_robotContainer.m_PoseEstimator;
+        //Allows Operator to know if the fms is disconected
+        NoFmsAlliance = new Alert("The FMS is not sending Alliance!", AlertType.kError);
+
     }
 
     @Override
@@ -35,13 +48,25 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        m_Drivetrain.seedFieldCentric();
+        m_PoseEstimator.setThermalManagement(true);
+    }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        m_robotContainer.getAlliance();
+        if(DriverStation.isDSAttached()){
+            NoFmsAlliance.set(DriverStation.getAlliance().isEmpty() ? true: false);
+        }
+    }
 
     @Override
-    public void disabledExit() {}
+    public void disabledExit() {
+        m_PoseEstimator.setThermalManagement(false);
+        m_robotContainer.m_Shooter.m_TurretMotor.setPosition(0);
+        m_robotContainer.m_Intake.m_pivotMotor.setPosition(0);
+    }
 
     @Override
     public void autonomousInit() {
@@ -66,7 +91,7 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
-        m_Drivetrain.seedFieldCentric();
+        
     }
 
     @Override
@@ -81,7 +106,9 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void testPeriodic() {}
+    public void testPeriodic() {
+        
+    }
 
     @Override
     public void testExit() {}
