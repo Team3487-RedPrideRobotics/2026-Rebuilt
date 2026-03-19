@@ -3,38 +3,7 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "Turret Auto Aim"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "T1-io-Nto"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Nto-i-Ntc"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Turret Auto Aim"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Ntc-Nto"
-          }
-        }
-      ]
+      "commands": []
     }
   },
   "resetOdom": true,

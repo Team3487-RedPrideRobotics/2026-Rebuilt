@@ -20,11 +20,14 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
@@ -44,7 +47,7 @@ import frc.robot.subsystems.KickerSubsystem.states.KickerReverseState;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.States.AutoHubAimStateOff;
 import frc.robot.subsystems.ShooterSubsystem.States.AutoHubAimStatePerm;
-import frc.robot.subsystems.ShooterSubsystem.States.BlueHoodAutoAimState;
+import frc.robot.subsystems.ShooterSubsystem.States.AutoHubAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleStatePerm;
 import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
@@ -75,12 +78,14 @@ public class RobotContainer {
     private final CommandXboxController driverController = new CommandXboxController(1);
     private final CommandXboxController operatorController = new CommandXboxController(0);
 
-    public final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
+    
 
-    public final PoseEstimatorSubsystem  m_PoseEstimator = new PoseEstimatorSubsystem(m_drivetrain);
+    
 
     
         //instance other robot subsystems
+        public final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
+        public final PoseEstimatorSubsystem  m_PoseEstimator = new PoseEstimatorSubsystem(m_drivetrain);
         public final kickerSubsystem    m_kicker       = new kickerSubsystem();
         public final SpindexterSubsytem m_Spindexter   = new SpindexterSubsytem();
         public final IntakeSubsystem    m_Intake       = new IntakeSubsystem();
@@ -90,7 +95,7 @@ public class RobotContainer {
         //checking which aliance that the robot is on
         public boolean IsRed; 
     
-        private final SendableChooser<Command> autoChooser;
+        private SendableChooser<Command> autoChooser;
     
         private Alliance m_alliance;
     
@@ -117,7 +122,9 @@ public class RobotContainer {
 
         getAlliance();
 
-        //buildNamedCommands();
+        buildNamedCommands();
+
+        NamedCommands.registerCommand("Test Print Command", new InstantCommand(() -> System.out.println("Auto is running!")));
 
         configureBindings();
 
@@ -129,8 +136,9 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-
+        //
         //CONFIGIURE DRIVER CONTROLS
+        //
 
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
@@ -181,10 +189,9 @@ public class RobotContainer {
         //Non Competition viable in current state
         //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
 
-
-
-
+        //
         //OPERATOR CONTROLS
+        //
 
         //Automatically set th turret to follow manual control and for the spindexter to spin
         m_Spindexter.setDefaultCommand(
@@ -195,7 +202,7 @@ public class RobotContainer {
             .withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
 
         //auto aims the Turret, Hood, and Flywheel to the hub; aims the turret to snowblow; resets to front
-        operatorController.leftTrigger().whileTrue(new BlueHoodAutoAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        operatorController.leftTrigger().whileTrue(new AutoHubAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         operatorController.leftBumper().whileTrue(new TurretSlowblowPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         operatorController.y().whileTrue(new TurretResetPIDState(m_Shooter));
 
@@ -228,11 +235,14 @@ public class RobotContainer {
     public void buildNamedCommands(){
         //NamedCommands.registerCommand("Flywheel Spinup", new FlywheelIdleStatePerm(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
         //NamedCommands.registerCommand("Climber Diretion Test", new ClimberGetDirectionstate(m_Climber));
-        //Shooter:
-        //NamedCommands.registerCommand("Turret Auto Aim",new AutoHubAimStatePerm(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        //NamedCommands.registerCommand("Stop Turret Auto Aim",new AutoHubAimStateOff(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        //new EventTrigger("Turret Auto Aim").toggleOnTrue(new AutoHubAimStatePerm(m_Shooter,this));
         
+        //SHOOTER COMMANDS:
+        NamedCommands.registerCommand("Turret Auto Aim", new AutoHubAimState(m_Shooter,this).withTimeout(1));
+        //NamedCommands.registerCommand("Stop Turret Auto Aim",new AutoHubAimStateOff(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        //new EventTrigger("Turret Auto Aim").toggleOnTrue(new AutoHubAimState(m_Shooter,this));
+        NamedCommands.registerCommand("Turret Reset", new TurretResetPIDState(m_Shooter));
+
+
         //NamedCommands.registerCommand("Turret Shoot",new ParallelCommandGroup(
         //                                                                        new KickerFeedState(m_kicker),
         //                                                                        new SpindexterHighstate(m_Spindexter)

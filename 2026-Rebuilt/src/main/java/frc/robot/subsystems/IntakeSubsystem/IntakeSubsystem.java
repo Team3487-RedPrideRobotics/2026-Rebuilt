@@ -118,8 +118,6 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
-        customIntakeSpeed = SmartDashboard.getNumber("Custom Intake Speed", 0);
-        intakeAngle = m_pivotMotor.getPosition().getValueAsDouble();
         BaseStatusSignal.refreshAll(m_pivotMotor.getPosition());
     }
 

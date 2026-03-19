@@ -27,7 +27,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Turret Shoot 0.5s"
+                        "name": null
                       }
                     }
                   ]
@@ -65,7 +65,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Turret Shoot 1s"
+                        "name": null
                       }
                     }
                   ]

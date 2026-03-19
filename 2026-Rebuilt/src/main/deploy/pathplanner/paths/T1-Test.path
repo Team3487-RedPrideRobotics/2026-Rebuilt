@@ -33,9 +33,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Turret Shoot",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.0,
+      "name": "Turret Reset",
+      "waypointRelativePos": 0.4012345679012346,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
@@ -49,7 +49,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 66.19839960195473
   },
   "reversed": false,
   "folder": null,

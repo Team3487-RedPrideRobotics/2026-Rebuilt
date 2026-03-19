@@ -251,12 +251,16 @@ public class ShooterSubsystem extends SubsystemBase {
      
     }
 
+    //TODO: fix this fuck ass delta number NOW
+
     public boolean TurretPIDRobotRelative(double angle){
         boolean done;
         double delta;
-        delta = Math.abs(angle-SubsystemConstants.ShooterCenteredRotation+getTurretAngle());
+        delta = Math.abs(angle+SubsystemConstants.ShooterCenteredRotation-(TurretAngle.getValueAsDouble()*36+SubsystemConstants.ShooterCenteredRotation));
         done = true;
-        if(delta > 5){
+        System.out.println(TurretAimed);
+        System.out.println(delta);
+        if(delta > 3){
         setAngle(angle+SubsystemConstants.ShooterCenteredRotation);
         done = false;
         TurretAimed = false;
@@ -281,7 +285,8 @@ public class ShooterSubsystem extends SubsystemBase {
     public double getTurretAngleRobotRelative(){
         double angle;
         angle = getTurretAngle();
-        angle = angle+SubsystemConstants.ShooterCenteredRotation;
+        angle = angle-SubsystemConstants.ShooterCenteredRotation;
+        //angle = DegreesAngleClamp(angle);
         return angle;
     }
     
@@ -289,30 +294,24 @@ public class ShooterSubsystem extends SubsystemBase {
 
     
     //AimPose: the pose to aim at, tolearance: how close it finds 'acceptable' in deg
-    public boolean FullTurretAutoAim(Pose2d AimPose,double tolerance){
+    public boolean FullTurretAutoAim(Pose2d AimPose){
         Pose2d robotPose = m_PoseEstimatorSubsystem.getRobotPose2d();
         Translation2d chassisSpeed = new Translation2d(m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vxMetersPerSecond
                                                       ,m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vyMetersPerSecond)
                                                       .rotateBy(robotPose.getRotation());
-        double distanceToHub = 0;
-        double desiredHoodAngle = 0;
-        double desiredRPM = 0;
-        Rotation2d desiredTurretAngle = Rotation2d.kZero;
-            
-        if(Math.abs(desiredHoodAngle-getTurretAngle()) < tolerance /*&& Math.abs(desiredHoodAngle-getHoodTurns()*360)<tolerance*/){
-            TurretAimed = true;
+        double distanceToHub = getDistanceToHub(AimPose);;
+        double desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);;
+        double desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);;
+        Rotation2d desiredTurretAngle = new Rotation2d(-Math.atan2(AimPose.getY()-chassisSpeed.getY()*0.25-robotPose.getY(),AimPose.getX()-chassisSpeed.getX()*0.25-robotPose.getX()));
+        TurretAimed = TurretPIDFieldRelative(desiredTurretAngle.getDegrees());
+        RunFlywheelMotor(desiredRPM/60);
+        //HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
+
+        if(TurretAimed /*&& Math.abs(desiredHoodAngle-getHoodTurns()*360)<tolerance*/){
+            StopTurretMotor();
             return true;
         }
-        else{
-            desiredTurretAngle = new Rotation2d(-Math.atan2(AimPose.getY()-chassisSpeed.getY()*0.25-robotPose.getY(),AimPose.getX()-chassisSpeed.getX()*0.25-robotPose.getX()));
-            
-            distanceToHub = getDistanceToHub(AimPose);
-            desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
-            desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
-            TurretPIDFieldRelative(desiredTurretAngle.getDegrees());
-            RunFlywheelMotor(desiredRPM/60);
-            //HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
-            TurretAimed = false;
+        else{              
             return false;
         }
     }
@@ -323,7 +322,7 @@ public class ShooterSubsystem extends SubsystemBase {
                                                       ,m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vyMetersPerSecond)
                                                       .rotateBy(robotPose.getRotation());
         double distanceToHub;
-        distanceToHub = (hubPose2d.relativeTo(robotPose).getTranslation().plus(chassisSpeed)).getNorm();
+        distanceToHub = (hubPose2d.relativeTo(robotPose).getTranslation().minus(chassisSpeed)).getNorm();
         return distanceToHub;
     }
 
@@ -352,8 +351,8 @@ public class ShooterSubsystem extends SubsystemBase {
         //update smartdashboard
         SmartDashboard.updateValues();
         //Do constant PIDs when issued
-        if(constantAutoAim){FullTurretAutoAim(constantGoalRedAlliance ?LimelightConstants.RedHubPose2d : LimelightConstants.BlueHubPose2d, 5); constantSnowblow = false;}
-        if(constantSnowblow){TurretPIDFieldRelative(constantGoalRedAlliance ? 0:180); constantAutoAim = false;}
+        //if(constantAutoAim){FullTurretAutoAim(constantGoalRedAlliance ?LimelightConstants.RedHubPose2d : LimelightConstants.BlueHubPose2d, 5); constantSnowblow = false;}
+        //if(constantSnowblow){TurretPIDFieldRelative(constantGoalRedAlliance ? 0:180); constantAutoAim = false;}
     }
 
     //handle Turret Simulation

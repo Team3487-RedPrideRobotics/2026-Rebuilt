@@ -25,7 +25,6 @@ public class AutoHubAimStatePerm extends Command {
     @Override
     public void initialize() {
         done = false;
-        System.out.println("starting to aim at hub");
         subsystem.continueousTurretAutoAim(true, m_RobotContainer.IsRed);
     }
 

@@ -5,7 +5,7 @@ import frc.robot.RobotContainer;
 import frc.robot.generated.LimelightConstants;
 import frc.robot.subsystems.ShooterSubsystem.*;
 
-public class BlueHoodAutoAimState extends Command {
+public class AutoHubAimState extends Command {
 
     ShooterSubsystem subsystem;
     RobotContainer m_RobotContainer;
@@ -14,7 +14,7 @@ public class BlueHoodAutoAimState extends Command {
 
     boolean done;
 
-    public BlueHoodAutoAimState( ShooterSubsystem Subsystem, RobotContainer m_RobotContainer){
+    public AutoHubAimState( ShooterSubsystem Subsystem, RobotContainer m_RobotContainer){
         
         super();
         subsystem = Subsystem;
@@ -31,15 +31,21 @@ public class BlueHoodAutoAimState extends Command {
 
     @Override
     public void execute() {
-        System.out.println(m_RobotContainer.getInstance().IsRed);
-        if (subsystem.FullTurretAutoAim(m_RobotContainer.getInstance().IsRed ?LimelightConstants.RedHubPose2d : LimelightConstants.BlueHubPose2d , 0.1)) {
-            System.out.println("Oh Im aimin' it! OwO");
+        System.out.println("Aiming");
+        if (subsystem.FullTurretAutoAim(m_RobotContainer.getInstance().IsRed ?LimelightConstants.RedHubPose2d : LimelightConstants.BlueHubPose2d)) {
             done = true;
         }
         else{
             done = false;
+            System.out.println("Aiming but in the if statement ig");
         }
         
+    }
+
+    @Override
+    public boolean isFinished() {
+        System.out.println(done);
+        return done;
     }
 
     @Override
