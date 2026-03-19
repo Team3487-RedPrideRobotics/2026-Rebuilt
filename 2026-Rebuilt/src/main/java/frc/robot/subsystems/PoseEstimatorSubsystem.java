@@ -76,7 +76,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     }
 
     public void setThermalManagement(boolean ThermalManagement){
-        if(ThermalManagement){limelightShooter.getSettings().withPipelineIndex(9).save();;}
+        if(ThermalManagement){limelightShooter.getSettings().withPipelineIndex(9).save();}
         else{limelightShooter.getSettings().withPipelineIndex(0).save();}
     }
 
