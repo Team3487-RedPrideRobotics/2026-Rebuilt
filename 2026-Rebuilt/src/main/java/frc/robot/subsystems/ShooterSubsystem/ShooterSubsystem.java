@@ -232,7 +232,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setAngle(double angleDegrees, double acceleration) {
-    m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, 0); //set rumble for driver to default
     // Convert degrees to rotations
     double positionRotations = DegreesAngleClamp(angleDegrees)/360*10;
     if(positionRotations<SubsystemConstants.ShooterTurretHardLimitTop
@@ -244,11 +243,9 @@ public class ShooterSubsystem extends SubsystemBase {
     else{
         m_TurretMotorRequest.withOutput(0);//stop motors
         m_TurretMotor.setControl(m_TurretMotorRequest);
-        m_TurretMotor.stopMotor();
-        m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, 1); //set rumble for driver
+        m_TurretMotor.stopMotor(); //set rumble for driver
         TurretRingOverrun.set(true); //set Overun to true
     }
-     
     }
 
     public boolean TurretPIDRobotRelative(double angle){
@@ -259,12 +256,13 @@ public class ShooterSubsystem extends SubsystemBase {
         done = true;
         System.out.println(TurretAimed);
         System.out.println(delta);
-        if(delta > 3 && delta <365){
+        if(delta > 4 && delta <365){
         setAngle(angle+SubsystemConstants.ShooterCenteredRotation);
         done = false;
         TurretAimed = false;
+        m_RobotContainer.operatorController.setRumble(RumbleType.kBothRumble,delta/100);
         }
-        else{TurretAimed = true;}
+        else{TurretAimed = true;m_RobotContainer.operatorController.setRumble(RumbleType.kBothRumble,0);}
         return done;
     }
 

@@ -12,45 +12,37 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbDownstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbUpstate;
-import frc.robot.subsystems.ClimberSubsystem.states.ClimberGetDirectionstate;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotDownState;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotUpState;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakeState;
 import frc.robot.subsystems.IntakeSubsystem.states.OutakeState;
-import frc.robot.subsystems.IntakeSubsystem.states.OutakeStatePerm;
 import frc.robot.subsystems.KickerSubsystem.kickerSubsystem;
 import frc.robot.subsystems.KickerSubsystem.states.KickerFeedState;
 import frc.robot.subsystems.KickerSubsystem.states.KickerReverseState;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
-import frc.robot.subsystems.ShooterSubsystem.States.AutoHubAimStateOff;
-import frc.robot.subsystems.ShooterSubsystem.States.AutoHubAimStatePerm;
 import frc.robot.subsystems.ShooterSubsystem.States.AutoHubAimState;
 import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleState;
-import frc.robot.subsystems.ShooterSubsystem.States.FlywheelIdleStatePerm;
 import frc.robot.subsystems.ShooterSubsystem.States.HoodDownState;
 import frc.robot.subsystems.ShooterSubsystem.States.TurretSlowblowPIDState;
 import frc.robot.subsystems.ShooterSubsystem.States.TurretHoodManualState;
@@ -72,12 +64,12 @@ public class RobotContainer {
     public final SwerveRequest.RobotCentric RobotCentricDrive = new SwerveRequest.RobotCentric().withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt(); //unused but may come back for
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt(); //unused but may come back for unbeaching
 
     private final Telemetry m_logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController driverController = new CommandXboxController(1);
-    private final CommandXboxController operatorController = new CommandXboxController(0);
+    public final CommandXboxController operatorController = new CommandXboxController(0);
 
     
 
@@ -157,6 +149,8 @@ public class RobotContainer {
             RobotCentricDrive.withVelocityX(-driverController.getLeftY() * MaxSpeed)
             .withVelocityY(-driverController.getLeftX() * MaxSpeed)
             .withRotationalRate(-driverController.getRightX() * MaxAngularRate)));
+        driverController.y().toggleOnTrue(new InstantCommand(() -> driverController.setRumble(RumbleType.kBothRumble,0.5)));
+        driverController.y().toggleOnFalse(new InstantCommand(() -> driverController.setRumble(RumbleType.kBothRumble,0)));
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();
