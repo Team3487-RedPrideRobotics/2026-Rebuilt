@@ -251,25 +251,20 @@ public class ShooterSubsystem extends SubsystemBase {
      
     }
 
-    //TODO: fix this fuck ass delta number NOW
-
     public boolean TurretPIDRobotRelative(double angle){
         boolean done;
         double delta;
-        delta = Math.abs(angle+SubsystemConstants.ShooterCenteredRotation-(TurretAngle.getValueAsDouble()*36+SubsystemConstants.ShooterCenteredRotation));
+        double TurretRobotRelativeAngle = TurretAngle.getValueAsDouble()*360/10-SubsystemConstants.ShooterCenteredRotation;
+        delta = Math.abs(angle-TurretRobotRelativeAngle);
         done = true;
         System.out.println(TurretAimed);
         System.out.println(delta);
-        if(delta > 3){
+        if(delta > 3 && delta <365){
         setAngle(angle+SubsystemConstants.ShooterCenteredRotation);
         done = false;
         TurretAimed = false;
         }
         else{TurretAimed = true;}
-        System.out.println(TurretAimed);
-        System.out.println(delta);
-        System.out.println(angle);
-        System.out.println(TurretAngle.getValueAsDouble()*360/10-SubsystemConstants.ShooterCenteredRotation);
         return done;
     }
 
@@ -290,20 +285,19 @@ public class ShooterSubsystem extends SubsystemBase {
         double angle;
         angle = getTurretAngle();
         angle = angle-SubsystemConstants.ShooterCenteredRotation;
-        //angle = DegreesAngleClamp(angle);
         return angle;
     }
     
 
 
     
-    //AimPose: the pose to aim at, tolearance: how close it finds 'acceptable' in deg
+    //AimPose: the pose to aim at
     public boolean FullTurretAutoAim(Pose2d AimPose){
         Pose2d robotPose = m_PoseEstimatorSubsystem.getRobotPose2d();
         Translation2d chassisSpeed = new Translation2d(m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vxMetersPerSecond
                                                       ,m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vyMetersPerSecond)
                                                       .rotateBy(robotPose.getRotation());
-        double distanceToHub = getDistanceToHub(AimPose);;
+        double distanceToHub = getDistanceToHub(AimPose);
         double desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);;
         double desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);;
         Rotation2d desiredTurretAngle = new Rotation2d(-Math.atan2(AimPose.getY()-chassisSpeed.getY()*0.25-robotPose.getY(),AimPose.getX()-chassisSpeed.getX()*0.25-robotPose.getX()));
@@ -342,13 +336,15 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //m_RobotContainer.getDriveController().setRumble(RumbleType.kBothRumble, (getDistanceToHub(m_RobotContainer.IsRed ? LimelightConstants.RedHubPose2d:LimelightConstants.BlueHubPose2d)-2.1336/2.7432));
         //Set own values
         FlywheelRPM = getFlywheelSpeed();
         getTurretAngle();
         SmartDashboard.getEntry("TurretAimed").setBoolean(TurretAimed);
         //update motor status signals
-        BaseStatusSignal.refreshAll(TurretAngle,m_FlywheelMotor.getVelocity(),m_HoodMotor.getPosition(),m_TurretMotor.getVelocity());
+        BaseStatusSignal.refreshAll(TurretAngle,
+                                    m_FlywheelMotor.getVelocity(),
+                                    m_HoodMotor.getPosition(),
+                                    m_TurretMotor.getVelocity());
         //feed the pose estimator numbers
         m_PoseEstimatorSubsystem.putShooterRotation(SubsystemConstants.ShooterCenteredRotation-getTurretAngle());
         m_PoseEstimatorSubsystem.putShooterRotationalVelocity(m_TurretMotor.getVelocity().getValueAsDouble()*36);

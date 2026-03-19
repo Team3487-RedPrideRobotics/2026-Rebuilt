@@ -146,6 +146,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
             if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
                 if(shooterDegPerSecond+DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<10){
         m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds,CurrentStdvs);
+        m_field.getObject("ShooterPoseEstimate").setPose(poseEstimateShooter.pose.toPose2d());
     }}}
     });
     
