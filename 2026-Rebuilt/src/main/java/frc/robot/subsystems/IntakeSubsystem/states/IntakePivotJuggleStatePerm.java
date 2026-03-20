@@ -3,13 +3,13 @@ package frc.robot.subsystems.IntakeSubsystem.states;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 
-public class IntakePivotJuggleState extends Command {
+public class IntakePivotJuggleStatePerm extends Command {
         
 IntakeSubsystem subsystem;
 
     boolean done;
 
-    public IntakePivotJuggleState(IntakeSubsystem Subsystem){
+    public IntakePivotJuggleStatePerm(IntakeSubsystem Subsystem){
         
         super();
 
@@ -25,7 +25,7 @@ IntakeSubsystem subsystem;
 
     @Override
     public void execute() {
-        done = subsystem.IntakePiviotPID(45, 0.2);
+        subsystem.IntakePiviotPID(45, 0.2);
     }
 
     @Override

@@ -7,8 +7,6 @@ public class IntakePivotDownState extends Command {
     
 IntakeSubsystem subsystem;
 
-    double Position = 5;
-
     boolean done;
 
     public IntakePivotDownState(IntakeSubsystem Subsystem){

@@ -35,7 +35,7 @@
     {
       "name": "Intake Extend",
       "waypointRelativePos": 0.3404558404558348,
-      "endWaypointRelativePos": null,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],

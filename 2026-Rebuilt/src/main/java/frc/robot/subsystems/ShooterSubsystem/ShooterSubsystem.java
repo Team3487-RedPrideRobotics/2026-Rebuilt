@@ -113,7 +113,7 @@ public class ShooterSubsystem extends SubsystemBase {
         Slot0Configs slot0 = m_TurretConfig.Slot0;
         slot0.kP = 0.25;//5
         slot0.kI = 0;//0.6
-        slot0.kD = 0;//0.3
+        slot0.kD = 0.05;//0.3
 
         SoftwareLimitSwitchConfigs softLimitsTurret = m_TurretConfig.SoftwareLimitSwitch;
         softLimitsTurret.ForwardSoftLimitThreshold = SubsystemConstants.ShooterTurretHardLimitTop;
@@ -254,15 +254,15 @@ public class ShooterSubsystem extends SubsystemBase {
         double TurretRobotRelativeAngle = TurretAngle.getValueAsDouble()*360/10-SubsystemConstants.ShooterCenteredRotation;
         delta = Math.abs(angle-TurretRobotRelativeAngle);
         done = true;
-        System.out.println(TurretAimed);
-        System.out.println(delta);
-        if(delta > 4 && delta <365){
+        TurretAimed = false;
+        if(delta > 4){
         setAngle(angle+SubsystemConstants.ShooterCenteredRotation);
         done = false;
         TurretAimed = false;
         m_RobotContainer.operatorController.setRumble(RumbleType.kBothRumble,delta/100);
         }
-        else{TurretAimed = true;m_RobotContainer.operatorController.setRumble(RumbleType.kBothRumble,0);}
+        else{TurretAimed = true;
+             m_RobotContainer.operatorController.setRumble(RumbleType.kBothRumble,0);}
         return done;
     }
 
@@ -299,7 +299,7 @@ public class ShooterSubsystem extends SubsystemBase {
         double desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);;
         double desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);;
         Rotation2d desiredTurretAngle = new Rotation2d(-Math.atan2(AimPose.getY()-chassisSpeed.getY()*0.25-robotPose.getY(),AimPose.getX()-chassisSpeed.getX()*0.25-robotPose.getX()));
-        TurretAimed = TurretPIDFieldRelative(desiredTurretAngle.getDegrees());
+        TurretPIDFieldRelative(desiredTurretAngle.getDegrees());
         RunFlywheelMotor(desiredRPM/60);
         //HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
 

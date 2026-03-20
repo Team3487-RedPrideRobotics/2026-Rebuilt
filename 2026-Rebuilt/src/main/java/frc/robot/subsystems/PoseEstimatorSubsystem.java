@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.*;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -109,7 +110,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
                                 m_gyro.getRoll(),
                                 m_gyro.getYaw(),
                                 m_gyro.getPitch());
-
+    
+    if(!DriverStation.isAutonomousEnabled()){
     robotRotation = new Rotation3d(
                     Degrees.of(m_gyro.getRoll().getValueAsDouble()),
                     Degrees.of(m_gyro.getPitch().getValueAsDouble()),
@@ -150,7 +152,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     }}}
     });
     
-
+    }
     Optional<Pose2d> tempPose = m_CommandSwerveDrivetrain.samplePoseAt(Utils.getCurrentTimeSeconds());
 
     if (tempPose.isPresent()) {

@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Turret Auto Aim"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "T1-io-Nto"

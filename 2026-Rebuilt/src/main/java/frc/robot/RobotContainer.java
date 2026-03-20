@@ -8,10 +8,13 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -34,6 +37,7 @@ import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbDownstate;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbUpstate;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotDownState;
+import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotJuggleState;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakePivotUpState;
 import frc.robot.subsystems.IntakeSubsystem.states.IntakeState;
 import frc.robot.subsystems.IntakeSubsystem.states.OutakeState;
@@ -151,53 +155,47 @@ public class RobotContainer {
             .withRotationalRate(-driverController.getRightX() * MaxAngularRate)));
         driverController.y().toggleOnTrue(new InstantCommand(() -> driverController.setRumble(RumbleType.kBothRumble,0.5)));
         driverController.y().toggleOnFalse(new InstantCommand(() -> driverController.setRumble(RumbleType.kBothRumble,0)));
+        
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();
         RobotModeTriggers.disabled().whileTrue(
             m_drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
+
         //brake the robot's movement
         driverController.a().whileTrue(m_drivetrain.applyRequest(() -> brake));
-
-        /* 
-        driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(driverController.getLeftY(), driverController.getLeftX()))
-        ));*/
         
-        // Run SysId routines when holding back/start and X/Y.
+        // Run SysId routines when holding back/start and X/Y. UNUSED SYSTEM ID
         // Note that each routine should be run exactly once in a single log.
-        driverController.back().and(driverController.y()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kForward));
-        driverController.back().and(driverController.x()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kReverse));
-        driverController.start().and(driverController.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
-        driverController.start().and(driverController.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
+        //driverController.back().and(driverController.y()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kForward));
+        //driverController.back().and(driverController.x()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kReverse));
+        //driverController.start().and(driverController.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
+        //driverController.start().and(driverController.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on b press
         driverController.b().onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
 
         // Robot intake
-        driverController.leftBumper().whileTrue(new IntakeState(m_Intake)); // while the LT button is held it will intake fuel
-        driverController.leftTrigger().whileTrue(new OutakeState(m_Intake));  // while the LB button is held it will outake fuel
-        driverController.rightBumper().whileTrue(new IntakePivotUpState(m_Intake));  // when RT button is pressed retract the intake 
-        driverController.rightTrigger().whileTrue(new IntakePivotDownState(m_Intake));  // when RB button is pressed deploy the intake
+        driverController.leftBumper().whileTrue(new IntakeState(m_Intake));             // while the LB button is held it will intake fuel
+        driverController.leftTrigger().whileTrue(new OutakeState(m_Intake));            // while the LT button is held it will outtake fuel
+        driverController.rightBumper().whileTrue(new IntakePivotUpState(m_Intake));     // when RB button is pressed retract the intake 
+        driverController.rightTrigger().whileTrue(new IntakePivotDownState(m_Intake));  // when RT button is pressed deploy the intake
+        driverController.x().whileTrue(new IntakePivotJuggleState(m_Intake));           // when X is pressed PID the intake to 45deg for storage and juggling
         
-        //Non Competition viable in current state
-        //driverController.rightBumper().whileTrue(new LimelightChassisAimState(m_drivetrain, RobotCentricDrive,new Pose2d(0.0,-1.0,Rotation2d.kZero)));
 
         //
         //OPERATOR CONTROLS
         //
 
-        //Automatically set th turret to follow manual control and for the spindexter to spin
-        m_Spindexter.setDefaultCommand(
-            new ParallelCommandGroup(
-                new SpindexterLowstate(m_Spindexter),
+        //Control the turret with the left stick
+        m_Shooter.setDefaultCommand(
                 new TurretHoodManualState(m_Shooter, () -> MathUtil.applyDeadband(operatorController.getLeftX(),SubsystemConstants.OperatorConstants.leftXdeadBand)
                                                    , () -> MathUtil.applyDeadband(operatorController.getLeftY(),SubsystemConstants.OperatorConstants.leftYdeadBand))
-            .withInterruptBehavior(InterruptionBehavior.kCancelSelf)));
+            .withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
         //auto aims the Turret, Hood, and Flywheel to the hub; aims the turret to snowblow; resets to front
-        operatorController.leftTrigger().whileTrue(new AutoHubAimState(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        operatorController.leftTrigger().whileTrue(new AutoHubAimState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         operatorController.leftBumper().whileTrue(new TurretSlowblowPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         operatorController.y().whileTrue(new TurretResetPIDState(m_Shooter));
 
@@ -228,27 +226,22 @@ public class RobotContainer {
     }  
 
     public void buildNamedCommands(){
-        //NamedCommands.registerCommand("Flywheel Spinup", new FlywheelIdleStatePerm(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-        //NamedCommands.registerCommand("Climber Diretion Test", new ClimberGetDirectionstate(m_Climber));
         
         //SHOOTER COMMANDS:
-        NamedCommands.registerCommand("Turret Auto Aim", new AutoHubAimState(m_Shooter,this).withTimeout(1));
-        //NamedCommands.registerCommand("Stop Turret Auto Aim",new AutoHubAimStateOff(m_Shooter,this).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        //new EventTrigger("Turret Auto Aim").toggleOnTrue(new AutoHubAimState(m_Shooter,this));
-        NamedCommands.registerCommand("Turret Reset", new TurretResetPIDState(m_Shooter));
-
-
-        //NamedCommands.registerCommand("Turret Shoot",new ParallelCommandGroup(
-        //                                                                        new KickerFeedState(m_kicker),
-        //                                                                        new SpindexterHighstate(m_Spindexter)
-        //                                                                          ));
+        new EventTrigger("Turret Auto Aim").toggleOnTrue(new AutoHubAimState(m_Shooter).withTimeout(20).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        NamedCommands.registerCommand("Turret Reset", new TurretResetPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming).withTimeout(0.5));
+        NamedCommands.registerCommand("Turret Shoot",new ParallelCommandGroup(
+                                                                               new KickerFeedState(m_kicker),
+                                                                                new SpindexterHighstate(m_Spindexter)
+                                                                                  ));
         //Climber:
-        //NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(2));
+        NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(3));
         //Intake:
-        //NamedCommands.registerCommand("Intake Extend", new IntakePivotDownState(m_Intake).withTimeout(1));
-        //NamedCommands.registerCommand("Intake Retract", new IntakePivotUpState(m_Intake).withTimeout(1));
-        //NamedCommands.registerCommand("Intake", new IntakeState(m_Intake).withTimeout(5));
-        //NamedCommands.registerCommand("OutakePerm", new OutakeStatePerm(m_Intake));
+        NamedCommands.registerCommand("Intake Extend", new IntakePivotDownState(m_Intake).withTimeout(1));
+        NamedCommands.registerCommand("Intake Retract", new IntakePivotUpState(m_Intake).withTimeout(1));
+        new EventTrigger("Intake Juggle").whileTrue(new IntakePivotJuggleState(m_Intake));
+        new EventTrigger("Intake").whileTrue( new IntakeState(m_Intake));
+        new EventTrigger("Outtake").whileTrue(new OutakeState(m_Intake));
     }
 
     public Command getAutonomousCommand() {
