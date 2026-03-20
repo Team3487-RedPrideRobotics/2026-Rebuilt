@@ -229,13 +229,14 @@ public class RobotContainer {
         
         //SHOOTER COMMANDS:
         new EventTrigger("Turret Auto Aim").toggleOnTrue(new AutoHubAimState(m_Shooter).withTimeout(20).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-        NamedCommands.registerCommand("Turret Reset", new TurretResetPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming).withTimeout(0.5));
+        NamedCommands.registerCommand("Turret Reset", new InstantCommand(()->m_Shooter.AllStop(),m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         NamedCommands.registerCommand("Turret Shoot",new ParallelCommandGroup(
                                                                                new KickerFeedState(m_kicker),
                                                                                 new SpindexterHighstate(m_Spindexter)
-                                                                                  ));
+                                                                                  ).withTimeout(20));
         //Climber:
-        NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(3));
+        NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(2));
+        NamedCommands.registerCommand("Climber Arm Retract", new ClimberClimbDownstate(m_Climber).withTimeout(3));
         //Intake:
         NamedCommands.registerCommand("Intake Extend", new IntakePivotDownState(m_Intake).withTimeout(1));
         NamedCommands.registerCommand("Intake Retract", new IntakePivotUpState(m_Intake).withTimeout(1));

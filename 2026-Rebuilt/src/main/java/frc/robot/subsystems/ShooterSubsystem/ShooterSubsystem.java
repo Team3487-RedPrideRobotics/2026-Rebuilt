@@ -287,7 +287,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     
 
-
+    //Full Controll
+    public void AllStop(){
+        StopFlywheelMotors();
+        StopHoodMotor();
+        StopTurretMotor();
+    }
     
     //AimPose: the pose to aim at
     public boolean FullTurretAutoAim(Pose2d AimPose){
