@@ -4,9 +4,9 @@
       "visible": false
     }
   },
-  "Joysticks": {
+  "Keyboard 1 Settings": {
     "window": {
-      "visible": false
+      "visible": true
     }
   },
   "keyboardJoysticks": [
@@ -34,7 +34,7 @@
         88,
         67,
         86,
-        -1,
+        66,
         69,
         -1,
         -1,
@@ -78,7 +78,7 @@
       "buttonCount": 12,
       "buttonKeys": [
         77,
-        -1,
+        50,
         46,
         47,
         57,

@@ -1,11 +1,8 @@
 package frc.robot.subsystems.ShooterSubsystem.States;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
 import frc.robot.generated.LimelightConstants;
 import frc.robot.subsystems.ShooterSubsystem.*;
 

@@ -1,6 +1,3 @@
-
-
-
 package frc.robot.subsystems.ShooterSubsystem;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -33,6 +30,8 @@ import frc.robot.RobotContainer;
 import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
+
+//TODO: Remove Turret Angle Adjust (its not used anyway)
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -104,10 +103,11 @@ public class ShooterSubsystem extends SubsystemBase {
         m_FlywheelMotorSlotConfigs.kS = 0.1;
         m_FlywheelMotorSlotConfigs.kA = 1;
         m_FlywheelMotorSlotConfigs.kP = 1;
+        m_FlywheelMotorSlotConfigs.kD = 0.2;
         m_FlywheelConfig.Slot0 = m_FlywheelMotorSlotConfigs;
         m_FlywheelConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
         m_FlywheelConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-        
+        m_FlywheelConfig.HardwareLimitSwitch.withForwardLimitEnable(false);
 
         //turret configs
         Slot0Configs slot0 = m_TurretConfig.Slot0;
@@ -301,14 +301,14 @@ public class ShooterSubsystem extends SubsystemBase {
                                                       ,m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vyMetersPerSecond)
                                                       .rotateBy(robotPose.getRotation());
         double distanceToHub = getDistanceToHub(AimPose);
-        double desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);;
-        double desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);;
+        double desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
+        double desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
         Rotation2d desiredTurretAngle = new Rotation2d(-Math.atan2(AimPose.getY()-chassisSpeed.getY()*0.25-robotPose.getY(),AimPose.getX()-chassisSpeed.getX()*0.25-robotPose.getX()));
         TurretPIDFieldRelative(desiredTurretAngle.getDegrees());
-        RunFlywheelMotor(desiredRPM/60);
+        RunFlywheelMotor(desiredRPM);
         //HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
 
-        if(TurretAimed /*&& Math.abs(desiredHoodAngle-getHoodTurns()*360)<tolerance*/){
+        if(TurretAimed){
             StopTurretMotor();
             return true;
         }
@@ -324,6 +324,7 @@ public class ShooterSubsystem extends SubsystemBase {
                                                       .rotateBy(robotPose.getRotation());
         double distanceToHub;
         distanceToHub = (hubPose2d.relativeTo(robotPose).getTranslation().minus(chassisSpeed)).getNorm();
+        System.out.println(distanceToHub);
         return distanceToHub;
     }
 
@@ -339,10 +340,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        m_RobotContainer.operatorController.setRumble(RumbleType.kBothRumble, 0);
         //Set own values
         FlywheelRPM = getFlywheelSpeed();
         getTurretAngle();
         SmartDashboard.getEntry("TurretAimed").setBoolean(TurretAimed);
+        SmartDashboard.getEntry("Shooter RPM").setNumber(FlywheelRPM);
         //update motor status signals
         BaseStatusSignal.refreshAll(TurretAngle,
                                     m_FlywheelMotor.getVelocity(),
@@ -356,6 +359,7 @@ public class ShooterSubsystem extends SubsystemBase {
         //Do constant PIDs when issued
         //if(constantAutoAim){FullTurretAutoAim(constantGoalRedAlliance ?LimelightConstants.RedHubPose2d : LimelightConstants.BlueHubPose2d, 5); constantSnowblow = false;}
         //if(constantSnowblow){TurretPIDFieldRelative(constantGoalRedAlliance ? 0:180); constantAutoAim = false;}
+
     }
 
     //handle Turret Simulation

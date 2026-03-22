@@ -43,7 +43,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     Field2d m_field;
     Pose2d  m_robotPose2d = new Pose2d(0.0,0.0, new Rotation2d(0.0));
     Rotation3d robotRotation = new Rotation3d();
-    Matrix<N3,N1> shooterStddevs = VecBuilder.fill(1,1,10);
+    Matrix<N3,N1> shooterStddevs = VecBuilder.fill(5,5,10);
+    Matrix<N3,N1> chassisStddevs = VecBuilder.fill(1,1,2);
 
     boolean   tooFast;
     Optional<Pose2d> tempPose;
@@ -111,7 +112,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
                                 m_gyro.getYaw(),
                                 m_gyro.getPitch());
     
-    if(!DriverStation.isAutonomousEnabled()){
+    
     robotRotation = new Rotation3d(
                     Degrees.of(m_gyro.getRoll().getValueAsDouble()),
                     Degrees.of(m_gyro.getPitch().getValueAsDouble()),
@@ -133,21 +134,24 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXWorld().getValueAsDouble()),
 																	   DegreesPerSecond.of(m_gyro.getAngularVelocityYWorld().getValueAsDouble()),
 																	   DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble())))).save();
+    
+    if(!DriverStation.isAutonomousEnabled()){
     // If the pose is present
-    //visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
+    visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
+    Matrix<N3,N1> CurrentStdvs = chassisStddevs.times((poseEstimateFront.getAvgTagAmbiguity()+1)*5);
     // Add it to the pose estimator.
     //check if you can actually see tags
-    //if(poseEstimateFront.tagCount >0 ){
-    //m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds);
-    //}
-    //});
+    if(poseEstimateFront.tagCount >0 ){
+    //m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds,CurrentStdvs);
+    }
+    });
 
     visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
         Matrix<N3,N1> CurrentStdvs = shooterStddevs.times((poseEstimateShooter.getAvgTagAmbiguity()+1)*5);    
         if(poseEstimateShooter.tagCount >1 ){
             if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
                 if(shooterDegPerSecond+DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<10){
-        m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds,CurrentStdvs);
+        //m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds,CurrentStdvs);
         m_field.getObject("ShooterPoseEstimate").setPose(poseEstimateShooter.pose.toPose2d());
     }}}
     });

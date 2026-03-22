@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "T1-io-D"
+            "pathName": "B1-s-B1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B1-ie-s-D"
           }
         },
         {
@@ -20,6 +26,12 @@
           "type": "path",
           "data": {
             "pathName": "De-s-iu-Ct"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Climber Arm Retract"
           }
         }
       ]

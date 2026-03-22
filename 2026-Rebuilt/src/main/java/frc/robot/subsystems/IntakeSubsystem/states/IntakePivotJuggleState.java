@@ -10,8 +10,6 @@ IntakeSubsystem subsystem;
     boolean done;
 
     public IntakePivotJuggleState(IntakeSubsystem Subsystem){
-        
-        super();
 
         subsystem = Subsystem;
         addRequirements(Subsystem);
@@ -31,6 +29,7 @@ IntakeSubsystem subsystem;
     @Override
     public void end(boolean interrupted) {
         subsystem.StopMotorPivot();
+        System.err.println("finished juggle");
     }
 
     
@@ -38,4 +37,5 @@ IntakeSubsystem subsystem;
     public boolean isFinished() {
         return done;
     }
+    
 }

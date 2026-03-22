@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
         m_PoseEstimator = m_robotContainer.m_PoseEstimator;
         //Allows Operator to know if the fms is disconected
         NoFmsAlliance = new Alert("The FMS is not sending Alliance!", AlertType.kError);
+        m_Drivetrain.seedFieldCentric();
 
     }
 
@@ -49,8 +50,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        m_Drivetrain.seedFieldCentric();
-        m_Drivetrain.tareEverything();
         m_PoseEstimator.setThermalManagement(true);
     }
 
@@ -65,8 +64,6 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledExit() {
         m_PoseEstimator.setThermalManagement(false);
-        m_robotContainer.m_Shooter.m_TurretMotor.setPosition(0);
-        m_robotContainer.m_Intake.m_pivotMotor.setPosition(0);
     }
 
     @Override

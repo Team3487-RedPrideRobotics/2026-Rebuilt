@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.337138157894738,
-        "y": 0.4096820175438598
+        "x": 7.462236842105264,
+        "y": 0.18850877192982374
       },
       "isLocked": false,
       "linkedName": "Ntcb"
@@ -20,8 +20,8 @@
         "y": 0.8
       },
       "prevControl": {
-        "x": 6.336849751153197,
-        "y": 0.40010952769124414
+        "x": 8.116140350877194,
+        "y": 0.6789364035087715
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,19 +31,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Intake Juggle",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Intake Juggle"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 10.4,

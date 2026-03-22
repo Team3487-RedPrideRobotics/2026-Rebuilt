@@ -50,7 +50,7 @@ public class IntakeSubsystem extends SubsystemBase {
         0.3, // Arm length (m)
         Units.degreesToRadians(0), // Min angle of the motor (deg)
         Units.degreesToRadians(90), // Max angle of the subsystem(deg)
-        true, // Simulate gravity Yes
+        false, // Simulate gravity No; Braking makes it not fall ever
         Units.degreesToRadians(0) // Starting position (rad)
         );
     

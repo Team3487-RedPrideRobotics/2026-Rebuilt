@@ -33,22 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Turret Shoot",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
-      "command": null
-    },
-    {
-      "name": "Turret Auto Aim",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
-      "command": null
-    },
-    {
       "name": "Intake",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
-      "command": null
+      "waypointRelativePos": 0.19396551724137936,
+      "endWaypointRelativePos": 0.8462643678160919,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake"
+        }
+      }
     }
   ],
   "globalConstraints": {

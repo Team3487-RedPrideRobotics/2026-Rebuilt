@@ -26,9 +26,7 @@ public class IntakeState extends Command{
 
     @Override
     public void end(boolean interrupted) {
-
         subsystem.StopIntake();
-
     }
 
     

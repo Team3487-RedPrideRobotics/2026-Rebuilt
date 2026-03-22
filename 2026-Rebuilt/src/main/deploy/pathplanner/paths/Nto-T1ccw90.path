@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.600912981455064,
-        "y": 7.625477888730385
+        "x": 7.693026315789474,
+        "y": 7.900723684210526
       },
       "isLocked": false,
       "linkedName": "Nto"
@@ -20,12 +20,12 @@
         "y": 7.25
       },
       "prevControl": {
-        "x": 2.7,
-        "y": 7.25
+        "x": 8.318081140350877,
+        "y": 7.487225877192982
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "T1ccw90"
     }
   ],
   "rotationTargets": [],

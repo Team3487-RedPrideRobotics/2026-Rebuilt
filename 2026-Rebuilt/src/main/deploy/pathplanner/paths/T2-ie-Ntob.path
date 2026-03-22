@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.7,
+        "x": 4.0,
         "y": 0.8
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.700000000000002,
+        "x": 5.0,
         "y": 0.8
       },
       "isLocked": false,
@@ -20,8 +20,8 @@
         "y": 0.8
       },
       "prevControl": {
-        "x": 5.738289473684211,
-        "y": 0.18850877192982385
+        "x": 5.721699561403509,
+        "y": 0.4096820175438601
       },
       "nextControl": null,
       "isLocked": false,
@@ -36,7 +36,12 @@
       "name": "Intake Extend",
       "waypointRelativePos": 0.7413793103448277,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Extend"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -55,7 +60,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 170.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

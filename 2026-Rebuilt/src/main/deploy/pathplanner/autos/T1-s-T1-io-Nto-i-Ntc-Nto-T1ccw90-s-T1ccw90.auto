@@ -37,31 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "T1-s-T1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "T1ccw90-Nto"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Nto-i-Ntc"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Ntc-Nto"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Nto-T1cw90"
+            "pathName": "T1ccw90-T1ccw90"
           }
         }
       ]

@@ -3,37 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.7,
-        "y": 0.8
+        "x": 3.8,
+        "y": 7.25
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.699999999999999,
-        "y": 0.7999999999999998
+        "x": 3.2830153508771924,
+        "y": 7.275668859649122
       },
       "isLocked": false,
-      "linkedName": "T2cw90"
+      "linkedName": "T1"
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 3.8,
+        "y": 7.25
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 6.0
+        "x": 3.263782894736842,
+        "y": 7.266052631578947
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "T1"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Flywheel spinup",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Flywheel spinup"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 0.195,
     "maxAcceleration": 10.4,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0.8186945222303482
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0.8186945222303482
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

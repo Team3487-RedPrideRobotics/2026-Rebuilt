@@ -117,6 +117,6 @@ public class ClimberSubsystem extends SubsystemBase {
 
     m_ClimbMotor.getSimState().setRawRotorPosition(motorPosition);
     m_ClimbMotor.getSimState().setRotorVelocity(motorVelocity);
-    m_ClimberSimPivot.setLength(180+m_ClimberSim.getPositionMeters()/(2*Math.PI)*360);
+    m_ClimberSimPivot.setLength(m_ClimberSim.getPositionMeters());
     }
 }
