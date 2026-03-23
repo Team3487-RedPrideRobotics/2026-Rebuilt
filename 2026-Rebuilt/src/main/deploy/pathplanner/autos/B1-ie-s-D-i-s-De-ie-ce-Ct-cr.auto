@@ -5,33 +5,33 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "B1-s-B1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B1-ie-s-D"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "D-i-s-De"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "De-s-iu-Ct"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Turret Auto Aim"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "T1-io-Nto"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Nto-i-Ntc"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Turret Auto Aim"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Ntc-Nto"
+            "name": "Climber Arm Retract"
           }
         }
       ]

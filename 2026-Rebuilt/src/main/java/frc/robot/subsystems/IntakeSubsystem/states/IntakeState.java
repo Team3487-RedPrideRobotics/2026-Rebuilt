@@ -21,14 +21,12 @@ public class IntakeState extends Command{
 
     @Override
     public void execute() {
-        subsystem.RunIntake(0.75);
+        subsystem.RunIntake(0.5);
     }
 
     @Override
     public void end(boolean interrupted) {
-
         subsystem.StopIntake();
-
     }
 
     

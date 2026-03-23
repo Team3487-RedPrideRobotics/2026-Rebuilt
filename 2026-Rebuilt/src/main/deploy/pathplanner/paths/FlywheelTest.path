@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.7,
+        "x": 3.8,
         "y": 7.25
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1252302631578948,
-        "y": 5.9197807017543855
+        "x": 3.2830153508771924,
+        "y": 7.275668859649122
       },
       "isLocked": false,
       "linkedName": "T1"
     },
     {
       "anchor": {
-        "x": 2.2694736842105265,
-        "y": 4.054232456140351
+        "x": 3.8,
+        "y": 7.25
       },
       "prevControl": {
-        "x": 2.057916666666667,
-        "y": 5.871699561403509
+        "x": 3.263782894736842,
+        "y": 7.266052631578947
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "T1"
     }
   ],
   "rotationTargets": [],
@@ -33,15 +33,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Turret Shoot",
-      "waypointRelativePos": 0.0,
+      "name": "Flywheel spinup",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": 1.0,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Flywheel spinup"
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 0.195,
+    "maxAcceleration": 10.4,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -49,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0.8186945222303482
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.8186945222303482
   },
   "useDefaultConstraints": false
 }

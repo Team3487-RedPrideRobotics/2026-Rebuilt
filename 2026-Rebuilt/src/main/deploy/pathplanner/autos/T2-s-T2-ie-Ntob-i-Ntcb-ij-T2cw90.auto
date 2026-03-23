@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "T2-T2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "T2-ie-Ntob"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ntob-i-Ntcb"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ntcb-T2cw90"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "T2cw90-T2cw90"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

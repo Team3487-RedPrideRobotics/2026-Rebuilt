@@ -10,6 +10,14 @@ import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.SubsystemConstants;
@@ -28,7 +36,23 @@ public class IntakeSubsystem extends SubsystemBase {
 
     double intakeAngle;
 
+    SingleJointedArmSim m_IntakeSim;
+    Mechanism2d m_IntakeSimMech = new Mechanism2d(3, 3);
+    MechanismRoot2d m_IntakeSimRoot = m_IntakeSimMech.getRoot("IntakePivot", 2, 1);
+    MechanismLigament2d m_IntakeSimPivot = m_IntakeSimRoot.append(new MechanismLigament2d("pivot", 0.4, 90));
+
     public IntakeSubsystem(){
+
+        m_IntakeSim = new SingleJointedArmSim(
+        DCMotor.getKrakenX60(1), 
+        80,//gear ratio
+        1, // Arm moment of inertia
+        0.3, // Arm length (m)
+        Units.degreesToRadians(0), // Min angle of the motor (deg)
+        Units.degreesToRadians(90), // Max angle of the subsystem(deg)
+        false, // Simulate gravity No; Braking makes it not fall ever
+        Units.degreesToRadians(0) // Starting position (rad)
+        );
     
     m_pivotMotor = new TalonFX(SubsystemConstants.IntakePivotKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS); //initalize motors
     m_intakeMotor = new TalonFX(SubsystemConstants.IntakeKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
@@ -43,10 +67,12 @@ public class IntakeSubsystem extends SubsystemBase {
     TalonFXConfiguration m_intakePivotConfig = new TalonFXConfiguration(); //make configs
     TalonFXConfiguration m_intakeConfig = new TalonFXConfiguration();
 
+    //intake config
     Slot0Configs m_pivotPIDs = new Slot0Configs(); //set PIDs
-    m_pivotPIDs.kP = 0.25;
+    m_pivotPIDs.kP = 2;
     m_pivotPIDs.kI = 0;
-    m_pivotPIDs.kD = 0;
+    m_pivotPIDs.kD = 0.5;
+    m_intakePivotConfig.Slot0 = m_pivotPIDs;
 
     SoftwareLimitSwitchConfigs softLimitsIntakePivot = m_intakePivotConfig.SoftwareLimitSwitch; //set limits
         softLimitsIntakePivot.ForwardSoftLimitThreshold = SubsystemConstants.IntakePiviotHardLimitTop;
@@ -56,6 +82,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     m_intakePivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake; //set breaking
 
+    //Intake roller config
     SoftwareLimitSwitchConfigs softLimitsIntake = m_intakeConfig.SoftwareLimitSwitch;
     softLimitsIntake.ForwardSoftLimitThreshold = SubsystemConstants.IntakePiviotHardLimitTop;
     softLimitsIntake.ForwardSoftLimitEnable = false;
@@ -67,13 +94,9 @@ public class IntakeSubsystem extends SubsystemBase {
     m_pivotMotor.getConfigurator().apply(m_intakePivotConfig); //apply configs
     m_intakeMotor.getConfigurator().apply(m_intakeConfig);
     
-
     m_pivotMotor.setPosition(0);
 
-    SmartDashboard.putNumber("Intake Angle", intakeAngle);
-
-    SmartDashboard.putNumber("Custom Intake Speed", customIntakeSpeed);
-
+    SmartDashboard.putData("Intake Pivot", m_IntakeSimMech);
     }
 
     public void RunMotorPivot(double speed){
@@ -88,18 +111,16 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean IntakePiviotPID(double goalValueDeg, double threshold){
-        double delta = Math.abs(goalValueDeg*360/80) - Math.abs(intakeAngle);
+        double delta = Math.abs(goalValueDeg/360*80 - m_pivotMotor.getPosition().getValueAsDouble());
+        System.out.println(delta);
         if(Math.abs(delta) >= threshold){
             m_pivotPIDRequest.withPosition(goalValueDeg/360*80);
+            m_pivotMotor.setControl(m_pivotPIDRequest);
             return false;
     }   else {
-            StopMotorPivot();
+            m_pivotMotor.stopMotor();
             return true;
     }
-    }
-
-    public double TurretTurnsToDeg(double turns){
-        return(((turns*SubsystemConstants.IntakePivotGearRatio)-Math.floor(turns*SubsystemConstants.IntakePivotGearRatio))/360); 
     }
 
     public void RunIntake(double speed){
@@ -118,9 +139,29 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
-        customIntakeSpeed = SmartDashboard.getNumber("Custom Intake Speed", 0);
+        intakeAngle = m_pivotMotor.getPosition().getValueAsDouble();
         BaseStatusSignal.refreshAll(m_pivotMotor.getPosition());
         intakeAngle = m_pivotMotor.getPosition().getValueAsDouble();
     }
+
+    //handle Turret Simulation
+    public void simulationPeriodic() {
+    m_IntakeSim.setInput(m_pivotMotor.getSimState().getMotorVoltage());
+
+    // Update simulation by 20ms
+    m_IntakeSim.update(0.020);
+    RoboRioSim.setVInVoltage(
+      BatterySim.calculateDefaultBatteryLoadedVoltage(
+        m_IntakeSim.getCurrentDrawAmps()
+      )
+    );
+
+    double motorPosition = (m_IntakeSim.getAngleRads()*80)/(2*Math.PI);
+    double motorVelocity = (m_IntakeSim.getVelocityRadPerSec() * 80)/(2*Math.PI);
+
+    m_pivotMotor.getSimState().setRawRotorPosition(motorPosition);
+    m_pivotMotor.getSimState().setRotorVelocity(motorVelocity);
+    m_IntakeSimPivot.setAngle(180+m_IntakeSim.getAngleRads()/(2*Math.PI)*360);
+  }
 
 }

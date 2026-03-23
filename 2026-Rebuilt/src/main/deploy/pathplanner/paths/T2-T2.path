@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.7,
-        "y": 7.25
+        "x": 4.0,
+        "y": 0.8
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.7,
-        "y": 5.25
+        "x": 3.75,
+        "y": 0.8
       },
       "isLocked": false,
-      "linkedName": "Nto"
+      "linkedName": "T2"
     },
     {
       "anchor": {
-        "x": 7.7,
-        "y": 4.8
+        "x": 4.0,
+        "y": 0.8
       },
       "prevControl": {
-        "x": 7.7,
-        "y": 7.025
+        "x": 3.5000000000000004,
+        "y": 0.8
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Ntc"
+      "linkedName": "T2"
     }
   ],
   "rotationTargets": [],
@@ -33,19 +33,36 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
+      "name": "Intake Extend",
       "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.5,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Extend"
+        }
+      }
+    },
+    {
+      "name": "Turret Auto Aim",
+      "waypointRelativePos": 0.3,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
+      "name": "Turret Shoot",
+      "waypointRelativePos": 0.6,
       "endWaypointRelativePos": 1.0,
       "command": {
         "type": "named",
         "data": {
-          "name": "Intake"
+          "name": "Turret Shoot"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 0.1,
     "maxAcceleration": 10.4,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -54,13 +71,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": false
 }

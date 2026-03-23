@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.7,
-        "y": 7.25
+        "x": 0.46,
+        "y": 0.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.7,
-        "y": 5.25
+        "x": 1.46,
+        "y": 0.5999999999999996
       },
       "isLocked": false,
-      "linkedName": "Nto"
+      "linkedName": "O"
     },
     {
       "anchor": {
-        "x": 7.7,
-        "y": 4.8
+        "x": 0.96,
+        "y": 2.8
       },
       "prevControl": {
-        "x": 7.7,
-        "y": 7.025
+        "x": 0.5459644206434672,
+        "y": 2.476531590087807
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Ntc"
+      "linkedName": "Cb"
     }
   ],
   "rotationTargets": [],
@@ -33,19 +33,30 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
-      "waypointRelativePos": 0,
+      "name": "Climber Arm Extend",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Climber Arm Extend"
+        }
+      }
+    },
+    {
+      "name": "Intake Juggle",
+      "waypointRelativePos": 0.4848053181386528,
       "endWaypointRelativePos": 1.0,
       "command": {
         "type": "named",
         "data": {
-          "name": "Intake"
+          "name": "Intake Juggle"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 5.0,
     "maxAcceleration": 10.4,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -54,13 +65,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

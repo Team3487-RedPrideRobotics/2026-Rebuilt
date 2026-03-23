@@ -7,6 +7,7 @@ public class TurretResetPIDState extends Command {
 
     ShooterSubsystem subsystem;
 
+    boolean reset = false;
 
     public TurretResetPIDState( ShooterSubsystem Subsystem){
         
@@ -17,17 +18,23 @@ public class TurretResetPIDState extends Command {
 
     @Override
     public void initialize() {
-        
+        System.out.println("trying to reset");
     }
 
     @Override
     public void execute() {
-        subsystem.TurretPIDRobotRelative(0);
+        reset = subsystem.TurretPIDRobotRelative(0);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return reset;
     }
 
     @Override
     public void end(boolean interrupted) {
         subsystem.StopTurretMotor();
+        System.out.println("reset successfully");
     }
 
 }

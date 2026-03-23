@@ -12,10 +12,10 @@ import edu.wpi.first.math.util.Units;
 
 public class LimelightConstants {
     //limelight-chassis/limelight-lront
-    public static final Pose3d limelightFrontPose = new Pose3d(Units.inchesToMeters(-0.58)
-                                                        ,  Units.inchesToMeters(-7.5) 
-                                                        ,  Units.inchesToMeters(18)
-                                                        ,  new Rotation3d());
+    public static final Pose3d limelightFrontPose = new Pose3d(Units.inchesToMeters(-3)
+                                                        ,  Units.inchesToMeters(10) 
+                                                        ,  Units.inchesToMeters(12)
+                                                        ,  new Rotation3d(0, 45, 90));
     public static final String LimelightFrontID =  "limelight-chassis";
     //limelight-left
     public static final Pose3d limelightShooterOffset = new Pose3d(Units.inchesToMeters(6.76)
@@ -51,37 +51,18 @@ public class LimelightConstants {
 
     //Flywheel Interpolator; distance to goal(meters), Speed out (RPM)
     public static final InterpolatingDoubleTreeMap TurretFlywheelInterpolatorRPM = InterpolatingDoubleTreeMap.ofEntries(
-          Map.entry(2.13, 2800.0)
-         ,Map.entry(2.28,2800.0)
-         ,Map.entry(2.43,2900.0)
-         ,Map.entry(2.49,2900.0)
-         ,Map.entry(2.74,3000.0)
-         ,Map.entry(3.0,3000.0)
-         ,Map.entry(3.2,3050.0)
-         ,Map.entry(3.35,3100.0)
-         ,Map.entry(3.51,3200.0)
-         ,Map.entry(3.81,3200.0)
-         ,Map.entry(3.96,3300.0)
-         ,Map.entry(4.11,3300.0)
-         ,Map.entry(4.27,3400.0)
-         ,Map.entry(4.87,3400.0)
-        );
+          Map.entry(2.13, 4100.0)
+         ,Map.entry(2.28,4100.0)
+         ,Map.entry(2.43,4100.0)
+         ,Map.entry(2.49,4100.0)
+         ,Map.entry(2.74,4150.0)
+         ,Map.entry(3.0,4200.0)
+         ,Map.entry(3.2,4250.0)
+         ,Map.entry(3.35,4300.0)
+         ,Map.entry(3.51,4350.0)
+         ,Map.entry(3.81,4400.0)
+         ,Map.entry(3.96,4450.0)
 
-    public static final InterpolatingDoubleTreeMap InverseTurretFlywheelInterpolatorRPM = InterpolatingDoubleTreeMap.ofEntries(
-          Map.entry(2800.0,2.13)
-         ,Map.entry(2800.0,2.28)
-         ,Map.entry(2900.0,2.43)
-         ,Map.entry(2900.0,2.49)
-         ,Map.entry(3000.0,2.74)
-         ,Map.entry(3000.0,3.0)
-         ,Map.entry(3050.0,3.2)
-         ,Map.entry(3100.0,3.35)
-         ,Map.entry(3200.0,3.51)
-         ,Map.entry(3200.0,3.81)
-         ,Map.entry(3300.0,3.96)
-         ,Map.entry(3300.0,4.11)
-         ,Map.entry(3400.0,4.27)
-         ,Map.entry(3400.0,4.87)
         );
         
 }

@@ -7,8 +7,6 @@ public class IntakePivotDownState extends Command {
     
 IntakeSubsystem subsystem;
 
-    double Position = 5;
-
     boolean done;
 
     public IntakePivotDownState(IntakeSubsystem Subsystem){
@@ -27,7 +25,7 @@ IntakeSubsystem subsystem;
 
     @Override
     public void execute() {
-    subsystem.RunMotorPivot(-0.5);
+    subsystem.RunMotorPivot(0.5);
     }
 
     @Override

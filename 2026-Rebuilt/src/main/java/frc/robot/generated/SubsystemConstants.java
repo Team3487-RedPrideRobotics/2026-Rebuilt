@@ -21,7 +21,7 @@ public class SubsystemConstants {
     //diretions for every motor
     public final static InvertedValue SpindexterKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue KickerKrakenInverted = InvertedValue.Clockwise_Positive;
-    public final static InvertedValue IntakeKrakenInverted = InvertedValue.Clockwise_Positive;
+    public final static InvertedValue IntakeKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue IntakePivotKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue ShooterFlywheelKrakenInverted = InvertedValue.CounterClockwise_Positive;
     public final static InvertedValue ShooterTurretKrakenInverted = InvertedValue.CounterClockwise_Positive;
@@ -34,11 +34,11 @@ public class SubsystemConstants {
     public final static double ClimberClimbHardLimitTop = 210; //max extention
     public final static double ClimberClimbHardLimitBottom = 0; //fully retracted
 
-    public final static double ShooterTurretHardLimitTop = 5; //the rightmost rotational hardstop
+    public final static double ShooterTurretHardLimitTop = 10; //the rightmost rotational hardstop
     public final static double ShooterTurretHardLimitBottom = 0; //the leftmost roational hardstop
 
-    public final static double IntakePiviotHardLimitTop = 20.58; //fully deployed ,90 intaking angle
-    public final static double IntakePiviotHardLimitBototm = 0; //stowed ,-25.1549 stowed angle(from vertical)
+    public final static double IntakePiviotHardLimitTop = 19; //fully deployed ,90 intaking angle
+    public final static double IntakePiviotHardLimitBototm = 1; //stowed ,-25.1549 stowed angle(from vertical)
 
     //Gear ratios
     public final static double ShooterTurretGearRatio = 20/200;
@@ -51,7 +51,7 @@ public class SubsystemConstants {
     public final static double HoodRotationSpeed = 0.1; 
 
     //The amount of turns of the motor required to turn from the left-most hardstop to face forward
-    public final static double ShooterCenteredRotation = 90;
+    public final static double ShooterCenteredRotation = 260;
     public final static double ShooterHoodLowestAngle = 30; //the angle in deg that the hood starts at
 
     //Controller Deadbands

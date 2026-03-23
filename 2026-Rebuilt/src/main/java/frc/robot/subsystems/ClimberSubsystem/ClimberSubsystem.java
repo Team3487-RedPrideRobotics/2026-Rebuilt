@@ -7,20 +7,41 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.generated.SubsystemConstants;
 
 public class ClimberSubsystem extends SubsystemBase {
     
-    
-
     private TalonFX m_ClimbMotor;
 
     DutyCycleOut m_ClimbMotorRequest;
 
+    ElevatorSim m_ClimberSim;
+    Mechanism2d m_ClimberSimMech = new Mechanism2d(3, 3);
+    MechanismRoot2d m_ClimberSimRoot = m_ClimberSimMech.getRoot("ClimberArm", 2, 1);
+    MechanismLigament2d m_ClimberSimPivot = m_ClimberSimRoot.append(new MechanismLigament2d("Arm", 0.4, 90));
+
     private int direction;
     
     public ClimberSubsystem(){
+
+    m_ClimberSim = new ElevatorSim(DCMotor.getKrakenX60(1), 
+                                    15, 
+                                    0.1, 
+                                    0.02, 
+                                    0.3, 
+                                    0.6, 
+                                    false, 
+                                    direction);
 
     m_ClimbMotor = new TalonFX(SubsystemConstants.ClimberKrakenCANID, SubsystemConstants.SUBSYSTEM_BUS);
     
@@ -28,6 +49,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
     m_ClimbMotor.setNeutralMode(NeutralModeValue.Brake);
 
+    SmartDashboard.putData("Climber Sim", m_ClimberSimMech);
     }
 
 // the pid for the motor going up and down
@@ -76,5 +98,25 @@ public class ClimberSubsystem extends SubsystemBase {
     public void periodic() {
         BaseStatusSignal.refreshAll(m_ClimbMotor.getPosition());
 
+    }
+
+    @Override
+    public void simulationPeriodic() {
+    m_ClimberSim.setInput(m_ClimbMotor.getSimState().getMotorVoltage());
+
+    // Update simulation by 20ms
+    m_ClimberSim.update(0.020);
+    RoboRioSim.setVInVoltage(
+      BatterySim.calculateDefaultBatteryLoadedVoltage(
+        m_ClimberSim.getCurrentDrawAmps()
+      )
+    );
+
+    double motorPosition = ((m_ClimberSim.getPositionMeters()-0.3/0.3)*15)/(2*Math.PI);
+    double motorVelocity = (m_ClimberSim.getVelocityMetersPerSecond() * 15)/(2*Math.PI);
+
+    m_ClimbMotor.getSimState().setRawRotorPosition(motorPosition);
+    m_ClimbMotor.getSimState().setRotorVelocity(motorVelocity);
+    m_ClimberSimPivot.setLength(m_ClimberSim.getPositionMeters());
     }
 }
