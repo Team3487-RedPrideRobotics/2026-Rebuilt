@@ -141,6 +141,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         intakeAngle = m_pivotMotor.getPosition().getValueAsDouble();
         BaseStatusSignal.refreshAll(m_pivotMotor.getPosition());
+        intakeAngle = m_pivotMotor.getPosition().getValueAsDouble();
     }
 
     //handle Turret Simulation
