@@ -7,25 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "B1-s-B1"
+            "pathName": "T2-T2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "B1-ie-s-D"
+            "pathName": "T2-ie-Ntob"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "D-i-s-De"
+            "pathName": "Ntob-i-Ntcb"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "De-s-iu-Ct"
+            "pathName": "Ntcb-T2cw90"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "T2-ce-s-ij-Cb"
           }
         },
         {

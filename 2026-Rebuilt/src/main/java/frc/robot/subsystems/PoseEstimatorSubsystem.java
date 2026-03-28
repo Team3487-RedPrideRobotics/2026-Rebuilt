@@ -43,8 +43,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     Field2d m_field;
     Pose2d  m_robotPose2d = new Pose2d(0.0,0.0, new Rotation2d(0.0));
     Rotation3d robotRotation = new Rotation3d();
-    Matrix<N3,N1> shooterStddevs = VecBuilder.fill(5,5,10);
-    Matrix<N3,N1> chassisStddevs = VecBuilder.fill(1,1,2);
+    Matrix<N3,N1> shooterStddevs = VecBuilder.fill(0.1,0.1,0.1);
+    Matrix<N3,N1> chassisStddevs = VecBuilder.fill(0.5,0.5,0.5);
+    boolean visionEstimatesEnabled = true;
 
     boolean   tooFast;
     Optional<Pose2d> tempPose;
@@ -82,6 +83,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
         else{limelightShooter.getSettings().withPipelineIndex(0).save();}
     }
 
+    public void setVisionEstimatesEnabled(){
+        visionEstimatesEnabled = !visionEstimatesEnabled;
+    }
+
 
     public PoseEstimatorSubsystem(CommandSwerveDrivetrain MySillyLittleDrivetrain){
         limelightFront = new Limelight(LimelightConstants.LimelightFrontID);
@@ -95,7 +100,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
         m_field.getObject("BlueHub").setPose(Pose2d.kZero);
         m_field.getObject("RedHub").setPose(Pose2d.kZero);
 
-        limelightFront.getSettings().withCameraOffset(LimelightConstants.limelightFrontPose).save();  
+        limelightFront.getSettings().withCameraOffset(LimelightConstants.limelightFrontPose).save();
+        limelightShooter.getSettings().withCameraOffset(LimelightConstants.limelightShooterPose).save();
 
         shooterPoseEstimator = limelightShooter.createPoseEstimator(EstimationMode.MEGATAG2);
         frontPoseEstimator = limelightFront.createPoseEstimator(EstimationMode.MEGATAG2);
@@ -121,10 +127,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     visionEstimateShooter = shooterPoseEstimator.getPoseEstimate();
     visionEstimateFront = frontPoseEstimator.getPoseEstimate();
 
-    limelightShooter.getSettings().withCameraOffset(LimelightConstants.limelightShooterOffset.rotateAround(
-                                 LimelightConstants.limelightShooterCenter.getTranslation()
-                                ,new Rotation3d(Rotation2d.fromDegrees(shooterRotation2d)))).save();
-    
     //Update each of the limelights with the current robot orientation
     limelightFront.getSettings().withRobotOrientation(new Orientation3d(robotRotation,
 												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXWorld().getValueAsDouble()),
@@ -139,19 +141,19 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     // If the pose is present
     visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
     Matrix<N3,N1> CurrentStdvs = chassisStddevs.times((poseEstimateFront.getAvgTagAmbiguity()+1)*5);
-    // Add it to the pose estimator.
-    //check if you can actually see tags
     if(poseEstimateFront.tagCount >0 ){
-    //m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds,CurrentStdvs);
-    }
+        if(poseEstimateFront.pose.toPose2d() != Pose2d.kZero){
+                if(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<10){
+    //if(visionEstimatesEnabled){m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds,CurrentStdvs);}
+    }}}
     });
 
     visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
         Matrix<N3,N1> CurrentStdvs = shooterStddevs.times((poseEstimateShooter.getAvgTagAmbiguity()+1)*5);    
         if(poseEstimateShooter.tagCount >1 ){
             if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
-                if(shooterDegPerSecond+DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<10){
-        //m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds,CurrentStdvs);
+                if(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<10){
+        //if(visionEstimatesEnabled){m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds,CurrentStdvs);}
         m_field.getObject("ShooterPoseEstimate").setPose(poseEstimateShooter.pose.toPose2d());
     }}}
     });

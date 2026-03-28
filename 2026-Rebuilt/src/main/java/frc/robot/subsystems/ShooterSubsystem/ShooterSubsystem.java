@@ -1,7 +1,10 @@
 package frc.robot.subsystems.ShooterSubsystem;
 
+import static edu.wpi.first.units.Units.Amps;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -37,7 +40,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private TalonFX m_FlywheelMotor;
     public  TalonFX m_TurretMotor;
-    private TalonFX m_HoodMotor;
+    //private TalonFX //m_HoodMotor;
     private final SingleJointedArmSim m_TurretSim;
 
     private PoseEstimatorSubsystem m_PoseEstimatorSubsystem;
@@ -46,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private VelocityDutyCycle m_FlywheelMotorRequest;
     private DutyCycleOut m_TurretMotorRequest;
     private PositionDutyCycle m_TurretPositionRequest;
-    private DutyCycleOut m_HoodMotorRequest;
+    //private DutyCycleOut //m_HoodMotorRequest;
     
     private Slot0Configs m_FlywheelMotorSlotConfigs;
 
@@ -80,14 +83,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
         m_FlywheelMotor = new TalonFX(SubsystemConstants.ShooterFlywheelKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
         m_TurretMotor = new TalonFX(SubsystemConstants.ShooterTurretKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
-        m_HoodMotor = new TalonFX(SubsystemConstants.ShooterHoodKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
+        //m_HoodMotor = new TalonFX(SubsystemConstants.ShooterHoodKrakenCANID,SubsystemConstants.SUBSYSTEM_BUS);
 
         TurretAngle = m_TurretMotor.getPosition();
 
         m_FlywheelMotorRequest = new VelocityDutyCycle(0.0).withIgnoreHardwareLimits(true);
         m_TurretMotorRequest = new DutyCycleOut(0.0);
         m_TurretPositionRequest = new PositionDutyCycle(0.0);
-        m_HoodMotorRequest = new DutyCycleOut(0);
+        //m_HoodMotorRequest = new DutyCycleOut(0);
 
         m_FlywheelMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ShooterFlywheelKrakenInverted));
         m_TurretMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(SubsystemConstants.ShooterTurretKrakenInverted));
@@ -101,19 +104,26 @@ public class ShooterSubsystem extends SubsystemBase {
         //Flywheel configs
         m_FlywheelMotorSlotConfigs = new Slot0Configs();
         m_FlywheelMotorSlotConfigs.kS = 0.1;
-        m_FlywheelMotorSlotConfigs.kA = 1;
-        m_FlywheelMotorSlotConfigs.kP = 1;
-        m_FlywheelMotorSlotConfigs.kD = 0.2;
+        m_FlywheelMotorSlotConfigs.kA = 0.01;
+        m_FlywheelMotorSlotConfigs.kV = 0.02;
+        m_FlywheelMotorSlotConfigs.kP = 0.25;
+        m_FlywheelMotorSlotConfigs.kD = 0.01;
         m_FlywheelConfig.Slot0 = m_FlywheelMotorSlotConfigs;
         m_FlywheelConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
         m_FlywheelConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
         m_FlywheelConfig.HardwareLimitSwitch.withForwardLimitEnable(false);
 
+        
+        CurrentLimitsConfigs currentLimitsFlywheel = m_FlywheelConfig.CurrentLimits;
+            currentLimitsFlywheel.withStatorCurrentLimit(Amps.of(80));
+            currentLimitsFlywheel.withSupplyCurrentLimit(Amps.of(20));
+
+
         //turret configs
         Slot0Configs slot0 = m_TurretConfig.Slot0;
-        slot0.kP = 0.25;//5
-        slot0.kI = 0;//0.6
-        slot0.kD = 0.05;//0.3
+        slot0.kP = 0.25;
+        slot0.kI = 0;
+        slot0.kD = 0;
 
         SoftwareLimitSwitchConfigs softLimitsTurret = m_TurretConfig.SoftwareLimitSwitch;
         softLimitsTurret.ForwardSoftLimitThreshold = SubsystemConstants.ShooterTurretHardLimitTop;
@@ -138,10 +148,10 @@ public class ShooterSubsystem extends SubsystemBase {
         //Apply configs
         m_TurretMotor.getConfigurator().apply(m_TurretConfig);
         m_FlywheelMotor.getConfigurator().apply(m_FlywheelConfig);
-        m_HoodMotor.getConfigurator().apply(m_HoodConfig);
+        //m_HoodMotor.getConfigurator().apply(m_HoodConfig);
 
         m_TurretMotor.setPosition(0);
-        m_HoodMotor.setPosition(0);
+        //m_HoodMotor.setPosition(0);
 
         SmartDashboard.putBoolean("TurretAimed", TurretAimed);
         SmartDashboard.putNumber("Custom Hood Angle", CustomHoodAngle);
@@ -181,17 +191,17 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //Hood Control
     public void RunHoodMotor(double speed) {
-        m_HoodMotorRequest.withOutput(speed);
-        m_HoodMotor.setControl(m_HoodMotorRequest);
+        //m_HoodMotorRequest.withOutput(speed);
+        //m_HoodMotor.setControl(//m_HoodMotorRequest);
     }
 
     public void StopHoodMotor() {
-        m_HoodMotorRequest.Output = 0;
-        m_HoodMotor.stopMotor();
+        //m_HoodMotorRequest.Output = 0;
+        //m_HoodMotor.stopMotor();
     }
 
     //Goal in Deg, Limit in max speed, kP as P value(influencing speed), threshold as in tolerance
-    public boolean HoodPID(double goalValue, double limit, double kP, double threshold) {
+    /*public boolean HoodPID(double goalValue, double limit, double kP, double threshold) {
         double delta = Math.abs(goalValue) - Math.abs(getHoodAngle().getDegrees());
         if (Math.abs(delta) >= threshold) {
             var speed = -delta * kP;
@@ -203,17 +213,18 @@ public class ShooterSubsystem extends SubsystemBase {
             return true;
         }
 
-    }
+    }*/
 
-    public double getHoodTurns(){
-        return(m_HoodMotor.getPosition().getValueAsDouble());
-    }
+    /*public double getHoodTurns(){
+        return(//m_HoodMotor.getPosition().getValueAsDouble());
+    }*/
 
+    /*
     public Rotation2d getHoodAngle(){
         Rotation2d hoodAngle = new Rotation2d();
         hoodAngle = Rotation2d.fromDegrees(getHoodTurns()*SubsystemConstants.ShooterHoodGearRatio*360+SubsystemConstants.ShooterHoodLowestAngle);
         return hoodAngle;
-    }
+    }*/
     
     
     //Turret Control
@@ -301,11 +312,11 @@ public class ShooterSubsystem extends SubsystemBase {
                                                       ,m_PoseEstimatorSubsystem.getDrivetrain().getState().Speeds.vyMetersPerSecond)
                                                       .rotateBy(robotPose.getRotation());
         double distanceToHub = getDistanceToHub(AimPose);
-        double desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
+        //double desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
         double desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
         Rotation2d desiredTurretAngle = new Rotation2d(-Math.atan2(AimPose.getY()-chassisSpeed.getY()*0.25-robotPose.getY(),AimPose.getX()-chassisSpeed.getX()*0.25-robotPose.getX()));
         TurretPIDFieldRelative(desiredTurretAngle.getDegrees());
-        RunFlywheelMotor(desiredRPM);
+        RunFlywheelMotor(desiredRPM/60);
         //HoodPID(desiredHoodAngle, 0.1, 0.1, tolerance);
 
         if(TurretAimed){
@@ -349,17 +360,13 @@ public class ShooterSubsystem extends SubsystemBase {
         //update motor status signals
         BaseStatusSignal.refreshAll(TurretAngle,
                                     m_FlywheelMotor.getVelocity(),
-                                    m_HoodMotor.getPosition(),
+                                    //m_HoodMotor.getPosition(),
                                     m_TurretMotor.getVelocity());
         //feed the pose estimator numbers
         m_PoseEstimatorSubsystem.putShooterRotation(SubsystemConstants.ShooterCenteredRotation-getTurretAngle());
         m_PoseEstimatorSubsystem.putShooterRotationalVelocity(m_TurretMotor.getVelocity().getValueAsDouble()*36);
         //update smartdashboard
         SmartDashboard.updateValues();
-        //Do constant PIDs when issued
-        //if(constantAutoAim){FullTurretAutoAim(constantGoalRedAlliance ?LimelightConstants.RedHubPose2d : LimelightConstants.BlueHubPose2d, 5); constantSnowblow = false;}
-        //if(constantSnowblow){TurretPIDFieldRelative(constantGoalRedAlliance ? 0:180); constantAutoAim = false;}
-
     }
 
     //handle Turret Simulation

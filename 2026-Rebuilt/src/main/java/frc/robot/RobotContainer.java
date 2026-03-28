@@ -195,6 +195,8 @@ public class RobotContainer {
         operatorController.leftBumper().whileTrue(new TurretSlowblowPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         operatorController.y().whileTrue(new TurretResetPIDState(m_Shooter));
 
+        operatorController.start().onTrue(new InstantCommand(()->{m_PoseEstimator.setVisionEstimatesEnabled();}));
+
         //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
         operatorController.rightTrigger(0.5).whileTrue(
             new ParallelCommandGroup(
@@ -231,7 +233,7 @@ public class RobotContainer {
                                                                                 new SpindexterHighstate(m_Spindexter).withTimeout(20)
                                                                                   ).withTimeout(20));
         //Climber:
-        NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(1.5));
+        NamedCommands.registerCommand("Climber Arm Extend", new ClimberClimbUpstate(m_Climber).withTimeout(1.2));
         NamedCommands.registerCommand("Climber Arm Retract", new ClimberClimbDownstate(m_Climber).withTimeout(2));
         //Intake:
         NamedCommands.registerCommand("Intake Extend", new IntakePivotDownState(m_Intake).withTimeout(1).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));

@@ -12,20 +12,16 @@ import edu.wpi.first.math.util.Units;
 
 public class LimelightConstants {
     //limelight-chassis/limelight-lront
-    public static final Pose3d limelightFrontPose = new Pose3d(Units.inchesToMeters(-3)
-                                                        ,  Units.inchesToMeters(10) 
-                                                        ,  Units.inchesToMeters(12)
-                                                        ,  new Rotation3d(0, 45, 90));
+    public static final Pose3d limelightFrontPose = new Pose3d(Units.inchesToMeters(3.818)
+                                                        ,  Units.inchesToMeters(-11.457) 
+                                                        ,  Units.inchesToMeters(9)
+                                                        ,  new Rotation3d(0, Math.PI/8, Math.PI/12));
     public static final String LimelightFrontID =  "limelight-chassis";
     //limelight-left
-    public static final Pose3d limelightShooterOffset = new Pose3d(Units.inchesToMeters(6.76)
-                                                        ,  Units.inchesToMeters(0.44) 
-                                                        ,  Units.inchesToMeters(4.1)
-                                                        ,  new Rotation3d());
-    public static final Pose3d limelightShooterCenter = new Pose3d(Units.inchesToMeters(-5.75)
-                                                        ,  Units.inchesToMeters(-4) 
-                                                        ,  Units.inchesToMeters(17)
-                                                        ,  new Rotation3d());
+    public static final Pose3d limelightShooterPose = new Pose3d(Units.inchesToMeters(-9.48)
+                                                        ,  Units.inchesToMeters(-12.714) 
+                                                        ,  Units.inchesToMeters(9)
+                                                        ,  new Rotation3d(0,0,Math.PI/2));
     public static final String LimelightShooterID =  "limelight-shooter";
         
 
@@ -51,17 +47,17 @@ public class LimelightConstants {
 
     //Flywheel Interpolator; distance to goal(meters), Speed out (RPM)
     public static final InterpolatingDoubleTreeMap TurretFlywheelInterpolatorRPM = InterpolatingDoubleTreeMap.ofEntries(
-          Map.entry(2.13, 4100.0)
-         ,Map.entry(2.28,4100.0)
-         ,Map.entry(2.43,4100.0)
-         ,Map.entry(2.49,4100.0)
-         ,Map.entry(2.74,4150.0)
-         ,Map.entry(3.0,4200.0)
-         ,Map.entry(3.2,4250.0)
-         ,Map.entry(3.35,4300.0)
-         ,Map.entry(3.51,4350.0)
-         ,Map.entry(3.81,4400.0)
-         ,Map.entry(3.96,4450.0)
+          Map.entry(2.13, 3100.0)
+         ,Map.entry(2.28,3100.0)
+         ,Map.entry(2.43,3250.0)
+         ,Map.entry(2.49,3200.0)
+         ,Map.entry(2.74,3430.0)
+         ,Map.entry(3.0,3440.0)
+         ,Map.entry(3.2,3550.0)
+         ,Map.entry(3.35,3560.0)
+         ,Map.entry(3.51,3570.0)
+         ,Map.entry(3.81,3580.0)
+         ,Map.entry(3.96,4000.0)
 
         );
         

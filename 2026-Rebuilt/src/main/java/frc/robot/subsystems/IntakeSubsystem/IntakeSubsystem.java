@@ -1,6 +1,9 @@
 package frc.robot.subsystems.IntakeSubsystem;
 
+import static edu.wpi.first.units.Units.Amps;
+
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -90,6 +93,10 @@ public class IntakeSubsystem extends SubsystemBase {
     softLimitsIntake.ReverseSoftLimitEnable = false;
 
     m_intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+
+    CurrentLimitsConfigs currentLimitsIntake = m_intakeConfig.CurrentLimits;
+        currentLimitsIntake.withStatorCurrentLimit(Amps.of(80));
+        currentLimitsIntake.withSupplyCurrentLimit(Amps.of(20));
 
     m_pivotMotor.getConfigurator().apply(m_intakePivotConfig); //apply configs
     m_intakeMotor.getConfigurator().apply(m_intakeConfig);

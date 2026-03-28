@@ -8,45 +8,70 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.55,
-        "y": 7.25
+        "x": 3.0291557017543864,
+        "y": 7.6410855263157895
       },
       "isLocked": false,
       "linkedName": "T1"
     },
     {
       "anchor": {
-        "x": 3.8,
-        "y": 7.25
+        "x": 0.9,
+        "y": 4.264
       },
       "prevControl": {
-        "x": 3.05,
-        "y": 7.25
+        "x": 0.34622807017543855,
+        "y": 4.650438596491228
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "T1"
+      "linkedName": "Ct"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 10.4,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Intake Juggle",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.5,
+      "endWaypointRelativePos": 1.0,
       "command": {
         "type": "named",
         "data": {
-          "name": "Intake Extend"
+          "name": "Intake Juggle"
+        }
+      }
+    },
+    {
+      "name": "Climber Arm Extend",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Climber Arm Extend"
         }
       }
     },
     {
       "name": "Turret Auto Aim",
-      "waypointRelativePos": 0.3,
-      "endWaypointRelativePos": 1.0,
+      "waypointRelativePos": 0.2,
+      "endWaypointRelativePos": 0.9,
       "command": {
         "type": "named",
         "data": {
@@ -56,8 +81,8 @@
     },
     {
       "name": "Turret Shoot",
-      "waypointRelativePos": 0.4,
-      "endWaypointRelativePos": 1.0,
+      "waypointRelativePos": 0.3,
+      "endWaypointRelativePos": 0.9,
       "command": {
         "type": "named",
         "data": {
@@ -67,7 +92,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.16,
+    "maxVelocity": 5.0,
     "maxAcceleration": 10.4,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -76,7 +101,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.8186945222303482
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
@@ -84,5 +109,5 @@
     "velocity": 0,
     "rotation": 0.8186945222303482
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

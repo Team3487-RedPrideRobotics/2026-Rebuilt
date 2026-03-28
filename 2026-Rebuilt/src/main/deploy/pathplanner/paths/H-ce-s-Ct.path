@@ -3,71 +3,65 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.8,
-        "y": 7.25
+        "x": 3.5,
+        "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.55,
-        "y": 7.25
+        "x": 1.5290241228070176,
+        "y": 4.486962719298245
       },
       "isLocked": false,
-      "linkedName": "T1"
+      "linkedName": "H"
     },
     {
       "anchor": {
-        "x": 3.8,
-        "y": 7.25
+        "x": 0.9,
+        "y": 4.264
       },
       "prevControl": {
-        "x": 3.05,
-        "y": 7.25
+        "x": 0.5289364035087722,
+        "y": 6.169802631578947
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "T1"
+      "linkedName": "Ct"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2022160664819958,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake Juggle",
+      "name": "Climber Arm Extend",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.5,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Climber Arm Extend"
+        }
+      }
+    },
+    {
+      "name": "Intake Extend",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.0,
       "command": {
         "type": "named",
         "data": {
           "name": "Intake Extend"
         }
       }
-    },
-    {
-      "name": "Turret Auto Aim",
-      "waypointRelativePos": 0.3,
-      "endWaypointRelativePos": 1.0,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Turret Auto Aim"
-        }
-      }
-    },
-    {
-      "name": "Turret Shoot",
-      "waypointRelativePos": 0.4,
-      "endWaypointRelativePos": 1.0,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Turret Shoot"
-        }
-      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.16,
+    "maxVelocity": 1.0,
     "maxAcceleration": 10.4,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -76,13 +70,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.8186945222303482
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.8186945222303482
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }
