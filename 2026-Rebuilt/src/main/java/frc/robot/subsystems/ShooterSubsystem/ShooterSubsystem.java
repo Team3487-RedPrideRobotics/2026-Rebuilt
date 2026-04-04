@@ -34,8 +34,6 @@ import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 
-//TODO: Remove Turret Angle Adjust (its not used anyway)
-
 public class ShooterSubsystem extends SubsystemBase {
 
     private TalonFX m_FlywheelMotor;

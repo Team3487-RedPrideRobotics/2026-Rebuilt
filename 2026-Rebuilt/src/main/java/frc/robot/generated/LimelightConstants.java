@@ -11,15 +11,15 @@ import edu.wpi.first.math.util.Units;
 
 
 public class LimelightConstants {
-    //limelight-chassis/limelight-lront
-    public static final Pose3d limelightFrontPose = new Pose3d(Units.inchesToMeters(3.818)
+    //limelight-chassis/limelight-front
+    public static final Pose3d limelightFrontPose = new Pose3d(Units.inchesToMeters(-3.818)
                                                         ,  Units.inchesToMeters(-11.457) 
                                                         ,  Units.inchesToMeters(9)
-                                                        ,  new Rotation3d(0, Math.PI/8, Math.PI/12));
+                                                        ,  new Rotation3d(0, Math.PI/8, -Math.PI*9/12));
     public static final String LimelightFrontID =  "limelight-chassis";
     //limelight-left
     public static final Pose3d limelightShooterPose = new Pose3d(Units.inchesToMeters(-9.48)
-                                                        ,  Units.inchesToMeters(-12.714) 
+                                                        ,  Units.inchesToMeters(12.714) 
                                                         ,  Units.inchesToMeters(9)
                                                         ,  new Rotation3d(0,0,Math.PI/2));
     public static final String LimelightShooterID =  "limelight-shooter";

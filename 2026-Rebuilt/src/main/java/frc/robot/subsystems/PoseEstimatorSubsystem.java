@@ -9,19 +9,25 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.*;
+
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.generated.LimelightConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
+
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.LimelightPoseEstimator;
@@ -33,6 +39,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     Limelight limelightFront;
     Limelight limelightShooter;
+
+    LimelightSim limelightFrontSim;
+    LimelightSim limelightShooterSim;
 
     Pigeon2   m_gyro;
     CommandSwerveDrivetrain m_CommandSwerveDrivetrain;
@@ -46,6 +55,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     Matrix<N3,N1> shooterStddevs = VecBuilder.fill(0.1,0.1,0.1);
     Matrix<N3,N1> chassisStddevs = VecBuilder.fill(0.5,0.5,0.5);
     boolean visionEstimatesEnabled = true;
+    boolean isSimulation = RobotBase.isSimulation();
 
     boolean   tooFast;
     Optional<Pose2d> tempPose;
@@ -88,12 +98,23 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     }
 
 
-    public PoseEstimatorSubsystem(CommandSwerveDrivetrain MySillyLittleDrivetrain){
+    public PoseEstimatorSubsystem(CommandSwerveDrivetrain MySillyLittleDrivetrain){        
+        if(isSimulation){
+            limelightFrontSim = new LimelightSim(LimelightConstants.LimelightFrontID,AprilTagFields.k2026RebuiltAndymark);
+            limelightShooterSim = new LimelightSim(LimelightConstants.LimelightShooterID,AprilTagFields.k2026RebuiltAndymark);
+            limelightFrontSim.setCameraSimOutput(true, true);
+            limelightShooterSim.setCameraSimOutput(true, true);
+        }
+
         limelightFront = new Limelight(LimelightConstants.LimelightFrontID);
         limelightShooter = new Limelight(LimelightConstants.LimelightShooterID);
+        
         m_gyro = new Pigeon2(13);
+
         m_CommandSwerveDrivetrain = MySillyLittleDrivetrain;
+
         m_field = new Field2d();
+
         SmartDashboard.putData("Field",m_field);
         m_field.getObject("ShooterPoseEstimate").setPose(Pose2d.kZero);
         m_field.getObject("turretPose").setPose(Pose2d.kZero);
@@ -140,20 +161,20 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     if(!DriverStation.isAutonomousEnabled()){
     // If the pose is present
     visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
-    Matrix<N3,N1> CurrentStdvs = chassisStddevs.times((poseEstimateFront.getAvgTagAmbiguity()+1)*5);
     if(poseEstimateFront.tagCount >0 ){
+        Matrix<N3,N1> CurrentStdvs = chassisStddevs.times(Math.pow(!isSimulation?poseEstimateFront.getAvgTagAmbiguity():1.05+1,5));
         if(poseEstimateFront.pose.toPose2d() != Pose2d.kZero){
                 if(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<10){
-    //if(visionEstimatesEnabled){m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds,CurrentStdvs);}
+    if(visionEstimatesEnabled){m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds,CurrentStdvs);}
     }}}
     });
 
     visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
-        Matrix<N3,N1> CurrentStdvs = shooterStddevs.times((poseEstimateShooter.getAvgTagAmbiguity()+1)*5);    
-        if(poseEstimateShooter.tagCount >1 ){
+        if(poseEstimateShooter.tagCount >0){
+            Matrix<N3,N1> CurrentStdvs = shooterStddevs.times(Math.pow(!isSimulation?poseEstimateShooter.getAvgTagAmbiguity():1.05+1,5));
             if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
                 if(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<10){
-        //if(visionEstimatesEnabled){m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds,CurrentStdvs);}
+        if(visionEstimatesEnabled){m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds,CurrentStdvs);}
         m_field.getObject("ShooterPoseEstimate").setPose(poseEstimateShooter.pose.toPose2d());
     }}}
     });
@@ -169,6 +190,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     m_field.getObject("BlueHub").setPose(LimelightConstants.BlueHubPose2d);
     m_field.getObject("RedHub").setPose(LimelightConstants.RedHubPose2d);
     m_field.getObject("turretPose").setPose(new Pose2d(getRobotPose2d().getTranslation(),getRobotPose2d().getRotation().plus(Rotation2d.fromDegrees(shooterRotation2d))));
+}
+
+@Override
+public void simulationPeriodic() {
+    limelightFrontSim.updateBotPose(m_robotPose2d);
+    limelightShooterSim.updateBotPose(m_robotPose2d);
 }
 
 }
