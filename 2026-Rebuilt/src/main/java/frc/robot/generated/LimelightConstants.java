@@ -15,7 +15,7 @@ public class LimelightConstants {
     public static final Pose3d limelightFrontPose = new Pose3d(Units.inchesToMeters(-3.818)
                                                         ,  Units.inchesToMeters(-11.457) 
                                                         ,  Units.inchesToMeters(9)
-                                                        ,  new Rotation3d(0, Math.PI/8, -Math.PI*9/12));
+                                                        ,  new Rotation3d(0, Math.PI/8, Math.PI*9/12));
     public static final String LimelightFrontID =  "limelight-chassis";
     //limelight-left
     public static final Pose3d limelightShooterPose = new Pose3d(Units.inchesToMeters(-9.48)

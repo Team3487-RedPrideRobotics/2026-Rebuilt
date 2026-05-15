@@ -15,19 +15,15 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.numbers.*;
-
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.generated.LimelightConstants;
-import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
-
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.LimelightPoseEstimator;
@@ -52,8 +48,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     Field2d m_field;
     Pose2d  m_robotPose2d = new Pose2d(0.0,0.0, new Rotation2d(0.0));
     Rotation3d robotRotation = new Rotation3d();
-    Matrix<N3,N1> shooterStddevs = VecBuilder.fill(0.1,0.1,0.1);
-    Matrix<N3,N1> chassisStddevs = VecBuilder.fill(0.5,0.5,0.5);
+    Matrix<N3,N1> standardStddevs= VecBuilder.fill(0.1, 0.1,0.1);
+    Matrix<N3,N1> Mt1Stddevs= VecBuilder.fill(4, 4,2);
+    Matrix<N3,N1> shooterStddevs;
+    Matrix<N3,N1> chassisStddevs;
     boolean visionEstimatesEnabled = true;
     boolean isSimulation = RobotBase.isSimulation();
 
@@ -64,9 +62,18 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     LimelightPoseEstimator shooterPoseEstimator;
     LimelightPoseEstimator frontPoseEstimator;
+    
+    LimelightPoseEstimator shooterPoseEstimatorMT1;
+    LimelightPoseEstimator frontPoseEstimatorMT1;
 
     Optional<PoseEstimate> visionEstimateFront;
     Optional<PoseEstimate> visionEstimateShooter;
+
+    Optional<PoseEstimate> visionEstimateFrontMT1;
+    Optional<PoseEstimate> visionEstimateShooterMT1;
+
+    Pose2d visionEstimateMt1;
+    Pose2d visionEstimateMt2;
 
     public Field2d getField2d(){
         return m_field;
@@ -95,6 +102,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
     public void setVisionEstimatesEnabled(){
         visionEstimatesEnabled = !visionEstimatesEnabled;
+        System.out.println("VisionEnabled!");
     }
 
 
@@ -115,6 +123,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
         m_field = new Field2d();
 
+        visionEstimateMt1 = Pose2d.kZero;
+        visionEstimateMt2 = Pose2d.kZero;
+
         SmartDashboard.putData("Field",m_field);
         m_field.getObject("ShooterPoseEstimate").setPose(Pose2d.kZero);
         m_field.getObject("turretPose").setPose(Pose2d.kZero);
@@ -126,6 +137,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 
         shooterPoseEstimator = limelightShooter.createPoseEstimator(EstimationMode.MEGATAG2);
         frontPoseEstimator = limelightFront.createPoseEstimator(EstimationMode.MEGATAG2);
+        shooterPoseEstimatorMT1 = limelightShooter.createPoseEstimator(EstimationMode.MEGATAG1);
+        frontPoseEstimatorMT1 = limelightFront.createPoseEstimator(EstimationMode.MEGATAG1);
+        
         
     }
 
@@ -148,6 +162,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     visionEstimateShooter = shooterPoseEstimator.getPoseEstimate();
     visionEstimateFront = frontPoseEstimator.getPoseEstimate();
 
+    visionEstimateShooterMT1 = shooterPoseEstimatorMT1.getPoseEstimate();
+    visionEstimateFrontMT1 = frontPoseEstimatorMT1.getPoseEstimate();
+
+    limelightFront.getSettings().withCameraOffset(LimelightConstants.limelightFrontPose).save();
+    limelightShooter.getSettings().withCameraOffset(LimelightConstants.limelightShooterPose).save();
+
     //Update each of the limelights with the current robot orientation
     limelightFront.getSettings().withRobotOrientation(new Orientation3d(robotRotation,
 												 new AngularVelocity3d(DegreesPerSecond.of(m_gyro.getAngularVelocityXWorld().getValueAsDouble()),
@@ -162,29 +182,57 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
     // If the pose is present
     visionEstimateFront.ifPresent((PoseEstimate poseEstimateFront) -> {
     if(poseEstimateFront.tagCount >0 ){
-        Matrix<N3,N1> CurrentStdvs = chassisStddevs.times(Math.pow(!isSimulation?poseEstimateFront.getAvgTagAmbiguity():1.05+1,5));
+        chassisStddevs = standardStddevs.times(Math.pow(!isSimulation?poseEstimateFront.getAvgTagAmbiguity():1.05,1));
         if(poseEstimateFront.pose.toPose2d() != Pose2d.kZero){
-                if(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<10){
-    if(visionEstimatesEnabled){m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateFront.pose.toPose2d(), poseEstimateFront.timestampSeconds,CurrentStdvs);}
+            System.out.println(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond));
+                if(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<100){
+    if(visionEstimatesEnabled){visionEstimateMt2 = poseEstimateFront.pose.toPose2d();
+    if(visionEstimateMt2.getTranslation().getDistance(visionEstimateMt1.getTranslation())<5){
+            //m_CommandSwerveDrivetrain.addVisionMeasurement(visionEstimateMt2,Utils.currentTimeToFPGATime(Utils.getCurrentTimeSeconds()),shooterStddevs);
+        }}
     }}}
     });
 
     visionEstimateShooter.ifPresent((PoseEstimate poseEstimateShooter) -> {
         if(poseEstimateShooter.tagCount >0){
-            Matrix<N3,N1> CurrentStdvs = shooterStddevs.times(Math.pow(!isSimulation?poseEstimateShooter.getAvgTagAmbiguity():1.05+1,5));
+            shooterStddevs = standardStddevs.times(Math.pow(!isSimulation?poseEstimateShooter.getAvgTagAmbiguity():1.05,1));
             if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
-                if(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<10){
-        if(visionEstimatesEnabled){m_CommandSwerveDrivetrain.addVisionMeasurement(poseEstimateShooter.pose.toPose2d(), poseEstimateShooter.timestampSeconds,CurrentStdvs);}
+                if(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<100){
+        if(visionEstimatesEnabled){
+            visionEstimateMt2 = poseEstimateShooter.pose.toPose2d();
+            if(Math.abs(visionEstimateMt2.getTranslation().getDistance(visionEstimateMt1.getTranslation()))<0.25){
+            m_CommandSwerveDrivetrain.addVisionMeasurement(visionEstimateMt2,Utils.currentTimeToFPGATime(Utils.getCurrentTimeSeconds()),shooterStddevs);
+        }}
         m_field.getObject("ShooterPoseEstimate").setPose(poseEstimateShooter.pose.toPose2d());
     }}}
+    });}
+
+    visionEstimateFrontMT1.ifPresent((PoseEstimate poseEstimateFront) -> {
+    if(poseEstimateFront.tagCount >0 ){
+        if(poseEstimateFront.pose.toPose2d() != Pose2d.kZero){
+                if(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<100){
+    if(visionEstimatesEnabled){visionEstimateMt1 = poseEstimateFront.pose.toPose2d();
+        System.out.println("Chassis LL Pose Updated!");
+        System.out.println(visionEstimateMt1);
+                               m_CommandSwerveDrivetrain.addVisionMeasurement(visionEstimateMt1,Utils.currentTimeToFPGATime(Utils.getCurrentTimeSeconds()),Mt1Stddevs);}
+    }}}
     });
-    
-    }
+
+    visionEstimateShooterMT1.ifPresent((PoseEstimate poseEstimateShooter) -> {
+        if(poseEstimateShooter.tagCount >0){
+            if(poseEstimateShooter.pose.toPose2d() != Pose2d.kZero){
+                if(DegreesPerSecond.of(m_gyro.getAngularVelocityZWorld().getValueAsDouble()).in(DegreesPerSecond)<100){
+        if(visionEstimatesEnabled){visionEstimateMt1 = poseEstimateShooter.pose.toPose2d();
+            System.out.println("shooter LL Pose Updated!");
+                                  m_CommandSwerveDrivetrain.addVisionMeasurement(visionEstimateMt1, Utils.currentTimeToFPGATime(Utils.getCurrentTimeSeconds()),Mt1Stddevs);}
+    }}}
+    });
+
     Optional<Pose2d> tempPose = m_CommandSwerveDrivetrain.samplePoseAt(Utils.getCurrentTimeSeconds());
 
-    if (tempPose.isPresent()) {
-        m_robotPose2d = tempPose.get();
-    }
+    tempPose.ifPresent((Pose2d pose)->{
+        m_robotPose2d = pose;
+    });
 
     m_field.setRobotPose(getRobotPose2d());
     m_field.getObject("BlueHub").setPose(LimelightConstants.BlueHubPose2d);
@@ -196,6 +244,4 @@ public class PoseEstimatorSubsystem extends SubsystemBase{
 public void simulationPeriodic() {
     limelightFrontSim.updateBotPose(m_robotPose2d);
     limelightShooterSim.updateBotPose(m_robotPose2d);
-}
-
-}
+}}

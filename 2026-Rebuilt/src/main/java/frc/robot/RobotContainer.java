@@ -8,6 +8,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import java.util.Locale.IsoCountryCode;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -68,6 +70,7 @@ public class RobotContainer {
 
     private final Telemetry m_logger = new Telemetry(MaxSpeed);
 
+    private final CommandXboxController singleController = new CommandXboxController(2);
     private final CommandXboxController driverController = new CommandXboxController(1);
     public final CommandXboxController operatorController = new CommandXboxController(0);
 
@@ -129,6 +132,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        if(!SubsystemConstants.SingleController){
         //
         //CONFIGIURE DRIVER CONTROLS
         //
@@ -218,6 +222,51 @@ public class RobotContainer {
         operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
         operatorController.povDown().whileTrue(new ClimberClimbDownstate(m_Climber));
 
+        }
+        else{
+         //
+         //SINGLE CONTROLLER CONTROLS
+         //
+        
+         //drive commands
+         m_drivetrain.setDefaultCommand(
+            // Drivetrain will execute this command periodically
+            m_drivetrain.applyRequest(() ->
+                drive.withVelocityX(-singleController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-singleController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-singleController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            )
+         );
+         
+         final var idle = new SwerveRequest.Idle();
+         RobotModeTriggers.disabled().whileTrue(
+            m_drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+         );
+         
+         //turretCommands
+         singleController.rightTrigger(0.5).whileTrue(
+            new ParallelCommandGroup(
+                    new KickerFeedState(m_kicker),
+                    new SpindexterHighstate(m_Spindexter)
+                ));
+         singleController.rightBumper().whileTrue(new AutoHubAimState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+         singleController.povRight().whileTrue(new TurretHoodManualState(m_Shooter, 0.3, 0.0));
+         singleController.povLeft().whileTrue(new TurretHoodManualState(m_Shooter, -0.3, 0.0));
+         singleController.back().whileTrue(new InstantCommand(()->{m_Shooter.AllStop();},m_Shooter));
+
+
+         //intakeCommands
+         singleController.leftBumper().whileTrue(new IntakePivotDownState(m_Intake).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+         singleController.leftTrigger().whileTrue(new IntakeState(m_Intake).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+         singleController.x().whileTrue(new IntakePivotUpState(m_Intake).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+         
+         //climberCommands
+         singleController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
+         singleController.povDown().whileTrue(new ClimberClimbDownstate(m_Climber));
+
+        }
+        
+        driverController.start().onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
         //Start up swerve telemetry logging
         m_drivetrain.registerTelemetry(m_logger::telemeterize);
     }  

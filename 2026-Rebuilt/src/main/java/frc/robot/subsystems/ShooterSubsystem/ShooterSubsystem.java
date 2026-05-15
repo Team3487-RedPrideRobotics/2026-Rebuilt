@@ -71,8 +71,8 @@ public class ShooterSubsystem extends SubsystemBase {
         m_TurretSim = new SingleJointedArmSim(
         DCMotor.getKrakenX44(1), 
         10,
-        0.05, // Arm moment of inertia
-        0, // Arm length (m)
+        0.005, // Arm moment of inertia
+        1, // Arm length (m)
         Units.degreesToRadians(0), // Min angle of the motor (deg)
         Units.degreesToRadians( 360), // Max angle of the motor(deg)
         false, // Simulate gravity NO
@@ -119,9 +119,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
         //turret configs
         Slot0Configs slot0 = m_TurretConfig.Slot0;
-        slot0.kP = 0.25;
+        slot0.kP = 0.3;
         slot0.kI = 0;
-        slot0.kD = 0;
+        slot0.kD = 0.01;
 
         SoftwareLimitSwitchConfigs softLimitsTurret = m_TurretConfig.SoftwareLimitSwitch;
         softLimitsTurret.ForwardSoftLimitThreshold = SubsystemConstants.ShooterTurretHardLimitTop;

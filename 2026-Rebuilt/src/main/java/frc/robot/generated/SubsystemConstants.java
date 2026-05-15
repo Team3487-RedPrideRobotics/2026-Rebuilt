@@ -51,7 +51,7 @@ public class SubsystemConstants {
     public final static double HoodRotationSpeed = 0.1; 
 
     //The amount of turns of the motor required to turn from the left-most hardstop to face forward
-    public final static double ShooterCenteredRotation = 260;
+    public final static double ShooterCenteredRotation = 270;
     public final static double ShooterHoodLowestAngle = 30; //the angle in deg that the hood starts at
 
     //Controller Deadbands
@@ -59,6 +59,8 @@ public class SubsystemConstants {
         public final static double leftXdeadBand = 0.1;
         public final static double leftYdeadBand = 0.1;
     }
+
+    public final static boolean SingleController = true;
 
 
     //goku

@@ -24,6 +24,26 @@ public class TurretHoodManualState extends Command {
 
     }
 
+    public TurretHoodManualState( ShooterSubsystem Subsystem, Double TurretVelocity, Double hoodSpeed){
+        
+        addRequirements(Subsystem);
+        
+        subsystem = Subsystem;
+        this.turretVelocity = new DoubleSupplier() {
+            @Override
+            public double getAsDouble() {
+                return TurretVelocity;
+            } 
+        };
+        this.hoodSpeed = new DoubleSupplier() {
+            @Override
+            public double getAsDouble() {
+                return hoodSpeed;
+            } 
+        };
+
+    }
+
     @Override
     public void initialize() {
         
@@ -47,7 +67,7 @@ public class TurretHoodManualState extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        
+        subsystem.StopTurretMotor();
     }
 
 }
