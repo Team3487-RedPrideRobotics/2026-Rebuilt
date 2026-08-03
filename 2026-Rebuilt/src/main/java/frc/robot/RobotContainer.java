@@ -8,10 +8,9 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.Locale.IsoCountryCode;
-
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
@@ -28,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
@@ -74,11 +74,6 @@ public class RobotContainer {
     private final CommandXboxController driverController = new CommandXboxController(1);
     public final CommandXboxController operatorController = new CommandXboxController(0);
 
-    
-
-    
-
-    
         //instance other robot subsystems
         public final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
         public final PoseEstimatorSubsystem  m_PoseEstimator = new PoseEstimatorSubsystem(m_drivetrain);
@@ -199,7 +194,7 @@ public class RobotContainer {
         operatorController.leftBumper().whileTrue(new TurretSlowblowPIDState(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         operatorController.y().whileTrue(new TurretResetPIDState(m_Shooter));
 
-        operatorController.start().onTrue(new InstantCommand(()->{m_PoseEstimator.setVisionEstimatesEnabled();}));
+        operatorController.start().onTrue(new InstantCommand(()->{m_PoseEstimator.toggleVisionEstimatesEnabled();}));
 
         //activate the kicker and spindexter to feed fuel into the shooter to effectively shoot
         operatorController.rightTrigger(0.5).whileTrue(

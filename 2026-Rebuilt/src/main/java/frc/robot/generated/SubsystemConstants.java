@@ -60,7 +60,7 @@ public class SubsystemConstants {
         public final static double leftYdeadBand = 0.1;
     }
 
-    public final static boolean SingleController = true;
+    public final static boolean SingleController = false;
 
 
     //goku

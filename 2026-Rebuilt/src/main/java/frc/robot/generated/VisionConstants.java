@@ -2,28 +2,46 @@ package frc.robot.generated;
 
 import java.util.Map;
 
+import org.photonvision.simulation.SimCameraProperties;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.util.Units;
 
 
-public class LimelightConstants {
+public class VisionConstants {
     //limelight-chassis/limelight-front
-    public static final Pose3d limelightFrontPose = new Pose3d(Units.inchesToMeters(-3.818)
+    public static final Transform3d llCameraRightPose = new Transform3d(Units.inchesToMeters(-3.818)
                                                         ,  Units.inchesToMeters(-11.457) 
                                                         ,  Units.inchesToMeters(9)
-                                                        ,  new Rotation3d(0, Math.PI/8, Math.PI*9/12));
-    public static final String LimelightFrontID =  "limelight-chassis";
+                                                        ,  new Rotation3d(0, -Math.PI/8, -Math.PI*9/12));
+    public static final String llProcessorRightID =  "limelight-chassis";
     //limelight-left
-    public static final Pose3d limelightShooterPose = new Pose3d(Units.inchesToMeters(-9.48)
+    public static final Transform3d llCameraLeftPose = new Transform3d(Units.inchesToMeters(-9.48)
                                                         ,  Units.inchesToMeters(12.714) 
                                                         ,  Units.inchesToMeters(9)
                                                         ,  new Rotation3d(0,0,Math.PI/2));
-    public static final String LimelightShooterID =  "limelight-shooter";
-        
+    public static final String llProcessorLeftID =  "limelight-shooter";
+
+    public static final AprilTagFieldLayout AprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
+    
+    public static final Matrix<N3,N1> SingleTagStdDevs = VecBuilder.fill(3, 3, 3);
+    public static final Matrix<N3,N1> MultiTagStdDevs = VecBuilder.fill(1, 1, 1);
+
+    public static final SimCameraProperties llCameraSimProperties = new SimCameraProperties()
+                                            .setCalibration(1280, 800,Rotation2d.fromDegrees(99.4))
+                                            .setCalibError(0.35, 0.01)
+                                            .setFPS(20)
+                                            .setAvgLatencyMs(50)
+                                            .setLatencyStdDevMs(15);
 
     //Global pose of the hubs
     public static final Pose2d BlueHubPose2d = new Pose2d(4.6228,4.034536,new Rotation2d(0));

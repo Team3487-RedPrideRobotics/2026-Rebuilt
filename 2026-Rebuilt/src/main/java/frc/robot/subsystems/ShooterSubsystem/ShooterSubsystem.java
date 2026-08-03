@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.generated.LimelightConstants;
+import frc.robot.generated.VisionConstants;
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 
@@ -161,6 +161,10 @@ public class ShooterSubsystem extends SubsystemBase {
         return((angle/360-Math.floor(angle/360))*360);
     }
 
+    public double DegreesAngleClamp(double angle, double upperLimit){
+        return((angle/upperLimit-Math.floor(angle/upperLimit))*upperLimit);
+    }
+
     //returns an angle of degrees from the input o
     public double TurretTurnsToDeg(double turns){
         return(((turns*SubsystemConstants.ShooterTurretGearRatio)-Math.floor(turns*SubsystemConstants.ShooterTurretGearRatio))/360);
@@ -261,11 +265,12 @@ public class ShooterSubsystem extends SubsystemBase {
         boolean done;
         double delta;
         double TurretRobotRelativeAngle = TurretAngle.getValueAsDouble()*360/10-SubsystemConstants.ShooterCenteredRotation;
-        delta = Math.abs(angle-TurretRobotRelativeAngle);
+        delta = DegreesAngleClamp(Math.abs(angle-TurretRobotRelativeAngle),355);
         done = true;
         TurretAimed = false;
-        if(delta > 4){
+        if(delta > 10){
         setAngle(angle+SubsystemConstants.ShooterCenteredRotation);
+        System.out.println(delta);
         done = false;
         TurretAimed = false;
         m_RobotContainer.operatorController.setRumble(RumbleType.kBothRumble,delta/100);
@@ -311,7 +316,7 @@ public class ShooterSubsystem extends SubsystemBase {
                                                       .rotateBy(robotPose.getRotation());
         double distanceToHub = getDistanceToHub(AimPose);
         //double desiredHoodAngle = LimelightConstants.TurretHoodInterpolatorDEG.get(distanceToHub);
-        double desiredRPM = LimelightConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
+        double desiredRPM = VisionConstants.TurretFlywheelInterpolatorRPM.get(distanceToHub);
         Rotation2d desiredTurretAngle = new Rotation2d(-Math.atan2(AimPose.getY()-chassisSpeed.getY()*0.25-robotPose.getY(),AimPose.getX()-chassisSpeed.getX()*0.25-robotPose.getX()));
         TurretPIDFieldRelative(desiredTurretAngle.getDegrees());
         RunFlywheelMotor(desiredRPM/60);
