@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.photonvision.simulation.SimCameraProperties;
 
+import com.pathplanner.lib.path.PathConstraints;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -78,5 +80,8 @@ public class VisionConstants {
          ,Map.entry(3.96,4000.0)
 
         );
+
+    //Pathfinding path constants
+    public static final PathConstraints pathfindingConstants = new PathConstraints(5, 10, 720,12);
         
 }

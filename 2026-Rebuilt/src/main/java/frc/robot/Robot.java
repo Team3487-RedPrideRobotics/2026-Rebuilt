@@ -5,6 +5,9 @@
 package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -43,6 +46,13 @@ public class Robot extends TimedRobot {
     }
 
     @Override
+    public void robotInit() {
+        Pathfinding.setPathfinder(new LocalADStar());
+        super.robotInit();
+        PathfindingCommand.warmupCommand();
+    }
+
+    @Override
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
@@ -55,7 +65,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        m_robotContainer.getAlliance();
         if(DriverStation.isDSAttached()){
             NoFmsAlliance.set(DriverStation.getAlliance().isEmpty() ? true: false);
         }

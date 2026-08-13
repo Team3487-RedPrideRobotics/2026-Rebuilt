@@ -14,6 +14,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -30,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 
 import frc.robot.generated.SubsystemConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.generated.VisionConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 import frc.robot.subsystems.ClimberSubsystem.states.ClimberClimbDownstate;
@@ -66,7 +68,7 @@ public class RobotContainer {
     public final SwerveRequest.RobotCentric RobotCentricDrive = new SwerveRequest.RobotCentric().withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt(); //unused but may come back for unbeaching
+    //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt(); //unused but may come back for unbeaching
 
     private final Telemetry m_logger = new Telemetry(MaxSpeed);
 
@@ -148,8 +150,8 @@ public class RobotContainer {
             RobotCentricDrive.withVelocityX(-driverController.getLeftY() * MaxSpeed)
             .withVelocityY(-driverController.getLeftX() * MaxSpeed)
             .withRotationalRate(-driverController.getRightX() * MaxAngularRate)));
-        driverController.y().toggleOnTrue(new InstantCommand(() -> driverController.setRumble(RumbleType.kBothRumble,0.5)));
-        driverController.y().toggleOnFalse(new InstantCommand(() -> driverController.setRumble(RumbleType.kBothRumble,0)));
+        driverController.y().whileTrue(new InstantCommand(() -> driverController.setRumble(RumbleType.kBothRumble,0.5)));
+        driverController.y().whileFalse(new InstantCommand(() -> driverController.setRumble(RumbleType.kBothRumble,0)));
         
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
@@ -216,6 +218,12 @@ public class RobotContainer {
         // Moving the climber arm up/down
         operatorController.povUp().whileTrue(new ClimberClimbUpstate(m_Climber));
         operatorController.povDown().whileTrue(new ClimberClimbDownstate(m_Climber));
+
+        //pathfinding
+        try{operatorController.povLeft().whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("l"),VisionConstants.pathfindingConstants));}
+        catch(Exception e){System.err.println("Error in making Pathfinding command!"+e);}
+        try{operatorController.povLeft().whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("l"),VisionConstants.pathfindingConstants));}
+        catch(Exception e){System.err.println("Error in making Pathfinding command!"+e);}
 
         }
         else{
